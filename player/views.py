@@ -11,7 +11,6 @@ def home_view(request):
         'top_3': top_3,
         'top_20': top_20_users,
     }
-    print(context)
     return render(request, 'player/home.html', context)
 
 @login_required

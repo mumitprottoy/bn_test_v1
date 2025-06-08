@@ -14,7 +14,7 @@ SECRET_KEY = 'django-insecure-g)_is-bk9rmzltp2=msu)+-fdwpgp-4l$pw3za1+#*#+@6c7t#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -116,11 +116,12 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 AUTH_USER_MODEL = 'player.User'
 
-STATIC_URL = 'staticfiles/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / 'staticfiles',
+    BASE_DIR / 'static'
 ]
-# STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 # Default primary key field type
