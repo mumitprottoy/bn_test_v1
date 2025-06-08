@@ -182,5 +182,6 @@ def change_profile_pic(request):
                 return JsonResponse({"message": "✅ Profile picture updated!"})
             return JsonResponse({"message": "❌ No image data received."}, status=400)
         except Exception as e:
+            print(e)
             return JsonResponse({"message": f"❌ Error: {str(e)}"}, status=500)
     return JsonResponse({"message": "Invalid method"}, status=405)
