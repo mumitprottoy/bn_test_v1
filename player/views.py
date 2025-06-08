@@ -172,6 +172,7 @@ def upload_profile_picture(request):
 @csrf_exempt
 @login_required
 def change_profile_pic(request):
+    print('hey')
     if request.method == "POST":
         try:
             data = json.loads(request.body)
@@ -179,9 +180,9 @@ def change_profile_pic(request):
             if image_data:
                 request.user.profile_picture_url = image_data
                 request.user.save()
-                return JsonResponse({"message": "✅ Profile picture updated!"})
-            return JsonResponse({"message": "❌ No image data received."}, status=400)
+                return JsonResponse({"message": "Profile picture updated!"})
+            return JsonResponse({"message": "No image data received."}, status=400)
         except Exception as e:
             print(e)
-            return JsonResponse({"message": f"❌ Error: {str(e)}"}, status=500)
+            return JsonResponse({"message": f"Error: {str(e)}"}, status=500)
     return JsonResponse({"message": "Invalid method"}, status=405)
