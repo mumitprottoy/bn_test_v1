@@ -174,6 +174,7 @@ def upload_profile_picture(request):
 def change_profile_pic(request):
     print('hey')
     if request.method == "POST":
+        print(request.POST)
         try:
             data = json.loads(request.body)
             image_data = data.get("image_data")
