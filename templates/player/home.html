@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+  .podium-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 40px;
+    margin-top: 40px;
+  }
+  .podium-card {
+    background: linear-gradient(135deg, var(--theme-color), #1e1e1e);
+    color: white;
+    border-radius: 20px;
+    padding: 25px;
+    width: 250px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    backdrop-filter: blur(10px);
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    user-select: none;
+  }
+  .podium-card:hover {
+    transform: translateY(-10px) scale(1.05);
+  }
+  .podium-1 {
+    order: 2;
+    transform: translateY(-40px);
+    width: 280px;
+    box-shadow: 0 0 15px 3px #ffd700;
+    border: 3px solid #ffd700;
+  }
+  .podium-2 {
+    order: 1;
+  }
+  .podium-3 {
+    order: 3;
+  }
+  .podium-card img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--theme-color);
+    box-shadow: 0 0 8px rgba(0,0,0,0.2);
+    margin-bottom: 20px;
+  }
+  .glow-text {
+    font-weight: 900;
+    font-size: 32px;
+    color: #fff;
+    text-shadow:
+      0 0 6px rgba(255,255,255,0.9),
+      0 0 12px rgba(255,255,255,0.7),
+      0 0 18px rgba(255,255,255,0.5);
+  }
+  .scroll-container {
+    margin-top: 80px;
+    display: flex;
+    overflow-x: auto;
+    padding-bottom: 20px;
+    gap: 20px;
+    scroll-behavior: smooth;
+    scrollbar-width: none; /* Firefox */
+  }
+  .scroll-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+  .scroll-card {
+    background: linear-gradient(135deg, var(--theme-color), #1e1e1e);
+    color: white;
+    border-radius: 20px;
+    padding: 20px;
+    min-width: 160px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    backdrop-filter: blur(10px);
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    user-select: none;
+  }
+  .scroll-card:hover {
+    transform: scale(1.05);
+  }
+  .scroll-card img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--theme-color);
+    margin-bottom: 10px;
+  }
+</style>
+
+{% comment %}
+Podium: show 3 cards, arranged so 1st is in the middle and raised.
+Use CSS order for arranging 2nd to left, 1st center raised, 3rd right.
+{% endcomment %}
+
+<h1 class="clr-theme" style="font-weight: 400;">Top 3 Cards</h1><br>
+<div class="podium-container">
+  {% if top_3|length >= 3 %}
+    <div class="podium-card podium-2" style="--theme-color: {{ top_3.1.card_theme }};" onclick="location.href='/public-profile/{{ top_3.1.username }}'">
+      <img src="{{ top_3.1.profile_picture_url }}" alt="{{ top_3.1.username }}">
+      <h2 class="clr-white">{{ top_3.1.get_full_name }}</h2>
+      <p class="clr-white">@{{ top_3.1.username }}</p>
+      <div style="display:flex;justify-content:center;gap: 50px; margin-top: 20px;">
+        <div>
+          <div style="font-size: 14px;" class="clr-white">Level</div>
+          <div class="glow-text clr-white">{{ top_3.1.level }}</div>
+        </div>
+        <div>
+            <div style="font-size: 14px;" class="clr-white">XP</div>
+            <div class="glow-text">{{ top_3.1.xp }}</div>
+        </div>
+    </div>
+    <p class="clr-white" style="margin-top: 15px; font-weight: 700;">2nd Place 🥈</p>
+    </div>
+    
+    <div class="podium-card podium-1" style="--theme-color: {{ top_3.0.card_theme }};" onclick="location.href='/public-profile/{{ top_3.0.username }}'">
+        <img src="{{ top_3.0.profile_picture_url }}" alt="{{ top_3.0.username }}">
+        <h2 class="clr-white">{{ top_3.0.get_full_name }}</h2>
+        <p class="clr-white">@{{ top_3.0.username }}</p>
+        <div style="display:flex;justify-content:center;gap: 50px; margin-top: 20px;">
+            <div>
+                <div style="font-size: 14px;" class="clr-white">Level</div>
+                <div class="glow-text clr-white">{{ top_3.0.level }}</div>
+            </div>
+            <div>
+                <div style="font-size: 14px;" class="clr-white">XP</div>
+                <div class="glow-text clr-white">{{ top_3.0.xp }}</div>
+            </div>
+        </div>
+        <p class="clr-white" style="margin-top: 15px; font-weight: 700;">1st Place 🥇</p>
+    </div>
+
+    <div class="podium-card podium-3" style="--theme-color: {{ top_3.2.card_theme }};" onclick="location.href='/public-profile/{{ top_3.2.username }}'">
+      <img src="{{ top_3.2.profile_picture_url }}" alt="{{ top_3.2.username }}">
+      <h2 class="clr-white">{{ top_3.2.get_full_name }}</h2>
+      <p class="clr-white">@{{ top_3.2.username }}</p>
+      <div style="display:flex;justify-content:center;gap: 50px; margin-top: 20px;">
+        <div>
+          <div class="clr-white" style="font-size: 14px;">Level</div>
+          <div class="glow-text clr-white">{{ top_3.2.level }}</div>
+        </div>
+        <div>
+          <div class="clr-white" style="font-size: 14px;">XP</div>
+          <div class="clr-white glow-text">{{ top_3.2.xp }}</div>
+        </div>
+      </div>
+      <p class="clr-white" style="margin-top: 15px; font-weight: 700;">3rd Place 🥉</p>
+    </div>
+  {% else %}
+    <p style="font-style: italic;">Not enough users for podium display.</p>
+  {% endif %}
+</div>
+
+{% comment %}
+Scroll container
+{% endcomment %}
+<br><br>
+<h1  class="clr-theme" style="font-weight: 400;">Top 20 Cards</h1>
+<div class="scroll-container">
+  {% for user in top_20 %}
+    <div class="scroll-card" style="--theme-color: {{ user.card_theme }};" onclick="location.href='/public-profile/{{ user.username }}'">
+      <img src="{{ user.profile_picture_url }}" alt="{{ user.username }}">
+      <h3 class="clr-white">{{ user.get_full_name }}</h3>
+      <p class="clr-white">@{{ user.username }}</p>
+      <div style="display:flex;justify-content:space-around;margin-top:10px;">
+        <div>
+          <div class="clr-white" style="font-size: 14px;">Level</div>
+          <div class="glow-text clr-white" style="font-size: 24px;">{{ user.level }}</div>
+        </div>
+        <div>
+          <div class="clr-white" style="font-size: 14px;">XP</div>
+          <div class="glow-text clr-white" style="font-size: 24px;">{{ user.xp }}</div>
+        </div>
+      </div>
+      <p class="clr-white" style="margin-top:10px;font-weight:700;">Rank {{ forloop.counter }}</p>
+    </div>
+  {% empty %}
+    <p>No users found.</p>
+  {% endfor %}
+</div>
+<script>
+    const scrollContainer = document.querySelector('.scroll-container');
+  
+    if (scrollContainer && scrollContainer.children.length > 1) {
+      let scrollDirection = 1; // 1 = right, -1 = left
+  
+      setInterval(() => {
+        scrollContainer.scrollBy({
+          left: scrollDirection * 10, // smaller = slower scroll
+          behavior: 'smooth'
+        });
+  
+        // Detect when to reverse direction
+        const maxScrollLeft = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+        if (scrollContainer.scrollLeft >= maxScrollLeft - 10) scrollDirection = -1;
+        if (scrollContainer.scrollLeft <= 10) scrollDirection = 1;
+      }, 30); // smooth interval
+    }
+  </script>
+  
+{% endblock %}

@@ -1,0 +1,121 @@
+import random
+from django.contrib.auth.models import AbstractUser
+from django.db import models
+from django.conf import settings
+from django.core import validators
+
+
+class LevelXPMapping(models.Model):
+    max_xp = models.IntegerField(unique=True)
+    level = models.IntegerField(unique=True)
+    card_theme_color = models.CharField(
+        max_length=20, default='#8db85a', 
+        help_text='put in color name in lowercase e.g. blue. \
+            Also takes hex e.g #8db85a or rgb e.g rgb(120, 200, 50)'
+        )
+
+    class Meta:
+        verbose_name_plural = 'Level-XP Mapping'
+
+    def __str__(self):
+        return f"Level {self.level} (≤ {self.max_xp} XP)"
+
+
+from django.core.exceptions import ValidationError
+
+def forbidden_word_validator(value):
+    forbidden_words = ['organic']
+    if value.lower() in forbidden_words:
+        raise ValidationError(f"Using '{value}' is not allowed.")
+
+class User(AbstractUser):
+    email = models.EmailField(unique=True)
+    profile_picture_url = models.TextField(
+        default='https://api.dicebear.com/7.x/shapes/jpg?seed=default-avatar')
+    xp = models.IntegerField(default=0)
+
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'email']
+    username = models.CharField(
+        max_length=20,
+        unique=True,
+        validators=[forbidden_word_validator],
+    )
+
+    following = models.ManyToManyField('self', symmetrical=False, related_name='followers', blank=True)
+    
+    def get_current_mapping(self) -> LevelXPMapping:
+        mapping = LevelXPMapping.objects.filter(max_xp__lte=self.xp).order_by('-max_xp').first()
+        if mapping is not None: 
+            return mapping
+        return LevelXPMapping.objects.first()
+            
+    @property
+    def level(self) -> int:
+        return self.get_current_mapping().level
+    
+    @property
+    def card_theme(self):
+        return self.get_current_mapping().card_theme_color
+
+    @property
+    def follower_count(self) -> int:
+        return self.following.count()
+    
+        
+    def __str__(self):
+        return f"{self.username} ({self.email})"
+
+
+class Team(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    created_by = models.ForeignKey('User', on_delete=models.CASCADE, related_name='created_teams', default=1)
+    members = models.ManyToManyField('User', related_name='teams', blank=True)
+
+    def __str__(self):
+        return f"{self.name} (created by {self.created_by.username})"
+
+
+class TeamInvitation(models.Model):
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='invitations')
+    invited_user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='invitations')
+    status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('accepted', 'Accepted')], default='pending')
+
+    def __str__(self):
+        return f"{self.invited_user.username} → {self.team.name} [{self.status}]"
+
+
+class Statistics(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='stats')
+    average_score = models.FloatField(default=0.0)
+    high_game = models.IntegerField(default=0)
+    high_series = models.IntegerField(default=0)
+    experience = models.IntegerField(default=0, help_text='Years (at least 0)', validators=[validators.MaxValueValidator(0)])
+
+    def __str__(self):
+        return f"{self.user.username}'s Stats"
+
+
+class XPMap(models.Model):
+    trigger_codename = models.CharField(max_length=20, unique=True, help_text='e.g. onboarding', default='')
+    trigger_detail = models.CharField(max_length=200, help_text='e.g.on boarding a user', default='')
+    xp_worth = models.IntegerField(default=1, 
+        help_text='Must be greater than zero!', validators=[validators.MinValueValidator(1)])
+    
+    def __str__(self):
+        return f'{self.trigger_codename} : {self.xp_worth} XP'
+    
+    
+class XPLog(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='xplogs')
+    xp_map = models.ForeignKey(XPMap, on_delete=models.CASCADE)
+    gained_xp = models.IntegerField(default=0)
+    gained_at = models.DateTimeField(auto_now_add=True)
+    
+    def title_str(self):
+        return f'{self.user.username} gained +{self.gained_xp} for {self.xp_map.trigger_detail}'
+         
+    def title_html(self):
+        return f'<span>Gained <span style="color:green">+{self.gained_xp}</span> for <b>{self.xp_map.trigger_detail}.</b>'
+    
+    def __str__(self):
+        return self.title_str()

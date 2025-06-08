@@ -1,0 +1,87 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://kit.fontawesome.com/02c6faad26.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="{% static 'css/inner.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  <title>Bowlers Network</title>
+</head>
+<body>
+
+  <div class="grid-col-1-a">
+    <div style="max-width: 40000;" class="bg"></div>
+  </div>
+
+  <div class="layout">
+    <div class="sidebar p-2">
+      <div class="grid-row-a-1">
+        <div>
+          <h2 class="big-logo m-b" style="border-bottom: 1px solid white;">
+            <span class="clr-white">Bowlers </span><span class="clr-green">Network</span>
+          </h2>
+          <h2 class="small-logo m-b" style="border-bottom: 1px solid white;">
+            <span class="clr-white">B</span><span class="clr-green">N</span>
+          </h2>
+
+          <a class="m-2 p rnd-1" href="{% url 'home' %}">
+            <span class="fa fa-home clr-white"></span>
+            <span class="side-bar-link clr-white">Home</span>
+          </a>
+          <a class="m-2 p rnd-1" href="/my-teams/">
+            <span class="fa fa-users clr-white"></span>
+            <span class="side-bar-link clr-white">Teams</span>
+          </a>
+          <a class="m-2 p rnd-1" href="{% url 'referral' %}">
+            <span>🔥</span>
+            <!-- <span class="fa fa-users clr-white"></span> -->
+            <span class="side-bar-link clr-white">Referrals</span>
+          </a>
+          <!-- <a class="m-2 p" href="#">Profile</a>
+          <a class="m-2 p" href="#">Settings</a> -->
+        </div>
+
+        <div class="m-t-4" style="border-top: 1px solid white; border-radius: 0;">
+          <a class="m-2 p rnd-1 flex vert-c" href="{% url 'user_profile' %}" style="display: flex; align-items: center;">
+            <img src="{{ user.profile_picture_url }}" class="rnd"
+                 style="width: 16px; height: 16px; object-fit: cover; margin-right: 5px;">
+            <span class="side-bar-link clr-white">{{ user.username }}</span>
+          </a>
+          
+          {% if user.is_superuser %}
+          <a class="m-2 p rnd-1" href="{% url 'random_shift' %}">
+            <span>😵</span>
+            <span class="clr-white side-bar-link">Random</span>
+          </a>
+          {% endif %}
+            
+          <a class="m-2 p rnd-1" href="/logout/">
+            <span class="fa fa-sign-out clr-white"></span>
+            <span class="clr-white side-bar-link">Logout</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+      {% if messages %}
+        <ul style="max-width: 600px; margin: 20px auto; list-style: none; padding: 0;">
+          {% for message in messages %}
+            <li style="background: {% if message.tags == 'success' %}green{% elif message.tags == 'error' %}red{% else %}#999{% endif %};
+                       padding: 10px 15px; margin-bottom: 10px; color: white; font-weight: 400;">
+              {{ message }}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      {% block content %}
+      {% endblock content %}
+    </div>
+  </div>
+
+</body>
+</html>

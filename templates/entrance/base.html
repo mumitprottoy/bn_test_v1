@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <title>Bowlers Network</title>
+</head>
+<body>
+    <div class="resp-30-80 m-c m-t-b-6 sdw rnd-1 p-4">
+        <div class="w-90 m-c">
+            {% include 'logo.html' %}
+            <form method='POST'>
+                {% csrf_token %}
+                {% block form_input %}
+                {% endblock form_input %}
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 class="clr-theme" style="text-align:center; margin-top: 30px; font-weight: 600">Create a Team</h2>
+
+<form method="post" action=""
+      style="max-width: 600px; margin: 30px auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px; background-color: var(--bg-theme);">
+  {% csrf_token %}
+
+  <label for="team_name" class="clr-theme" style="display:block; margin-bottom:5px; font-weight:bold;">Team Name:</label>
+  <input type="text" name="team_name" id="team_name" required
+         style="width:100%; padding:10px; margin-bottom:20px; border:1px solid #ddd; border-radius:5px;">
+
+  <p class="clr-theme" style="font-weight:bold; margin-bottom: 10px;">Invite Users:</p>
+
+  <input type="text" id="user-search" placeholder="Search users..." 
+         style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px;">
+
+  <div id="user-list" 
+       style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; border-radius: 5px; margin-bottom: 20px; display: none;">
+    {% for user in users %}
+      {% if user != request.user %}
+        <label class="user-label clr-theme" style="display: block; margin-bottom: 8px;">
+          <input type="checkbox" name="members" value="{{ user.id }}" style="margin-right: 10px;">
+          {{ user.username }} ({{ user.email }})
+        </label>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  <button type="submit" class="bg-theme clr-white"
+          style="padding:10px 20px; border:none; border-radius:5px; cursor:pointer;">
+    Create Team
+  </button>
+</form>
+
+<script>
+  const userSearch = document.getElementById('user-search');
+  const userList = document.getElementById('user-list');
+
+  userSearch.addEventListener('input', function () {
+    const searchTerm = this.value.toLowerCase().trim();
+    const labels = document.querySelectorAll('.user-label');
+
+    if (searchTerm === '') {
+      userList.style.display = 'none';
+      // Also clear all displayed labels (optional)
+      labels.forEach(label => label.style.display = 'none');
+      return;
+    }
+
+    let anyVisible = false;
+    labels.forEach(label => {
+      const text = label.textContent.toLowerCase();
+      if (text.includes(searchTerm)) {
+        label.style.display = 'block';
+        anyVisible = true;
+      } else {
+        label.style.display = 'none';
+      }
+    });
+
+    userList.style.display = anyVisible ? 'block' : 'none';
+  });
+</script>
+{% endblock %}

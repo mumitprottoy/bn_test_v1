@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<a href="{% url 'upload_profile_pic' %}" style="
+  display: inline-block;
+  margin-top: 10px;
+  padding: 10px 18px;
+  background: {{ user_obj.card_theme }};
+  color: white;
+  border-radius: 10px;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+">
+  <span class="fa fa-image clr-white"></span> Change Profile Picture
+</a>
+<div style="max-width: 1200px; margin: 40px auto; display: flex; flex-wrap: wrap; gap: 30px; justify-content: center;">
+    
+
+  <!-- Profile Card -->
+  <div style="
+      flex: 1 1 400px;
+      background: linear-gradient(135deg, {{ user_obj.card_theme }}, #1e1e1e);
+      color: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease-in-out;
+    ">
+    <div style="text-align: center;">
+        <img src="{{ user_obj.profile_picture_url }}" alt="Profile Picture"
+       style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin-bottom: 20px; border: 3px solid {{ user_obj.card_theme }}; box-shadow: 0 0 8px rgba(0,0,0,0.2);">
+
+      <!-- <img src="{{ user_obj.profile_picture_url }}" alt="Profile Picture"
+           style="width: 120px; height: 120px; border-radius: 50%; box-shadow: 0 0 0 4px white; margin-bottom: 20px;"> -->
+      <h1 style="font-size: 28px; font-weight: bold;" class="clr-white">{{ user_obj.get_full_name }}</h1>
+      <p style="opacity: 0.9; margin: 5px 0;" class="clr-white">@{{ user_obj.username }}</p>
+    </div>
+
+    <div style="margin-top: 30px;">
+        <div style="margin-top: 30px; display: flex; justify-content: center; gap: 60px;">
+            <div style="text-align: center;">
+              <div style="font-weight: 700; font-size: 18px; color: #eee; margin-bottom: 8px;">Level</div>
+              <div style="
+                font-weight: 900;
+                font-size: 32px;
+                color: #fff;
+                text-shadow:
+                  0 0 6px rgba(255,255,255,0.9),
+                  0 0 12px rgba(255,255,255,0.7),
+                  0 0 18px rgba(255,255,255,0.5);
+                ">
+                {{ user_obj.level }}
+              </div>
+            </div>
+          
+            <div style="text-align: center;">
+              <div style="font-weight: 700; font-size: 18px; color: #eee; margin-bottom: 8px;">XP</div>
+              <div style="
+                font-weight: 900;
+                font-size: 32px;
+                color: #fff;
+                text-shadow:
+                  0 0 6px rgba(255,255,255,0.9),
+                  0 0 12px rgba(255,255,255,0.7),
+                  0 0 18px rgba(255,255,255,0.5);
+                ">
+                {{ user_obj.xp }}
+              </div>
+            </div>
+          </div>
+
+          {% if user_obj.stats %}
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;">
+            <div style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 15px; text-align: center;">
+              <div style="font-size: 14px; opacity: 0.8;"  class="clr-white font-b font-l">Avg. Score</div>
+              <div class="clr-white" style="font-size: 18px; font-weight: bold;">{{ user_obj.stats.average_score }}</div>
+            </div>
+            <div style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 15px; text-align: center;">
+              <div style="font-size: 14px; opacity: 0.8;" class="clr-white font-b font-l">High Game</div>
+              <div class="clr-white" style="font-size: 18px; font-weight: bold;">{{ user_obj.stats.high_game }}</div>
+            </div>
+            <div style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 15px; text-align: center;">
+              <div style="font-size: 14px; opacity: 0.8;"  class="clr-white font-b font-l">High Series</div>
+              <div class="clr-white" style="font-size: 18px; font-weight: bold;">{{ user_obj.stats.high_series }}</div>
+            </div>
+            <div style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 15px; text-align: center;">
+              <div style="font-size: 14px; opacity: 0.8;"  class="clr-white font-b font-l">Experience</div>
+              <div class="clr-white" style="font-size: 18px; font-weight: bold;">{{ user_obj.stats.experience }} yrs</div>
+            </div>
+          </div>
+        {% else %}
+          <p style="margin-top: 20px;">No stats available.</p>
+        {% endif %}
+        
+    </div>
+  </div>
+
+  <!-- Basic Info + Edit Button (separate) -->
+  <div style="
+  flex: 1 1 350px;
+  background: #fafafa;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+">
+  <h2 style="margin-bottom: 20px; color: #333;">Edit Statistics</h2>
+  <form action="/save-stats/" method="POST" style="display: flex; flex-direction: column; gap: 15px;">
+    {% csrf_token %}
+    <label style="font-weight: 500; color: #444;">
+      Avg. Score
+      <input type="number" name="average_score" value="{{ user_obj.stats.average_score }}" style="
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 10px;
+        background: #f0f0f0;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        font-size: 15px;
+        margin-top: 5px;
+      ">
+    </label>
+    <label style="font-weight: 500; color: #444;">
+      High Game
+      <input type="number" name="high_game" value="{{ user_obj.stats.high_game }}" style="
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 10px;
+        background: #f0f0f0;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        font-size: 15px;
+        margin-top: 5px;
+      ">
+    </label>
+    <label style="font-weight: 500; color: #444;">
+      High Series
+      <input type="number" name="high_series" value="{{ user_obj.stats.high_series }}" style="
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 10px;
+        background: #f0f0f0;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        font-size: 15px;
+        margin-top: 5px;
+      ">
+    </label>
+    <label style="font-weight: 500; color: #444;">
+      Experience (yrs)
+      <input type="number" name="experience" value="{{ user_obj.stats.experience }}" style="
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 10px;
+        background: #f0f0f0;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        font-size: 15px;
+        margin-top: 5px;
+      ">
+    </label>
+
+    <button type="submit" style="
+      margin-top: 20px;
+      padding: 12px;
+      background-color: {{ user_obj.card_theme }};
+      color: white;
+      font-weight: 600;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: filter 0.2s ease;
+    "
+    onmouseover="this.style.filter = 'brightness(0.95)';"
+    onmouseout="this.style.filter = 'brightness(1)';"
+    >
+      Save Statistics
+    </button>
+  </form>
+</div>
+
+
+</div>
+{% endblock content %}

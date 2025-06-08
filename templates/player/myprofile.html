@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+    <div class="w-80">
+        <h1>Profile</h1>
+        {% include 'player/card.html' %}
+        <div class="m-2 m-t-b-4">
+            <div class="m-t-b-6">
+                <h2>Basic Info</h2>
+                <div class="grid-col-111">
+                    <div class="m-2">
+                        <span class="font-l font-b m">Name</span><br>
+                        <span class="m">{{user.get_full_name}}</span>
+                    </div>
+                    <div class="m-2">
+                        <span class="font-l font-b m">Email</span> <br>
+                        <span class="m"><span class="fa fa-envelope"></span> {{user.email}}</span>
+                    </div>
+                    <div class="m-2">
+                        <span class="font-l font-b m">Handle</span> <br>
+                        <span class="m"><span class="fa fa-user"></span> {{user.username}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="m-t-b-6">
+                <h2>Statistics</h2>
+                <form action="/save-stats/" method="post">
+                    {% csrf_token %}
+                    <div class="grid-col-111">
+                        <div class="m-2">
+                            <span class="font-l font-b m block">Average Score</span>
+                            <input type="number" class="no-brd transparent brd-b-def p-2" name="average_score" value="{{user.stats.average_score}}">
+                        </div>
+                        <div class="m-2">
+                            <span class="font-l font-b m block">High Game</span>
+                            <input type="number" class="no-brd transparent brd-b-def p-2" 
+                            name="high_game" 
+                            value="{{user.stats.high_game}}">
+                        </div>
+                        <div class="m-2">
+                            <span class="font-l font-b m block">High Series</span>
+                            <input type="number" class="no-brd transparent brd-b-def p-2" 
+                            name="high_series" 
+                            value="{{user.stats.high_series}}">
+                        </div>
+                        <div class="m-2">
+                            <span class="font-l font-b m block">Experience (Years)</span>
+                            <input type="number" class="no-brd transparent brd-b-def p-2" 
+                            name="experience" 
+                            value="{{user.stats.experience}}">
+                        </div>
+                    </div>
+                    {% include 'submit_button.html' with btn_text='Save' %}
+                </form>
+            </div>
+        </div>
+        <a href="/public-profile/{{user.username}}">See your public profile</a>
+    </div>
+{% endblock content %}
+    

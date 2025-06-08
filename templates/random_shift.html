@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+    <div class="p-2">
+        <h1 id="random" style="font-weight: 400;">😵 doing weird stuff <span class="fa fa-spinner fa-spin"></span></h1>
+    </div>
+
+    <script>
+        fetch('/random-shift-api/20')
+            .then(response => {
+                if (response.ok) document.getElementById('random').innerText = 'Done! Now navigate back to home page to results.';
+            })
+    </script>
+{% endblock content %}
+    

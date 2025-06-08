@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 style="text-align:center; margin-top: 30px;">Respond to {{invite.team.name}}</h2>
+
+  <ul style="max-width:600px; margin: 20px auto; padding: 0; list-style: none;">
+      <li style="border:1px solid #ccc; border-radius:8px; padding:15px; margin-bottom:10px;">
+        <strong>{{ invite.team.name }}</strong> — invited by {{ invite.team.created_by.username }}
+        <br>
+        <form action="" method="post">
+            {% csrf_token %}
+            <button class="no-brd m-2" type="submit" name="action" value="accept" style="color: rgb(0, 127, 0);">Accept</button>
+            <button class="no-brd m-2" type="submit" name="action" value="reject" style="color: rgb(220, 81, 81);">Reject</button>
+        </form>
+      </li>
+  </ul>
+
+{% endblock %}

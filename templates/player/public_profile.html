@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div style="max-width: 1200px; margin: 40px auto; display: flex; flex-wrap: wrap; gap: 30px; justify-content: center;">
+    
+
+  <!-- Profile Card -->
+  <div style="
+      flex: 1 1 400px;
+      background: linear-gradient(135deg, {{ user_obj.card_theme }}, #1e1e1e);
+      color: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease-in-out;
+    ">
+    <div style="text-align: center;">
+        <img src="{{ user_obj.profile_picture_url }}" alt="Profile Picture"
+       style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin-bottom: 20px; border: 3px solid {{ user_obj.card_theme }}; box-shadow: 0 0 8px rgba(0,0,0,0.2);">
+
+      <!-- <img src="{{ user_obj.profile_picture_url }}" alt="Profile Picture"
+           style="width: 120px; height: 120px; border-radius: 50%; box-shadow: 0 0 0 4px white; margin-bottom: 20px;"> -->
+      <h1 style="font-size: 28px; font-weight: bold;" class="clr-white">{{ user_obj.get_full_name }}</h1>
+      <p style="opacity: 0.9; margin: 5px 0;" class="clr-white">@{{ user_obj.username }}</p>
+    </div>
+
+    <div style="margin-top: 30px;">
+        <div style="margin-top: 30px; display: flex; justify-content: center; gap: 60px;">
+            <div style="text-align: center;">
+              <div style="font-weight: 700; font-size: 18px; color: #eee; margin-bottom: 8px;">Level</div>
+              <div style="
+                font-weight: 900;
+                font-size: 32px;
+                color: #fff;
+                text-shadow:
+                  0 0 6px rgba(255,255,255,0.9),
+                  0 0 12px rgba(255,255,255,0.7),
+                  0 0 18px rgba(255,255,255,0.5);
+                ">
+                {{ user_obj.level }}
+              </div>
+            </div>
+          
+            <div style="text-align: center;">
+              <div style="font-weight: 700; font-size: 18px; color: #eee; margin-bottom: 8px;">XP</div>
+              <div style="
+                font-weight: 900;
+                font-size: 32px;
+                color: #fff;
+                text-shadow:
+                  0 0 6px rgba(255,255,255,0.9),
+                  0 0 12px rgba(255,255,255,0.7),
+                  0 0 18px rgba(255,255,255,0.5);
+                ">
+                {{ user_obj.xp }}
+              </div>
+            </div>
+          </div>
+
+          {% if user_obj.stats %}
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;">
+            <div style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 15px; text-align: center;">
+              <div style="font-size: 14px; opacity: 0.8;"  class="clr-white font-b font-l">Avg. Score</div>
+              <div class="clr-white" style="font-size: 18px; font-weight: bold;">{{ user_obj.stats.average_score }}</div>
+            </div>
+            <div style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 15px; text-align: center;">
+              <div style="font-size: 14px; opacity: 0.8;" class="clr-white font-b font-l">High Game</div>
+              <div class="clr-white" style="font-size: 18px; font-weight: bold;">{{ user_obj.stats.high_game }}</div>
+            </div>
+            <div style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 15px; text-align: center;">
+              <div style="font-size: 14px; opacity: 0.8;"  class="clr-white font-b font-l">High Series</div>
+              <div class="clr-white" style="font-size: 18px; font-weight: bold;">{{ user_obj.stats.high_series }}</div>
+            </div>
+            <div style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 15px; text-align: center;">
+              <div style="font-size: 14px; opacity: 0.8;"  class="clr-white font-b font-l">Experience</div>
+              <div class="clr-white" style="font-size: 18px; font-weight: bold;">{{ user_obj.stats.experience }} yrs</div>
+            </div>
+          </div>
+        {% else %}
+          <p style="margin-top: 20px;">No stats available.</p>
+        {% endif %}
+        
+    </div>
+  </div>
+
+
+
+</div>
+{% endblock content %}

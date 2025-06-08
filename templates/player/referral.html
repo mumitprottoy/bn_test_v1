@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+  .referral-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 30px;
+    background: #1e1e1e;
+    color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  .referral-container h1 {
+    font-size: 2.2rem;
+    margin-bottom: 20px;
+  }
+
+  .referral-container p {
+    font-size: 1.1rem;
+    margin-bottom: 25px;
+    line-height: 1.6;
+  }
+
+  .referral-box {
+    background: #2a2a2a;
+    padding: 15px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    word-break: break-all;
+    margin-bottom: 15px;
+  }
+
+  .referral-url {
+    font-weight: 600;
+    font-size: 0.95rem;
+    flex-grow: 1;
+    margin-right: 10px;
+    text-align: left;
+  }
+
+  .copy-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .copied-message {
+    margin-top: 10px;
+    font-weight: bold;
+    display: none;
+  }
+</style>
+
+<div class="referral-container">
+    <div class="txt-c">
+        <h1 class="clr-white">🔥 Your Referral Link Is Live!</h1>
+    </div>
+  <p class="clr-white">
+    Share your custom referral link with friends, family, rivals — even your dog! 🐶 <br><br>
+    Anyone who signs up using your link will boost <strong class="clr-theme"><u class="clr-white">your</u> XP by +{{ reward_xp }}</strong>.  
+    You're basically getting rewarded for being popular. 😎
+  </p>
+
+  <div class="referral-box">
+    <span id="referralUrl" class="referral-url clr-theme">Loading...</span>
+    <button class="copy-btn bg-theme clr-white" onclick="copyReferral()"><span class="fa fa-copy clr-white"></span></button>
+  </div>
+  <div id="copiedMsg" class="copied-message clr-white txt-c">Copied to clipboard! 🚀</div>
+</div>
+
+<script>
+  const protocol = window.location.protocol;
+  const host = window.location.host;
+  const username = "{{ user.username }}";
+  const fullUrl = `${protocol}//${host}/i/${username}`;
+
+  document.getElementById('referralUrl').textContent = fullUrl;
+
+  function copyReferral() {
+    navigator.clipboard.writeText(fullUrl).then(() => {
+      const msg = document.getElementById('copiedMsg');
+      msg.style.display = 'block';
+      setTimeout(() => msg.style.display = 'none', 2000);
+    }).catch(() => {
+      alert("Copy failed. Please try again manually.");
+    });
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 style="text-align:center; margin-top: 30px; font-size: 28px; font-weight: 600;" class="clr-theme">
+  <i class="fa fa-users" style="margin-right: 10px; color: #8db85a;"></i> My Teams
+</h2>
+
+<!-- Action Buttons -->
+<div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin-top: 25px;">
+  <a href="{% url 'create_team' %}"
+     style="background-color: #8db85a; color: white; padding: 10px 20px; border-radius: 8px;
+            text-decoration: none; font-weight: 500; font-size: 15px; display: inline-flex; align-items: center; transition: background 0.3s ease;">
+    <i class="fa fa-plus-circle clr-white" style="margin-right: 8px;"></i> Create Team
+  </a>
+
+  <a href="{% url 'invitations_list' %}"
+     style="background-color: #8db85a; color: white; padding: 10px 20px; border-radius: 8px;
+            text-decoration: none; font-weight: 500; font-size: 15px; display: inline-flex; align-items: center; transition: background 0.3s ease;">
+    <i class="fa fa-envelope clr-white" style="margin-right: 8px;"></i> Check Invitations
+  </a>
+
+  <a href="{% url 'sent_invitations' %}"
+     style="background-color: #8db85a; color: white; padding: 10px 20px; border-radius: 8px;
+            text-decoration: none; font-weight: 500; font-size: 15px; display: inline-flex; align-items: center; transition: background 0.3s ease;">
+    <i class="fa fa-paper-plane clr-white" style="margin-right: 8px;"></i> Sent Invitations
+  </a>
+</div>
+
+<!-- Team List -->
+{% if teams %}
+  <div style="max-width: 800px; margin: 40px auto; padding: 0 10px;">
+    {% for team in teams %}
+      <a href="{% url 'team_detail' team.id %}"
+         style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px;
+                background-color: #fdfdfd; border: 1px solid #e0e0e0; border-radius: 12px; margin-bottom: 15px;
+                text-decoration: none; color: #333; transition: box-shadow 0.2s ease-in-out;">
+        <span style="font-weight: 600; font-size: 16px;">{{ team.name }}</span>
+        <span style="font-size: 14px; color: #666;">{{ team.members.count }} member{{ team.members.count|pluralize }}</span>
+      </a>
+    {% endfor %}
+  </div>
+{% else %}
+  <p style="text-align:center; margin-top: 50px; font-size: 16px; color: #888;">
+    You're not in any teams yet.
+  </p>
+{% endif %}
+{% endblock %}

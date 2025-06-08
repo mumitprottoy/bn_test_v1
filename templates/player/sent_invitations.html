@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 style="text-align:center; margin-top: 30px; font-weight: 600; color: #8db85a;">
+  <i class="fa fa-paper-plane clr-theme" style="margin-right: 10px;"></i> Sent Invitations
+</h2>
+
+{% if sent_invitations %}
+  <ul style="max-width:600px; margin: 30px auto; padding: 0; list-style: none;">
+    {% for invitation in sent_invitations %}
+      <li style="border: 1px solid #ccc; border-radius: 8px; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <strong>{{ invitation.team.name }}</strong> — invited user: <a class="m-2 p rnd-1 flex vert-c" href="{% url 'public-profile' invitation.invited_user.username %}" 
+                style="display: flex; align-items: center;">
+                  <img src="{{ invitation.invited_user.profile_picture_url }}" class="rnd" 
+                      style="width: 24px; height: 24px; object-fit: cover; margin-right: 5px;">
+                  <span class="side-bar-link">{{ invitation.invited_user.username }}</span>
+                </a>
+        </div>
+        <form method="post" action="{% url 'withdraw_invitation' invitation.id %}" style="margin: 0;">
+          {% csrf_token %}
+          <button type="submit" 
+                  class="no-brd m-2" 
+                  style="color: rgb(220, 81, 81); cursor: pointer; font-weight: 400; background: none; border: none; padding: 0;">
+            Withdraw
+          </button>
+        </form>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p style="text-align:center; margin-top: 60px; color: #888; font-size: 16px;">
+    You haven't sent any invitations yet.
+  </p>
+{% endif %}
+{% endblock %}
