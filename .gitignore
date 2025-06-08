@@ -1,0 +1,9 @@
+@ | Add-Content .gitignore
+**/migrations/*.bin
+**/migrations/*.exe
+**/migrations/*.dll
+**/migrations/*.so
+**/migrations/*.pyo
+**/migrations/*.pyc
+**/migrations/__pycache__/
+@
