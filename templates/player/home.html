@@ -91,6 +91,21 @@
     border: 2px solid var(--theme-color);
     margin-bottom: 10px;
   }
+  .fade-in {
+    animation: fadeInUp 1s ease-out forwards;
+    opacity: 0;
+  }
+  @keyframes fadeInUp {
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
 </style>
 
 {% comment %}
@@ -98,7 +113,16 @@ Podium: show 3 cards, arranged so 1st is in the middle and raised.
 Use CSS order for arranging 2nd to left, 1st center raised, 3rd right.
 {% endcomment %}
 
-<h1 class="clr-theme" style="font-weight: 400;">Top 3 Cards</h1><br>
+<div style="text-align:center; margin-top: 40px;">
+  <h1 class="clr-theme fade-in" style="font-weight: 700; font-size: 40px;">
+    🏆 Meet the Legends
+  </h1>
+  <p style="color: #aaa; font-style: italic; font-size: 18px;">
+    The podium of greatness – only the elites stand here.
+  </p>
+</div>
+
+<br><br>
 <div class="podium-container">
   {% if top_3|length >= 3 %}
     <div class="podium-card podium-2" style="--theme-color: {{ top_3.1.card_theme }};" onclick="location.href='/public-profile/{{ top_3.1.username }}'">
@@ -160,7 +184,14 @@ Use CSS order for arranging 2nd to left, 1st center raised, 3rd right.
 Scroll container
 {% endcomment %}
 <br><br>
-<h1  class="clr-theme" style="font-weight: 400;">Top 20 Cards</h1>
+<div style="text-align:center; margin-top: 60px;">
+  <h1 class="clr-theme fade-in" style="font-weight: 700; font-size: 36px;">
+    🚀 Rising Stars
+  </h1>
+  <p style="color: #aaa; font-style: italic; font-size: 16px;">
+    Keep an eye on these top 20 cards – legends in the making.
+  </p>
+</div>
 <div class="scroll-container">
   {% for user in top_20 %}
     <div class="scroll-card" style="--theme-color: {{ user.card_theme }};" onclick="location.href='/public-profile/{{ user.username }}'">

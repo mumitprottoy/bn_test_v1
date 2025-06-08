@@ -24,7 +24,7 @@ urlpatterns = [
     path('team/<int:team_id>/remove-member/<int:member_id>/', player_views.remove_member_view, name='remove_member'),
     path('random/', entrance_views.random_shift, name='random_shift'),
     path('random-shift-api/<int:cycle>', entrance_views.random_shift_api),
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls, name='admin'),
     path('login/', entrance_views.login, name='login'),
     path('i/<str:channel>', entrance_views.signup, name='signup'),
     path('base/', entrance_views.base_, name='base'),
