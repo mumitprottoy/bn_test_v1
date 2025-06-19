@@ -1,10 +1,11 @@
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from entrance import views as entrance_views
 from player import views as player_views
 
 urlpatterns = [
+    path('api/', include('api.urls')),
     # path('', player_views.myprofile, name='my-profile'),
     path('', player_views.home_view, name='home'),
     path('referral/', player_views.referral, name='referral'),

@@ -4,10 +4,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-g)_is-bk9rmzltp2=msu)+-fdwpgp-4l$pw3za1+#*#+@6c7t#'
 
@@ -28,6 +24,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'entrance',
     'player',
+    'pros',
+    'api',
+    'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -39,6 +39,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES' : (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
 
 ROOT_URLCONF = 'bn.urls'
 
@@ -58,17 +64,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'bn.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 
 DATABASES = {
     'default': {
@@ -129,3 +124,9 @@ LOGIN_REDIRECT_URL = '/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # OK
+
+from datetime import timedelta
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=70),
+}
