@@ -14,11 +14,11 @@ class CustomUserAdmin(DefaultUserAdmin):
 
     list_display = (
         "username", "email", "first_name", "last_name",
-        "is_staff", "is_active", "xp", "level_display", "follower_count"
+        "is_staff", "is_active", "xp", "level_display"
     )
     list_filter = ("is_staff", "is_superuser", "is_active")
 
-    readonly_fields = ("xp", "follower_count", "level_display", "card_theme_display")
+    readonly_fields = ("xp", "level_display", "card_theme_display")
 
     fieldsets = (
         (None, {"fields": ("username", "password")}),
@@ -28,7 +28,7 @@ class CustomUserAdmin(DefaultUserAdmin):
             )
         }),
         ("Game Progress", {
-            "fields": ("xp", "level_display", "card_theme_display", "follower_count")
+            "fields": ("xp", "level_display", "card_theme_display")
         }),
         ("Permissions", {
             "fields": (
@@ -36,7 +36,6 @@ class CustomUserAdmin(DefaultUserAdmin):
             )
         }),
         ("Important Dates", {"fields": ("last_login", "date_joined")}),
-        ("Social", {"fields": ("following",)}),
     )
 
     add_fieldsets = (

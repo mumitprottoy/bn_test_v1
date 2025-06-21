@@ -4,6 +4,9 @@ from rest_framework import views, status
 from rest_framework_simplejwt.tokens import RefreshToken
 from pros.operations import AuthHandler
 from pros.models import ProPlayer
+from .endpoints.posts import *
+from .endpoints.stats import *
+from .endpoints.profiles import *
 
 
 class ProLoginAPI(views.APIView):

@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.conf import settings
 from django.core import validators
-
+from utils import subroutines as sr
 
 class LevelXPMapping(models.Model):
     max_xp = models.IntegerField(unique=True)
@@ -41,8 +41,6 @@ class User(AbstractUser):
         validators=[forbidden_word_validator],
     )
 
-    following = models.ManyToManyField('self', symmetrical=False, related_name='followers', blank=True)
-    
     def get_current_mapping(self) -> LevelXPMapping:
         mapping = LevelXPMapping.objects.filter(max_xp__lte=self.xp).order_by('-max_xp').first()
         if mapping is not None: 
@@ -56,11 +54,10 @@ class User(AbstractUser):
     @property
     def card_theme(self):
         return self.get_current_mapping().card_theme_color
-
-    @property
-    def follower_count(self) -> int:
-        return self.following.count()
     
+    @property
+    def details(self) -> dict:
+        return sr.get_clean_dict(self)
         
     def __str__(self):
         return f"{self.username} ({self.email})"
@@ -89,7 +86,7 @@ class Statistics(models.Model):
     average_score = models.FloatField(default=0.0)
     high_game = models.IntegerField(default=0)
     high_series = models.IntegerField(default=0)
-    experience = models.IntegerField(default=0, help_text='Years (at least 0)', validators=[validators.MaxValueValidator(0)])
+    experience = models.IntegerField(default=0, help_text='Years (at least 0)', validators=[validators.MinValueValidator(0)])
 
     def __str__(self):
         return f"{self.user.username}'s Stats"
