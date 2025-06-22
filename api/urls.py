@@ -15,4 +15,7 @@ urlpatterns = [
 
     # profile
     path('user/profile', views.PlayerProfileAPI.as_view()),
+
+    # weighted index
+    path('weighted-index', views.WeightedIndexAPI.as_view()),
 ]
