@@ -72,3 +72,25 @@ class PostViewer:
     
     def get_viewable_posts_queryset(self) -> QuerySet:
         return models.PostMetaData.objects.filter(id__in=self.get_post_ids())
+    
+
+class PostStats:
+
+    def __init__(self, posts: QuerySet) -> None:
+        self.posts = posts
+
+    @property
+    def stats(self) -> dict:
+        likes = comments = shares = views = 0
+
+        for post in self.posts:
+            likes += post.total_likes
+            comments += post.total_comments
+            # video views and shares will be added
+
+        return dict(
+            likes=likes,
+            comments=comments,
+            shares=shares,
+            views=views
+        )

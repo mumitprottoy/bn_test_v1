@@ -5,6 +5,7 @@ from django.conf import settings
 from django.core import validators
 from utils import subroutines as sr
 
+
 class LevelXPMapping(models.Model):
     max_xp = models.IntegerField(unique=True)
     level = models.IntegerField(unique=True)

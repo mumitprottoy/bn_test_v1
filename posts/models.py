@@ -28,7 +28,6 @@ class PostMetaData(models.Model):
         help_text="List of tags for the post"
     )
 
-    
     @property
     def viewers(self) -> models.QuerySet:
         return {

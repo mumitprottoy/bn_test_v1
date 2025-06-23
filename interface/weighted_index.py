@@ -61,6 +61,15 @@ class WeightedIndex:
                 user=sr.get_clean_dict(pro.user),
                 score=engagement.score
             ))
-        return score_list
+        return sorted(score_list, key=lambda k: k['score'], reverse=True)
+    
+    @property
+    def ranked_score_map(self) -> dict:
+        score_map = dict()
+        for index, score in enumerate(self.scores):
+            data = score.copy()
+            data['rank'] = index + 1
+            score_map[score['user']['username']] = data
+        return score_map
 
     
