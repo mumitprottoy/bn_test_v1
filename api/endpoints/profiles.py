@@ -1,6 +1,7 @@
 from .libs import *
 from profiles.models import Follow
 from utils import subroutines as sr
+from pros.models import ProPlayer
 
 
 class PlayerProfileAPI(views.APIView):
@@ -8,9 +9,11 @@ class PlayerProfileAPI(views.APIView):
 
     def get(self, request: Request) -> Response:
         profile = request.user.details
+        profile['is_pro'] = ProPlayer.objects.filter(user=request.user).exists()
         profile.pop('password')
         profile['name'] = request.user.get_full_name()
-        followers = [f.follower.details for f in Follow.objects.filter(followed=request.user)]
+        followers = [f.follower.details for f in Follow.objects.filter(
+            followed=request.user)]
         profile['follower_count'] = followers.__len__()
         profile['followers'] = followers
         profile['stats'] = sr.get_clean_dict(request.user.stats)

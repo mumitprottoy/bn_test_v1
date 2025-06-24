@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'interface',
     'posts',
     'profiles',
+    'premium',
 ]
 
 

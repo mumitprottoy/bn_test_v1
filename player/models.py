@@ -1,5 +1,6 @@
 import random
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.conf import settings
 from django.core import validators
@@ -22,12 +23,11 @@ class LevelXPMapping(models.Model):
         return f"Level {self.level} (≤ {self.max_xp} XP)"
 
 
-from django.core.exceptions import ValidationError
-
 def forbidden_word_validator(value):
     forbidden_words = ['organic']
     if value.lower() in forbidden_words:
         raise ValidationError(f"Using '{value}' is not allowed.")
+
 
 class User(AbstractUser):
     email = models.EmailField(unique=True)
