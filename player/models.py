@@ -42,6 +42,27 @@ class User(AbstractUser):
         validators=[forbidden_word_validator],
     )
 
+    @property
+    def minimal(self) -> dict:
+        return dict(
+            user_id=self.id,
+            username=self.username,
+            name=self.get_full_name(),
+            first_name=self.first_name,
+            last_name=self.last_name,
+            profile_picture_url=self.profile_picture_url,
+        )
+    
+    @property
+    def basic(self) -> dict:
+        minimal = self.minimal.copy()
+        minimal.update(dict(
+            xp=self.xp,
+            email=self.email,
+            level=self.level,
+            card_theme = self.card_theme
+        ))
+
     def get_current_mapping(self) -> LevelXPMapping:
         mapping = LevelXPMapping.objects.filter(max_xp__lte=self.xp).order_by('-max_xp').first()
         if mapping is not None: 

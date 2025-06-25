@@ -7,7 +7,6 @@ from pros.models import ProPlayer
 from .endpoints.posts import *
 from .endpoints.stats import *
 from .endpoints.profiles import *
-from .endpoints.weighted_index import *
 
 
 class ProLoginAPI(views.APIView):

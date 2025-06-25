@@ -1,10 +1,12 @@
 from django.contrib.auth import get_user_model
-from ..utils.stuff import names, gradient_colors
+from utils.stuff import names, gradient_colors
 from player.models import LevelXPMapping
 User = get_user_model()
+from tqdm import tqdm
+
 
 def create_user() -> None:
-    for name in names:
+    for name in tqdm(names, desc='Creating new users', unit=' user', leave=True):
         first_name, last_name = name.split()
         email = first_name + '@bowlersnetwork_v1.com'
         if not User.objects.filter(
@@ -16,6 +18,7 @@ def create_user() -> None:
                 last_name=last_name
             )
             user.set_password('prottoy21')
+            user.save()
 
 def create_levels() -> None:
     LevelXPMapping.objects.all().delete()

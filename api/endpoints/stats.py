@@ -1,12 +1,12 @@
 from .libs import *
 from player.models import Statistics
 from utils import subroutines as sr
-from interface.stats import PostStats
+from interface import stats
 from posts.models import PostMetaData
 from profiles.models import Follow
 
 
-class StatsAPI(views.APIView):
+class GameStatsAPI(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request: Request) -> Response:
@@ -18,12 +18,12 @@ class StatsAPI(views.APIView):
         return Response(sr.get_clean_dict(request.user.stats), status=status.HTTP_200_OK)
     
 
-class PostStatsAPI(views.APIView):
+class EngagementStatsAPI(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request: Request) -> Response:
         query_set = PostMetaData.objects.filter(user=request.user)
-        return Response(PostStats(query_set).stats, status=status.HTTP_200_OK)
+        return Response(stats.EngagementStats(query_set).stats, status=status.HTTP_200_OK)
     
 
 class FollowerCountAPI(views.APIView):
@@ -48,3 +48,28 @@ class FollowersAPI(views.APIView):
         ), status=status.HTTP_200_OK)
 
 
+class SelfWeightedIndexAPI(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request: Request) -> Response:
+        pro_player = stats.ProPlayer.objects.get(user=request.user)
+        index = stats.ProPlayerWeightedIndex().compute_weighted_index(pro_player)
+        return Response(dict(weighted_index=index), status=status.HTTP_200_OK)
+
+
+class WeightedIndexLeaderBoard(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request: Request) -> Response:
+        return Response(
+            dict(
+                leaderboard=stats.ProPlayerWeightedIndex().get_all_weighted_indices_map()),
+            status=status.HTTP_200_OK
+            )
+
+class ProDashboardAPI(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request: Request) -> Response:
+        pro_player = stats.ProPlayer.objects.get(user=request.user)
+        return Response(stats.get_dashboard_data(pro_player), status=status.HTTP_200_OK)
