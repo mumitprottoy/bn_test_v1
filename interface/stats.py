@@ -82,8 +82,8 @@ class ProPlayerWeightedIndex:
 
     def __init__(self) -> None:
         self.pro_players = ProPlayer.objects.all()
-        self.pro_players_user_set = User.objects.filter(username__in=[
-            [pro.user.username for pro in self.pro_players]])
+        self.pro_players_user_set = User.objects.filter(username__in=
+            [pro.user.username for pro in self.pro_players])
         self.pro_players_user_list = list(self.pro_players_user_set)
         self.total_free_user_count = sum([
             OnboardingStats(pro).user_count for pro in self.pro_players])
@@ -92,7 +92,7 @@ class ProPlayerWeightedIndex:
         self.all_pro_players_engagement_value = self.count_all_pro_players_engagement_value()
         self.free_user_wight = 0.3
         self.premium_user_weight = 0.4
-        self.enagament_weight = 0.3
+        self.engagement_weight = 0.3
     
     def get_engagement_value(self, users: QuerySet) -> int:
         posts = PostMetaData.objects.filter(user__in=users)
@@ -122,7 +122,7 @@ class ProPlayerWeightedIndex:
         engagement_value = self.count_pro_player_engagement_value(pro)
         return round(
             (engagement_value / self.all_pro_players_engagement_value)
-              * self.engagement_index * 100, 2) if self.all_pro_players_engagement_value > 0 else 0.0
+              * self.engagement_weight * 100, 2) if self.all_pro_players_engagement_value > 0 else 0.0
     
     def compute_weighted_index(self, pro: ProPlayer) -> float:
         return round(sum((self.free_user_index(pro),

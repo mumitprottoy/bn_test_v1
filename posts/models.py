@@ -240,7 +240,7 @@ class PollVote(models.Model):
 class PostLike(models.Model):
     metadata = models.ForeignKey(
         PostMetaData, on_delete=models.CASCADE, related_name='likes')
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     
     class Meta:
         constraints = [

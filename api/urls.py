@@ -4,6 +4,9 @@ from . import views
 urlpatterns = [
     path('pro-login', views.ProLoginAPI.as_view(), name='pro-login'),
 
+    # feed
+    path('feed', views.PostFeedAPI.as_view()),
+
     # posts
     path('user/posts', views.UserPostAPI.as_view()),
     path('user/post/click-like/<int:metadata_id>', views.PostClickLikeAPI.as_view()),
