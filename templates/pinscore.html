@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PinScore</title>
+    <style>
+        * {
+            font-family: 'Lucida console', Monaco, monospace;
+        }
+        html, body {
+            padding: 0.25em;
+            margin: 0.25em;
+        }
+        button {
+            cursor: pointer;
+        }
+        input {
+            outline: none;
+            width: 250px;
+        }
+        #frame-scores {
+            margin: 0.25em 0 0.25em 0;
+            padding: 0.25rem;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>PinScore</h1>
+    <a href="/">Go back to home</a>
+    <hr>
+    <p>Total Score: <span id="total-score"></span></p>
+    <small>Balls threw: <span id="balls-threw"></span></small>
+    &nbsp;&nbsp;
+    <small>Current spares: <span id="current-spares"></span></small>
+
+    <div id="frame-scores"></div>
+    <label>Number of pins picked up:</label>
+    <input type="number" placeholder="Number of pins picked up" id="pins" value="0" min="0" max="10">
+    <button onclick="pickUp()">Pick Up</button>
+    &nbsp; &nbsp;
+    <button onclick="specialCase(10)">Strike</button>
+    &nbsp; &nbsp;
+    <button onclick="specialCase(0)">Miss</button>
+    <br><br>
+    <button onclick="location.reload()">Restart</button>
+
+</body>
+    <script>
+        const pickUpValContainer = document.getElementById('pins');
+        const totalScoreContainer = document.getElementById('total-score');
+        const frameScoresContainer = document.getElementById('frame-scores');
+        const ballCountContainer = document.getElementById('balls-threw');
+        const currentSparesContainer = document.getElementById('current-spares');
+        const maxPickUp = 10;
+        let totalScore = 0;
+        let currentSpares = 0;
+        let ballCount = 0;
+        let frame = 1;
+        const frameScores = {};
+        for (var i = 1; i <= 10; i++) frameScores[i] = {'turns': [], 'score': 0};
+        const bonusMap = {};
+        for (var i = 1; i <= 20; i++) bonusMap[i] = [];
+
+        const renderScores = () => {
+            totalScoreContainer.innerText = totalScore;
+            ballCountContainer.innerText = ballCount;
+            console.log('current spares:', currentSpares);
+            currentSparesContainer.innerText = currentSpares;
+            let html = [];
+            Object.keys(frameScores).forEach(key => {
+                html.push(`<p>frame ${key}: ${frameScores[key].turns.join(' - ')} score: ${frameScores[key].score}</p>`)
+            })
+            frameScoresContainer.innerHTML = html.join('');
+        }
+        renderScores();
+
+        const specialCase = (val) => {
+            pickUpValContainer.value = val;
+            pickUp();
+        }
+
+        const isOver = () => {
+            const A = totalScore == 0 && ballCount == 10;
+            const B = ballCount == 20 && totalScore != 290;
+            const C = ballCount == 21;
+            const D = frame > 10;
+            return A || B || C || D;
+        }
+
+        const pickUp = () => {
+            const currentPickUp = parseInt(pickUpValContainer.value);
+            
+            if (currentSpares > 0 && currentPickUp > currentSpares) {
+                alert(`Can't pickup more than ${currentSpares} pins in this turn.`);
+                pickUpValContainer.value = currentSpares;
+                return;
+            }
+            
+            if (currentPickUp > 10) {
+                alert('Illegal pickup: more than 10');
+                pickUpValContainer.value = '0';
+                return;
+            }
+
+            if (isOver()) {
+                alert('Game over!');
+                return;
+            }
+
+            pickUpValContainer.value = '0';
+            ballCount += 1;
+            frameScores[frame].turns.push(currentPickUp);
+            frameScores[frame].score += currentPickUp;
+            currentSpares = maxPickUp - currentPickUp;
+
+            if (frameScores[frame].score == 10 && frame < 10) {
+                bonusMap[ballCount + 1].push(frame);
+                if (currentPickUp == 10) bonusMap[ballCount + 2].push(frame);
+            }
+
+            bonusMap[ballCount].forEach(f => frameScores[f].score += currentPickUp);
+            totalScore = 0; 
+            Object.keys(frameScores).forEach(key => totalScore += frameScores[key].score);
+            
+            if (frame == 10 && frameScores[frame].turns[0] == 10) {
+                if (frameScores[frame].turns.length < 3) {
+                    renderScores();
+                    return;
+                } else {
+                    renderScores();
+                    frame += 1
+                    return;   
+                }
+            } 
+
+            if (currentPickUp == 0 || currentPickUp == 10 || frameScores[frame].turns.length > 1) {
+                frame += 1; currentSpares = 0;
+            } 
+
+            renderScores();
+        }
+    </script>
+</html>

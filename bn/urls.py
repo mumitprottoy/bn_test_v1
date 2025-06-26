@@ -1,8 +1,9 @@
-
 from django.contrib import admin
 from django.urls import path, include
 from entrance import views as entrance_views
 from player import views as player_views
+from pinscore.views import pinscore
+
 
 urlpatterns = [
     path('api/', include('api.urls')),
@@ -30,4 +31,5 @@ urlpatterns = [
     path('i/<str:channel>', entrance_views.signup, name='signup'),
     path('base/', entrance_views.base_, name='base'),
     path('logout/', entrance_views.logout, name='logout'),
+    path('pinscore', pinscore, name='pinscore'),
 ]
