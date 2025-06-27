@@ -24,7 +24,18 @@ class EngagementStatsAPI(views.APIView):
     def get(self, request: Request) -> Response:
         query_set = PostMetaData.objects.filter(user=request.user)
         return Response(stats.EngagementStats(query_set).stats, status=status.HTTP_200_OK)
-    
+
+
+class FollowAPI(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request: Request) -> Response:
+        followed = User.objects.get(id=int(request.data['user_id']))
+        follow, created = Follow.objects.get_or_create(
+            followed=followed, follower=request.user)
+        if not created: follow.delete()
+        return Response(dict(message='success'), status=status.HTTP_200_OK)
+
 
 class FollowerCountAPI(views.APIView):
     permission_classes = [permissions.IsAuthenticated]

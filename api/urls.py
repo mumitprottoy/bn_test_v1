@@ -18,6 +18,9 @@ urlpatterns = [
     # stats
     path('user/stats/game-stats', views.GameStatsAPI.as_view()),
     path('user/stats/engagement-stats', views.EngagementStatsAPI.as_view()),
+    path('user/follow', views.FollowAPI.as_view()),
+    path('user/follow-count', views.FollowerCountAPI.as_view()),
+    path('user/followers', views.FollowersAPI.as_view()),
 
     # pro dashboard
     path('user/pro-dashboard-data', views.ProDashboardAPI.as_view()),
