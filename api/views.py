@@ -2,12 +2,12 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import views, status
 from rest_framework_simplejwt.tokens import RefreshToken
-from pros.operations import AuthHandler
+from entrance.operations import AuthHandler
 from pros.models import ProPlayer
 from .endpoints.posts import *
 from .endpoints.stats import *
 from .endpoints.profiles import *
-
+from . import serializers
 
 class ProLoginAPI(views.APIView):
 
@@ -28,3 +28,29 @@ class ProLoginAPI(views.APIView):
         return Response({
             'errors': handler.errors
         }, status=status.HTTP_401_UNAUTHORIZED)
+
+
+class AmateurLoginAPI(views.APIView):
+
+    def post(self, request: Request) -> Response:
+        handler = AuthHandler(**request.data)
+        user = handler.authenticate()
+
+        if user is not None:
+            refresh_token = RefreshToken.for_user(user)
+            return Response({
+                'access_token': str(refresh_token.access_token)
+            }, status=status.HTTP_200_OK)       
+        return Response({
+            'errors': handler.errors
+        }, status=status.HTTP_401_UNAUTHORIZED)
+
+
+class UserRegisterAPI(views.APIView):
+
+    def post(self, request):
+        serializer = serializers.UserCreateSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'message': 'User created successfully!'}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

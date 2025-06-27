@@ -3,6 +3,8 @@ from . import views
 
 urlpatterns = [
     path('pro-login', views.ProLoginAPI.as_view(), name='pro-login'),
+    path('amateur-login', views.AmateurLoginAPI.as_view(), name='amateur-login'),
+    path('create-user', views.UserRegisterAPI.as_view(), name='create-user'),
 
     # feed
     path('feed', views.PostFeedAPI.as_view()),

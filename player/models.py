@@ -55,13 +55,14 @@ class User(AbstractUser):
     
     @property
     def basic(self) -> dict:
-        minimal = self.minimal.copy()
-        minimal.update(dict(
+        basic_info = self.minimal.copy()
+        basic_info.update(dict(
             xp=self.xp,
             email=self.email,
             level=self.level,
             card_theme = self.card_theme
         ))
+        return basic_info
 
     def get_current_mapping(self) -> LevelXPMapping:
         mapping = LevelXPMapping.objects.filter(max_xp__lte=self.xp).order_by('-max_xp').first()
