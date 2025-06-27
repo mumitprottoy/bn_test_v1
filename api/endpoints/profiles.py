@@ -16,4 +16,26 @@ class PlayerProfileAPI(views.APIView):
         # profile['followers'] = followers
         profile['stats'] = sr.get_clean_dict(request.user.stats)
         return Response(profile, status=status.HTTP_200_OK)
+
+
+class ProPlayersPublicProfileAPI(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request: Request) -> Response:
+        users = [pro.user for pro in ProPlayer.objects.all() if pro.user.id != request.user.id]
+        user_profiles = list()
+        for user in users:
+            profile = user.basic.copy()
+            profile['is_pro'] = ProPlayer.objects.filter(user=user).exists()
+            profile['follower_count'] = Follow.objects.filter(followed=user).count()
+            profile['stats'] = sr.get_clean_dict(user.stats)
+            profile['is_followed'] = Follow.objects.filter(
+                followed=user, follower=request.user).exists()
+            user_profiles.append(profile)  
+        import random
+        random.shuffle(user_profiles)
+        return Response(user_profiles, status=status.HTTP_200_OK)
+
+
+
     

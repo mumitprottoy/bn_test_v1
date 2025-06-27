@@ -34,7 +34,10 @@ class FollowAPI(views.APIView):
         follow, created = Follow.objects.get_or_create(
             followed=followed, follower=request.user)
         if not created: follow.delete()
-        return Response(dict(message='success'), status=status.HTTP_200_OK)
+        return Response(dict(message={
+            True: f'Followed this user with id: {request.data['user_id']}',
+            False: f'Unfollowed this user with id: {request.data['user_id']}',
+        }[created]), status=status.HTTP_200_OK)
 
 
 class FollowerCountAPI(views.APIView):

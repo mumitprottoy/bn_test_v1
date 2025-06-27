@@ -28,4 +28,5 @@ urlpatterns = [
 
     # profile
     path('user/profile', views.PlayerProfileAPI.as_view()),
+    path('user/pro-player-public-profile', views.ProPlayersPublicProfileAPI.as_view()),
 ]
