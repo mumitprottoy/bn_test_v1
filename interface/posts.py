@@ -60,7 +60,6 @@ class PostViewer:
     def get_post_ids(self) -> list[int]:
         public_post_ids = [p.id for p in models.PostMetaData.objects.filter(
             privacy=models.PostMetaData.PUBLIC).order_by('-id')]
-        print(public_post_ids)
         followed = [f.followed for f in self.user.following.all()]
         followed_users_post_ids = [p.id for p in models.PostMetaData.objects.filter(
             user__in=followed).order_by('-id')]
@@ -69,4 +68,4 @@ class PostViewer:
     
     def get_viewable_posts_queryset(self) -> QuerySet:
         return models.PostMetaData.objects.filter(id__in=self.get_post_ids()).order_by('-id')
-    
+

@@ -111,3 +111,14 @@ class PostCommentsAPI(views.APIView):
         if metadata is not None:
             return Response(metadata.all_comments, status=status.HTTP_200_OK)  
         return Response(dict(errors=[msg.INVALID_ID]), status=status.HTTP_404_NOT_FOUND)
+
+
+class UserPostsByID(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request: Request, user_id: int) -> Response:
+        user = User.objects.filter(id=user_id)
+        if user is not None:
+            return Response([post.details() for post in models.PostMetaData.objects.filter(
+                user=user).order_by('-id')])
+        return Response(dict(error='User not found'))

@@ -193,6 +193,14 @@ class PostPoll(models.Model):
     poll_type = models.CharField(
         max_length=15, choices=POLL_TYPE_CHOICES, default=Single)
     
+    def vote(self, voter: User, option_id: int) -> bool:
+        option = self.options.filter(id=option_id)
+        vote = self.votes.filter(voter=voter)
+        if vote is not None:
+            if self.poll_type == self.Single:
+                return False
+            
+    
     @property
     def total_vote(self) -> int:
         return sum([opt.total_vote for opt in self.options.all()])

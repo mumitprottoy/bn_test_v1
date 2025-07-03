@@ -25,6 +25,10 @@ urlpatterns = [
     # pro dashboard
     path('user/pro-dashboard-data', views.ProDashboardAPI.as_view()),
 
+    # by user id
+    path('user/<int:user_id>/profile', views.UserProfileByID.as_view()),
+    path('user/<int:user_id>/posts', views.UserPostsByID.as_view()),
+
 
     # profile
     path('user/profile', views.PlayerProfileAPI.as_view()),

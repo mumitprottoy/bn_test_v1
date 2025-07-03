@@ -37,5 +37,20 @@ class ProPlayersPublicProfileAPI(views.APIView):
         return Response(user_profiles, status=status.HTTP_200_OK)
 
 
+class UserProfileByID(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
 
-    
+    def get(self, request: Request, user_id: int) -> Response:
+        user = User.objects.filter(id=user_id)
+        if user is not None:
+            profile = user.basic.copy()
+            profile['is_pro'] = ProPlayer.objects.filter(user=user).exists()
+            profile['follower_count'] = Follow.objects.filter(followed=user).count()
+            profile['stats'] = sr.get_clean_dict(user.stats)
+            profile['is_followed'] = Follow.objects.filter(
+                followed=user, follower=request.user).exists()
+            return Response(profile, status=status.HTTP_200_OK)
+        return Response(dict(error='User not found'), status=status.HTTP_404_NOT_FOUND)
+
+
+
