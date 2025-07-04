@@ -41,7 +41,7 @@ class UserProfileByID(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request: Request, user_id: int) -> Response:
-        user = User.objects.filter(id=user_id)
+        user = User.objects.filter(id=user_id).first()
         if user is not None:
             profile = user.basic.copy()
             profile['is_pro'] = ProPlayer.objects.filter(user=user).exists()
