@@ -117,7 +117,7 @@ class UserPostsByID(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request: Request, user_id: int) -> Response:
-        user = User.objects.filter(id=user_id)
+        user = User.objects.filter(id=user_id).first()
         if user is not None:
             return Response([post.details() for post in models.PostMetaData.objects.filter(
                 user=user).order_by('-id')])
