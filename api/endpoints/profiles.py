@@ -2,6 +2,7 @@ from .libs import *
 from profiles.models import Follow
 from utils import subroutines as sr
 from pros.models import ProPlayer
+from interface.stats import EngagementStats
 
 
 class PlayerProfileAPI(views.APIView):
@@ -47,6 +48,7 @@ class UserProfileByID(views.APIView):
             profile['is_pro'] = ProPlayer.objects.filter(user=user).exists()
             profile['follower_count'] = Follow.objects.filter(followed=user).count()
             profile['stats'] = sr.get_clean_dict(user.stats)
+            profile['engagement'] = EngagementStats.stats_of_user()
             profile['is_followed'] = Follow.objects.filter(
                 followed=user, follower=request.user).exists()
             return Response(profile, status=status.HTTP_200_OK)
