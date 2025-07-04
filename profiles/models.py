@@ -178,4 +178,11 @@ class Follow(models.Model):
         
     def __str__(self):
         return f'{self.followed.username} followed by {self.follower.username}'
-    
+
+
+class IntroVideo(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    url = models.TextField()
+
+    def __str__(self) -> str:
+        return self.user.username + f' ({self.user.email})'

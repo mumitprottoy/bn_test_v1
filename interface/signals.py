@@ -12,6 +12,14 @@ def add_birth_date(instance: User, created: bool, *args, **kwargs) -> None:
 
 
 @receiver(post_save, sender=User)
+def add_intro_video(instance: User, created: bool, *args, **kwargs) -> None:
+    user = instance
+    if created:
+        profile_models.IntroVideo.objects.create(
+            user=user, url='https://i.imgur.com/BnDntB8.mp4')
+
+
+@receiver(post_save, sender=User)
 def add_address(instance: User, created: bool, *args, **kwargs) -> None:
     user = instance
     if created:

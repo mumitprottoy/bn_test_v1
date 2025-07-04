@@ -57,6 +57,7 @@ class User(AbstractUser):
     def basic(self) -> dict:
         basic_info = self.minimal.copy()
         basic_info.update(dict(
+            intro_video_url=self.introvideo.url,
             xp=self.xp,
             email=self.email,
             level=self.level,
