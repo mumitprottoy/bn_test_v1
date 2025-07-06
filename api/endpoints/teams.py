@@ -102,11 +102,19 @@ class UserTeamInvitationsAPI(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request: Request) -> Response:
+        sent_invitations = list()
+
+        for team in models.Team.objects.filter(created_by=request.user):
+            for invitation in models.TeamInvitation.objects.filter(
+                team=team, is_accepted=False):
+                sent_invitations.append(invitation.details)
+
         return Response(dict(
-            invitations=[invitation.details 
+            received=[invitation.details 
                 for invitation in models.TeamInvitation.objects.filter(
                     invited_user=request.user, is_accepted=False          
-                )]
+                )],
+            sent=sent_invitations
         ), status=status.HTTP_200_OK)
 
     def post(self, request: Request) -> Response:
@@ -122,3 +130,14 @@ class UserTeamInvitationsAPI(views.APIView):
                 return Response(dict(message='Invitation declined'), status=status.HTTP_200_OK)
         
         return Response(dict(error='Invalid invitation'), status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request: Request) -> Response:
+        invitation = models.TeamInvitation.objects.filter(
+            id=int(request.data['invitation_id']), is_accepted=False).first()
+        
+        if invitation is not None and invitation.team.is_creator(request.user):
+            invitation.delete()
+            return Response(dict(message='Invitation deleted'))
+        
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
