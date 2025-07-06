@@ -5,9 +5,12 @@ from utils import constants as const
 
 class Team(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    logo_url = models.TextField()
+    logo_url = models.TextField(default='https://i.imgur.com/QMJ67hC.png')
     created_by = models.OneToOneField(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def is_creator(self, user: User) -> bool:
+        return user == self.created_by
 
     @property
     def member_count(self) -> int:
@@ -15,7 +18,11 @@ class Team(models.Model):
     
     @property
     def member_list(self) -> list[dict]:
-        return [member.user.basic for member in self.members.all()]
+        return [dict(
+            member_id=member.id,
+            member=member.user.basic,
+            is_creator=self.created_by == member.user
+            ) for member in self.members.all()]
     
     @property
     def member_details(self) -> dict:

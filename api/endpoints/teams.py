@@ -21,9 +21,54 @@ class TeamsAPI(views.APIView):
             return Response(team.details, status=status.HTTP_200_OK)
         
         return Response(
-            dict(error='Team with name already exists'), 
+            dict(error='Team with same name already exists'), 
             status=status.HTTP_400_BAD_REQUEST
         )
+
+
+class TeamMembersAPI(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def initial(self, request: Request, *args, **kwargs):
+        super().initial(request, *args, **kwargs)
+        team_id = kwargs.get('team_id')
+        self.team = models.Team.objects.filter(id=team_id).first()
+        if not self.team:
+            raise exceptions.NotFound(detail="Team not found")
+        if not self.team.members.filter(user=request.user).exists():
+            raise exceptions.PermissionDenied(detail='Members only')
+
+    def get(self, request: Request, team_id: int) -> Response:
+        return Response(self.team.member_details, status=status.HTTP_200_OK)
+    
+    # leave group
+    def post(self, request: Request, team_id: int) -> Response:
+        self.team.members.filter(user=request.user).delete()
+        return Response(dict(message='Left group successfully'), status=status.HTTP_200_OK)
+
+    # remove a member
+    def delete(self, request: Request, team_id: int) -> Response:
+        member = self.team.members.filter(id=int(request.data['member_id'])).first()
+
+        if member is not None and self.team.is_creator(request.user):
+            member.delete()
+            return Response(dict(message=f'Removed member successfully'), status=status.HTTP_200_OK)
+        
+        return Response(dict(error='Member not found'), status=status.HTTP_404_NOT_FOUND)
+
+
+class TeamDeletionAPI(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request: Request, team_id: int) -> Response:
+        team = models.Team.objects.filter(
+            id=team_id, created_by=request.user).first()
+        
+        if team is not None:
+            team.delete()
+            return Response(dict(message='Team successfully deleted'), status=status.HTTP_200_OK)
+        
+        return Response(dict(error='Not authorized'), status=status.HTTP_401_UNAUTHORIZED)
 
 
 class TeamInviteSendingAPI(views.APIView):
@@ -77,5 +122,3 @@ class UserTeamInvitationsAPI(views.APIView):
                 return Response(dict(message='Invitation declined'), status=status.HTTP_200_OK)
         
         return Response(dict(error='Invalid invitation'), status=status.HTTP_400_BAD_REQUEST)
-
-  
