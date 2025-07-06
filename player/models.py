@@ -50,6 +50,7 @@ class User(AbstractUser):
             name=self.get_full_name(),
             first_name=self.first_name,
             last_name=self.last_name,
+            email=self.email,
             profile_picture_url=self.profile_picture_url,
         )
     
@@ -59,7 +60,6 @@ class User(AbstractUser):
         basic_info.update(dict(
             intro_video_url=self.introvideo.url,
             xp=self.xp,
-            email=self.email,
             level=self.level,
             card_theme = self.card_theme
         ))
