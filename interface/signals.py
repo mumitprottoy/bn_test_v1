@@ -2,6 +2,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from player.models import User
 from profiles import models as profile_models
+from teams.models import Team, TeamMember
 
 
 @receiver(post_save, sender=User)
@@ -9,6 +10,13 @@ def add_birth_date(instance: User, created: bool, *args, **kwargs) -> None:
     user = instance
     if created:
         profile_models.BirthDate.objects.create(user=user)
+
+
+@receiver(post_save, sender=Team)
+def add_team_creator_as_member(instance: Team, created: bool, *args, **kwargs) -> None:
+    team = instance
+    if created:
+        TeamMember.objects.create(team=team, user=team.created_by)
 
 
 @receiver(post_save, sender=User)

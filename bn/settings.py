@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'profiles',
     'premium',
     'pinscore',
+    'teams',
 ]
 
 

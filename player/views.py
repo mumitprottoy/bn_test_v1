@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import User, Team, TeamInvitation, XPMap
+from .models import User, XPMap
 
 @login_required
 def home_view(request):
@@ -39,119 +39,119 @@ def public_profile(request, handle: str):
     return render(request, 'player/public_profile.html', {'user_obj': user})
 
 
-@login_required
-def my_teams(request):
-    teams = request.user.teams.all().prefetch_related('members')
-    return render(request, 'player/my_teams.html', {'teams': teams})
+# @login_required
+# def my_teams(request):
+#     teams = request.user.teams.all().prefetch_related('members')
+#     return render(request, 'player/my_teams.html', {'teams': teams})
 
 
-@login_required
-def create_team(request):
-    if request.method == 'POST':
-        name = request.POST.get('team_name')
-        member_ids = request.POST.getlist('members')
-        team = Team.objects.create(name=name, created_by=request.user)
-        team.members.add(request.user)
-        for user_id in member_ids:
-            invited_user = User.objects.get(id=user_id)
-            TeamInvitation.objects.create(team=team, invited_user=invited_user)
-        return redirect('team_detail', team_id=team.id)
+# @login_required
+# def create_team(request):
+#     if request.method == 'POST':
+#         name = request.POST.get('team_name')
+#         member_ids = request.POST.getlist('members')
+#         team = Team.objects.create(name=name, created_by=request.user)
+#         team.members.add(request.user)
+#         for user_id in member_ids:
+#             invited_user = User.objects.get(id=user_id)
+#             TeamInvitation.objects.create(team=team, invited_user=invited_user)
+#         return redirect('team_detail', team_id=team.id)
 
-    users = User.objects.exclude(id=request.user.id)
-    return render(request, 'player/create_team.html', {'users': users})
-
-
-@login_required
-def invitations_list(request):
-    invites = TeamInvitation.objects.filter(invited_user=request.user, status='pending')
-    return render(request, 'player/invitations_list.html', {'invitations': invites})
+#     users = User.objects.exclude(id=request.user.id)
+#     return render(request, 'player/create_team.html', {'users': users})
 
 
-@login_required
-def respond_invitation(request, invite_id):
-    invitation = get_object_or_404(TeamInvitation, id=invite_id, invited_user=request.user)
-
-    if request.method == 'POST':
-        action = request.POST.get('action')
-        if action == 'accept':
-            invitation.status = 'accepted'
-            invitation.save()
-            invitation.team.members.add(request.user)
-        elif action == 'reject':
-            invitation.status = 'rejected'
-            invitation.save()
-        return redirect('invitations_list')
-
-    return render(request, 'player/respond_invitation.html', {'invite': invitation})
+# @login_required
+# def invitations_list(request):
+#     invites = TeamInvitation.objects.filter(invited_user=request.user, status='pending')
+#     return render(request, 'player/invitations_list.html', {'invitations': invites})
 
 
-@login_required
-def sent_invitations_view(request):
-    sent_invitations = TeamInvitation.objects.filter(
-        team__created_by=request.user,
-        status='pending'
-    ).select_related('team', 'invited_user')
-    return render(request, 'player/sent_invitations.html', {'sent_invitations': sent_invitations})
+# @login_required
+# def respond_invitation(request, invite_id):
+#     invitation = get_object_or_404(TeamInvitation, id=invite_id, invited_user=request.user)
+
+#     if request.method == 'POST':
+#         action = request.POST.get('action')
+#         if action == 'accept':
+#             invitation.status = 'accepted'
+#             invitation.save()
+#             invitation.team.members.add(request.user)
+#         elif action == 'reject':
+#             invitation.status = 'rejected'
+#             invitation.save()
+#         return redirect('invitations_list')
+
+#     return render(request, 'player/respond_invitation.html', {'invite': invitation})
 
 
-@login_required
-def withdraw_invitation_view(request, invitation_id):
-    invitation = get_object_or_404(TeamInvitation, id=invitation_id, team__created_by=request.user)
-    if request.method == 'POST':
-        invitation.delete()
-        return redirect('sent_invitations')
-    return redirect('sent_invitations')
+# @login_required
+# def sent_invitations_view(request):
+#     sent_invitations = TeamInvitation.objects.filter(
+#         team__created_by=request.user,
+#         status='pending'
+#     ).select_related('team', 'invited_user')
+#     return render(request, 'player/sent_invitations.html', {'sent_invitations': sent_invitations})
 
 
-@login_required
-def team_detail_view(request, team_id):
-    team = get_object_or_404(Team, id=team_id)
-    if request.user not in team.members.all():
-        return redirect('my_teams')
-    return render(request, 'player/team_detail.html', {'team': team})
+# @login_required
+# def withdraw_invitation_view(request, invitation_id):
+#     invitation = get_object_or_404(TeamInvitation, id=invitation_id, team__created_by=request.user)
+#     if request.method == 'POST':
+#         invitation.delete()
+#         return redirect('sent_invitations')
+#     return redirect('sent_invitations')
 
 
-@login_required
-def add_member_view(request, team_id):
-    team = get_object_or_404(Team, id=team_id)
-    if request.user != team.created_by:
-        messages.error(request, "Only the team owner can add members.")
-        return redirect('team_detail', team_id=team.id)
-
-    if request.method == 'POST':
-        username = request.POST.get('username', '').strip()
-        try:
-            user_to_add = User.objects.get(username=username)
-        except User.DoesNotExist:
-            messages.error(request, f"User '{username}' does not exist.")
-            return redirect('team_detail', team_id=team.id)
-
-        if user_to_add in team.members.all():
-            messages.warning(request, f"User '{username}' is already a member.")
-        else:
-            try:
-                TeamInvitation.objects.create(team=team, invited_user=user_to_add)
-                messages.success(request, f"Invitation sent to user: '{username}'")
-            except Exception as e: messages.error(request, str(e))
-    return redirect('team_detail', team_id=team.id)
+# @login_required
+# def team_detail_view(request, team_id):
+#     team = get_object_or_404(Team, id=team_id)
+#     if request.user not in team.members.all():
+#         return redirect('my_teams')
+#     return render(request, 'player/team_detail.html', {'team': team})
 
 
-@login_required
-def remove_member_view(request, team_id, member_id):
-    team = get_object_or_404(Team, id=team_id)
-    if request.user != team.created_by:
-        messages.error(request, "Only the team owner can remove members.")
-        return redirect('team_detail', team_id=team.id)
+# @login_required
+# def add_member_view(request, team_id):
+#     team = get_object_or_404(Team, id=team_id)
+#     if request.user != team.created_by:
+#         messages.error(request, "Only the team owner can add members.")
+#         return redirect('team_detail', team_id=team.id)
 
-    member = get_object_or_404(User, id=member_id)
-    if request.method == 'POST':
-        if member in team.members.all():
-            team.members.remove(member)
-            messages.success(request, f"User '{member.username}' has been removed from the team.")
-        else:
-            messages.warning(request, f"User '{member.username}' is not a member of the team.")
+#     if request.method == 'POST':
+#         username = request.POST.get('username', '').strip()
+#         try:
+#             user_to_add = User.objects.get(username=username)
+#         except User.DoesNotExist:
+#             messages.error(request, f"User '{username}' does not exist.")
+#             return redirect('team_detail', team_id=team.id)
 
-    return redirect('team_detail', team_id=team.id)
+#         if user_to_add in team.members.all():
+#             messages.warning(request, f"User '{username}' is already a member.")
+#         else:
+#             try:
+#                 TeamInvitation.objects.create(team=team, invited_user=user_to_add)
+#                 messages.success(request, f"Invitation sent to user: '{username}'")
+#             except Exception as e: messages.error(request, str(e))
+#     return redirect('team_detail', team_id=team.id)
+
+
+# @login_required
+# def remove_member_view(request, team_id, member_id):
+#     team = get_object_or_404(Team, id=team_id)
+#     if request.user != team.created_by:
+#         messages.error(request, "Only the team owner can remove members.")
+#         return redirect('team_detail', team_id=team.id)
+
+#     member = get_object_or_404(User, id=member_id)
+#     if request.method == 'POST':
+#         if member in team.members.all():
+#             team.members.remove(member)
+#             messages.success(request, f"User '{member.username}' has been removed from the team.")
+#         else:
+#             messages.warning(request, f"User '{member.username}' is not a member of the team.")
+
+#     return redirect('team_detail', team_id=team.id)
 
 
 @login_required

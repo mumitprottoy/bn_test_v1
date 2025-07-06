@@ -87,22 +87,22 @@ class User(AbstractUser):
         return f"{self.username} ({self.email})"
 
 
-class Team(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    created_by = models.ForeignKey('User', on_delete=models.CASCADE, related_name='created_teams', default=1)
-    members = models.ManyToManyField('User', related_name='teams', blank=True)
+# class Team(models.Model):
+#     name = models.CharField(max_length=100, unique=True)
+#     created_by = models.ForeignKey('User', on_delete=models.CASCADE, related_name='created_teams', default=1)
+#     members = models.ManyToManyField('User', related_name='teams', blank=True)
 
-    def __str__(self):
-        return f"{self.name} (created by {self.created_by.username})"
+#     def __str__(self):
+#         return f"{self.name} (created by {self.created_by.username})"
 
 
-class TeamInvitation(models.Model):
-    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='invitations')
-    invited_user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='invitations')
-    status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('accepted', 'Accepted')], default='pending')
+# class TeamInvitation(models.Model):
+#     team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='invitations')
+#     invited_user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='invitations')
+#     status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('accepted', 'Accepted')], default='pending')
 
-    def __str__(self):
-        return f"{self.invited_user.username} → {self.team.name} [{self.status}]"
+#     def __str__(self):
+#         return f"{self.invited_user.username} → {self.team.name} [{self.status}]"
 
 
 class Statistics(models.Model):
