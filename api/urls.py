@@ -40,4 +40,7 @@ urlpatterns = [
     path('user/teams/<int:team_id>/members', views.TeamMembersAPI.as_view()),
     path('user/teams/invite', views.TeamInviteSendingAPI.as_view()),
     path('user/teams/invitations', views.UserTeamInvitationsAPI.as_view()),
+
+    # users
+    path('user-data', views.UserDataAPI.as_view()),
 ]

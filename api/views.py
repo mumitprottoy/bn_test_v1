@@ -8,7 +8,9 @@ from .endpoints.posts import *
 from .endpoints.stats import *
 from .endpoints.profiles import *
 from .endpoints.teams import *
+from .endpoints.users import *
 from . import serializers
+
 
 class ProLoginAPI(views.APIView):
 
