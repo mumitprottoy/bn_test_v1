@@ -60,7 +60,7 @@ class TeamMembersAPI(views.APIView):
 class TeamDeletionAPI(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request: Request, team_id: int) -> Response:
+    def delete(self, request: Request, team_id: int) -> Response:
         team = models.Team.objects.filter(
             id=team_id, created_by=request.user).first()
         
