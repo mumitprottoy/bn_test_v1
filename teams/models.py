@@ -73,6 +73,7 @@ class TeamInvitation(models.Model):
     def details(self) -> dict:
         return dict(
             invitation_id=self.id,
+            invited_user=self.invited_user.basic,
             team=self.team.details
         )
     
