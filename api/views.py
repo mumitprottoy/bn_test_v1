@@ -7,6 +7,7 @@ from pros.models import ProPlayer
 from .endpoints.posts import *
 from .endpoints.stats import *
 from .endpoints.profiles import *
+from .endpoints.teams import *
 from . import serializers
 
 class ProLoginAPI(views.APIView):

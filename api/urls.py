@@ -33,4 +33,9 @@ urlpatterns = [
     # profile
     path('user/profile', views.PlayerProfileAPI.as_view()),
     path('user/pro-player-public-profile', views.ProPlayersPublicProfileAPI.as_view()),
+
+    # teams
+    path('user/teams', views.TeamsAPI.as_view()),
+    path('user/teams/invite', views.TeamInviteSendingAPI.as_view()),
+    path('user/teams/invitations', views.UserTeamInvitationsAPI.as_view()),
 ]
