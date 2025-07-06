@@ -6,7 +6,7 @@ from utils import constants as const
 class Team(models.Model):
     name = models.CharField(max_length=100, unique=True)
     logo_url = models.TextField(default='https://i.imgur.com/QMJ67hC.png')
-    created_by = models.OneToOneField(User, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def is_creator(self, user: User) -> bool:
