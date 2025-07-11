@@ -1,4 +1,3 @@
-
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -14,7 +13,6 @@ ALLOWED_HOSTS = ['*']
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -22,21 +20,32 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'corsheaders',
+]
+
+# internal apps
+INSTALLED_APPS += [
     'entrance',
     'player',
     'pros',
     'api',
-    'rest_framework',
-    'rest_framework.authtoken',
     'interface',
     'posts',
     'profiles',
     'premium',
     'pinscore',
     'teams',
+    'chat',
 ]
 
+# external apps
+INSTALLED_APPS += [
+    'corsheaders',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'channels'
+]
+
+ASGI_APPLICATION = 'bn.asgi.application'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -133,11 +142,9 @@ LOGIN_REDIRECT_URL = '/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-# OK
 
 from datetime import timedelta
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=70),
 }
-

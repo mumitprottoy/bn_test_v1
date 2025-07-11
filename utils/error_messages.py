@@ -1,0 +1,1 @@
+NOT_ROOM_MATE = 'Sender does not belong to this room'
