@@ -3,6 +3,7 @@ from profiles.models import Follow
 from utils import subroutines as sr
 from pros.models import ProPlayer
 from interface.stats import EngagementStats
+from cloud.engine import CloudEngine
 
 
 class PlayerProfileAPI(views.APIView):
@@ -23,7 +24,7 @@ class ProPlayersPublicProfileAPI(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request: Request) -> Response:
-        users = [pro.user for pro in ProPlayer.objects.all() if pro.user.id != request.user.id]
+        users = [pro.user for pro in ProPlayer.objects.all()]
         user_profiles = list()
         for user in users:
             profile = user.basic.copy()
@@ -55,4 +56,16 @@ class UserProfileByID(views.APIView):
         return Response(dict(error='User not found'), status=status.HTTP_404_NOT_FOUND)
 
 
+class UploadProfilePicture(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [parsers.MultiPartParser, parsers.FormParser]
 
+    def post(self, request: Request) -> Response:
+        image = request.data.get('image')
+        cloud_engine = CloudEngine(image)
+        image_pub_url = cloud_engine.upload()
+        if image_pub_url is not None:
+            request.user.profile_picture_url = image_pub_url
+            request.user.save()
+        return Response(dict(
+            message='Success', image_public_url=image_pub_url), status=status.HTTP_200_OK)
