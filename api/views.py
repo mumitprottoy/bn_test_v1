@@ -10,6 +10,7 @@ from .endpoints.profiles import *
 from .endpoints.teams import *
 from .endpoints.users import *
 from .endpoints.test import *
+from .endpoints.chat import *
 from . import serializers
 
 
