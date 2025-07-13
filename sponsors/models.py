@@ -7,4 +7,4 @@ class BusinessSponsor(models.Model):
     logo_url = models.URLField()
 
     def __str__(self) -> str:
-        return self.name
+        return self.formal_name
