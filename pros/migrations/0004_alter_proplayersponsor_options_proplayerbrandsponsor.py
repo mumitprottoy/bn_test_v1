@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('pros', '0003_proplayersponsor'),
-        ('sponsors', '0002_brandtype_brand'),
+        # ('sponsors', '0002_brandtype_brand'),
     ]
 
     operations = [
