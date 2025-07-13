@@ -30,8 +30,9 @@ urlpatterns = [
     path('user/<int:user_id>/posts', views.UserPostsByID.as_view()),
 
     # chat
-    path('rooms/', views.RoomListCreateView.as_view()),
-    path('rooms/<int:room_id>/messages/', views.MessageListView.as_view()),
+    path("rooms/", views.RoomListCreateView.as_view()),
+    path("rooms/<str:room_name>/messages/", views.MessageListView.as_view()), 
+    path("room/", views.get_or_create_private_room),
 
     # profile
     path('user/profile', views.PlayerProfileAPI.as_view()),
