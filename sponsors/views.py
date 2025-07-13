@@ -1,3 +1,9 @@
-from django.shortcuts import render
+from django.http import JsonResponse
+from .models import BusinessSponsor
 
-# Create your views here.
+
+def business_sponsors(request):
+    return JsonResponse(dict(
+        sponsors=[dict(name=s.name, formal_name=s.formal_name, logo_url=s.logo_url) for s in BusinessSponsor.objects.all()]
+    ))
+
