@@ -29,12 +29,6 @@ urlpatterns = [
     path('user/<int:user_id>/profile', views.UserProfileByID.as_view()),
     path('user/<int:user_id>/posts', views.UserPostsByID.as_view()),
 
-    # chat
-    path("rooms/", views.RoomListCreateView.as_view()),
-    path("rooms/<str:room_name>/messages/", views.MessageListView.as_view()), 
-    path("room/", views.get_or_create_private_room),
-    path('rooms/<str:room_name>/messages/send/', views.send_message),
-
     # profile
     path('user/profile', views.PlayerProfileAPI.as_view()),
     path('user/pro-player-public-profile', views.ProPlayersPublicProfileAPI.as_view()),

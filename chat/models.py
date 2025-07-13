@@ -1,6 +1,6 @@
 from django.db import models
 from player.models import User
-from utils import exceptions, error_messages
+from utils import exceptions, error_messages, subroutines as sr, constants as const
 from teams.models import Team
 
 
@@ -11,18 +11,29 @@ class Room(models.Model):
     name = models.CharField(max_length=50, unique=True, default='')
     room_type = models.CharField(max_length=10, choices=ROOM_TYPE_CHOICES, default=PRIVATE)
 
-    def display_info(self, for_user: User) -> dict | None:
+    def last_message_for_user(self, for_user: User) -> dict:
+        return self.messages.last().details_for_user(for_user)
+    
+    def messages_for_user(self, for_user: User) -> list[dict]:
+        return [msg.details_for_user(for_user) for msg in self.messages.all()]
+
+    def display_info_for_user(self, for_user: User) -> dict | None:
+        last_message = self.last_message_for_user(for_user)
         if self.mates.filter(user=for_user).exists():
             if self.room_type == self.GROUP:
                 team = Team.objects.filter(name=self.name).first()
                 return dict(
                     display_name=team.name, 
-                    display_image_url=team.logo_url)
+                    display_image_url=team.logo_url,
+                    last_message=last_message
+                )
             for mate in self.mates.all():
                 if mate.user != for_user:
                     return dict(
                         display_name=mate.user.username, 
-                        display_image_url=mate.user.profile_picture_url)  
+                        display_image_url=mate.user.profile_picture_url,
+                        last_message=last_message
+                    )  
           
     def save(self, *args, **kwargs) -> None:
         if not self.name:
@@ -59,6 +70,26 @@ class MessageMetaData(models.Model):
         User, on_delete=models.CASCADE, related_name='mymessages')
     sent_at = models.DateTimeField(auto_now_add=True)
 
+    @property
+    def time_datails(self) -> dict:
+        return dict(
+            sent_at=const.DATETIME_STR_FORMAT_1,
+            timesince=sr.pretty_timesince(self.sent_at)
+        )
+
+    @property
+    def details_for_user(self, for_user: User) -> dict:
+        has_text_content = hasattr(self, 'textcontent')
+        return dict(
+            sentByMe=self.sender.id == for_user.id,
+            roomID=self.room_id,
+            sender=self.sender.minimal,
+            timeDetails=self.time_datails,
+            message=dict(
+                textContent=self.textcontent.text if has_text_content else None),
+                mediaContent=[content.url for content in self.mediacontents.all()]
+        )
+
     def save(self, *args, **kwargs) -> None:
         if not RoomMate.objects.filter(
             room=self.room, user=self.sender).exists():
@@ -70,10 +101,12 @@ class MessageMetaData(models.Model):
     
 
 class MessageTextContent(models.Model):
-    metadata = models.ForeignKey(MessageMetaData, on_delete=models.CASCADE)
+    metadata = models.OneToOneField(
+        MessageMetaData, on_delete=models.CASCADE, related_name='textcontent')
     text = models.TextField()
 
 
 class MessageMediaContent(models.Model):
-    metadata = models.ForeignKey(MessageMetaData, on_delete=models.CASCADE)
+    metadata = models.ForeignKey(
+        MessageMetaData, on_delete=models.CASCADE, related_name='mediacontents')
     url = models.URLField()
