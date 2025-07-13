@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from sponsors.models import BusinessSponsor, Brand
+from brands.models import Brand
 
 User = get_user_model()
 
@@ -11,27 +11,19 @@ class ProPlayer(models.Model):
         return f'{self.user.username} ({self.user.email})'
 
 
-class ProPlayerSponsor(models.Model):
+class Sponsors(models.Model):
     pro_player = models.ForeignKey(
         ProPlayer, on_delete=models.CASCADE, related_name='sponsors')
-    sponsor = models.ForeignKey(
-        BusinessSponsor, on_delete=models.CASCADE, related_name='proplayers')
-    
-    def __str__(self) -> str:
-        return f'{self.sponsor.__str__()} ➝ {self.pro_player.__str__()}'
-    
-    class Meta:
-        verbose_name_plural = 'Business sponsors'
-
-
-class ProPlayerBrandSponsor(models.Model):
-    pro_player = models.ForeignKey(
-        ProPlayer, on_delete=models.CASCADE, related_name='brandsponsors')
     brand = models.ForeignKey(
-        Brand, on_delete=models.CASCADE, related_name='proplayers')
+        Brand, on_delete=models.CASCADE, related_name='sponsoredplayers')
     
     def __str__(self) -> str:
         return f'{self.brand.__str__()} ➝ {self.pro_player.__str__()}'
     
     class Meta:
-        verbose_name_plural = 'Brand sponsors'
+        constraints = [
+            models.UniqueConstraint(
+                fields=('pro_player', 'brand'),
+                name='unique_sponsor_player_pair'
+            )
+        ]

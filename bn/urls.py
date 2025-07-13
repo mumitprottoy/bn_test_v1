@@ -3,7 +3,6 @@ from django.urls import path, include
 from entrance import views as entrance_views
 from player import views as player_views
 from pinscore.views import pinscore
-from sponsors.views import business_sponsors
 
 urlpatterns = [
     path('api/', include('api.urls')),
@@ -32,5 +31,4 @@ urlpatterns = [
     path('base/', entrance_views.base_, name='base'),
     path('logout/', entrance_views.logout, name='logout'),
     path('pinscore', pinscore, name='pinscore'),
-    path('business-sponsors', business_sponsors, name='business-sponsor'),
 ]

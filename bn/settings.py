@@ -35,7 +35,6 @@ INSTALLED_APPS += [
     'pinscore',
     'teams',
     'chat',
-    'sponsors',
     'brands'
 ]
 
