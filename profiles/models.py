@@ -1,6 +1,7 @@
 from datetime import datetime
 from django.db import models
 from player.models import User
+from brands.models import Brand
 from utils import constants as const, keygen
 
 
@@ -186,3 +187,21 @@ class IntroVideo(models.Model):
 
     def __str__(self) -> str:
         return self.user.username + f' ({self.user.email})'
+
+
+class FavoriteBrand(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='favbrands')
+    brand = models.ForeignKey(
+        Brand, on_delete=models.CASCADE, related_name='targets')
+    
+    def __str__(self) -> str:
+        return f'{self.brand.__str__()} ➝ {self.user.username} ({self.user.email})'
+    
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=('user', 'brand'),
+                name='unique_user_brand_pair'
+            )
+        ]
