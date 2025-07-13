@@ -78,3 +78,31 @@ def get_or_create_private_room(request):
 
     serializer = RoomSerializer(new_room)
     return Response(serializer.data)
+
+from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from chat.models import Room, RoomMate, MessageMetaData, MessageTextContent
+from chat.serializers import MessageTextContentSerializer
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def send_message(request, room_name):
+    user = request.user
+    text = request.data.get('text')
+    if not text:
+        return Response({"detail": "Message text is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        room = Room.objects.get(name=room_name)
+    except Room.DoesNotExist:
+        return Response({"detail": "Room not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    if not RoomMate.objects.filter(room=room, user=user).exists():
+        return Response({"detail": "You are not a member of this room"}, status=status.HTTP_403_FORBIDDEN)
+
+    metadata = MessageMetaData.objects.create(room=room, sender=user)
+    message = MessageTextContent.objects.create(metadata=metadata, text=text)
+    serializer = MessageTextContentSerializer(message)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
