@@ -21,6 +21,7 @@ class Sponsors(models.Model):
         return f'{self.brand.__str__()} ➝ {self.pro_player.__str__()}'
     
     class Meta:
+        verbose_name_plural = 'Sponsors'
         constraints = [
             models.UniqueConstraint(
                 fields=('pro_player', 'brand'),
