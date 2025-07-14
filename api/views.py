@@ -3,7 +3,9 @@ from rest_framework.response import Response
 from rest_framework import views, status
 from rest_framework_simplejwt.tokens import RefreshToken
 from entrance.operations import AuthHandler
+from profiles.models import FavoriteBrand
 from pros.models import ProPlayer
+from brands.models import Brand
 from .endpoints.posts import *
 from .endpoints.stats import *
 from .endpoints.profiles import *
@@ -11,6 +13,7 @@ from .endpoints.teams import *
 from .endpoints.users import *
 from .endpoints.test import *
 from .endpoints.chat import *
+from .endpoints.brands import *
 from . import serializers
 
 
@@ -54,8 +57,11 @@ class AmateurLoginAPI(views.APIView):
 class UserRegisterAPI(views.APIView):
 
     def post(self, request):
-        serializer = serializers.UserCreateSerializer(data=request.data)
+        serializer = serializers.UserCreateSerializer(data=request.data.get('basicInfo'))
         if serializer.is_valid():
-            serializer.save()
+            user = serializer.save()
+            brand_ids = request.data.get('brandIDs')
+            for brand in Brand.objects.filter(id__in=brand_ids):
+                FavoriteBrand.objects.create(user=user, brand=brand)
             return Response({'message': 'User created successfully!'}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

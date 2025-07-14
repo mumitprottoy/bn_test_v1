@@ -44,6 +44,9 @@ urlpatterns = [
     # users
     path('user-data', views.UserDataAPI.as_view()),
 
+    # brands
+    path('brands', views.BrandsAPI.as_view()),
+
     # tests
     path('test-image-upload', views.TestImageUploadAPI.as_view())
 ]
