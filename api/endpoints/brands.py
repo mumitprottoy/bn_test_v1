@@ -25,4 +25,4 @@ class FavoriteBrandAPI(views.APIView):
             fav_brand.delete()
         action = 'Added' if created else 'Removed'
         return Response(
-            dict(message=f'{action} "{brand.name}" as favorite brand'), status=status.HTTP_200_OK)
+            dict(message=f'{action}: {brand.name} as favorite brand'), status=status.HTTP_200_OK)
