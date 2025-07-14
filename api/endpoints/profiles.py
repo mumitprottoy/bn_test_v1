@@ -1,7 +1,7 @@
 from .libs import *
-from profiles.models import Follow
+from profiles.models import Follow, FavoriteBrand
 from utils import subroutines as sr
-from pros.models import ProPlayer
+from pros.models import ProPlayer, Sponsors
 from interface.stats import EngagementStats
 from cloud.engine import CloudEngine
 
@@ -17,6 +17,7 @@ class PlayerProfileAPI(views.APIView):
         profile['follower_count'] = Follow.objects.filter(followed=request.user).count()
         # profile['followers'] = followers
         profile['stats'] = sr.get_clean_dict(request.user.stats)
+        profile['favorite_brands'] = [brand.details for brand in request.user.favbrands.all()]
         return Response(profile, status=status.HTTP_200_OK)
 
 
@@ -33,6 +34,7 @@ class ProPlayersPublicProfileAPI(views.APIView):
             profile['stats'] = sr.get_clean_dict(user.stats)
             profile['is_followed'] = Follow.objects.filter(
                 followed=user, follower=request.user).exists()
+            profile['favorite_brands'] = [brand.details for brand in user.favbrands.all()]
             user_profiles.append(profile)  
         import random
         random.shuffle(user_profiles)
@@ -52,6 +54,7 @@ class UserProfileByID(views.APIView):
             profile['engagement'] = EngagementStats.stats_of_user(user)
             profile['is_followed'] = Follow.objects.filter(
                 followed=user, follower=request.user).exists()
+            profile['favorite_brands'] = [brand.details for brand in request.user.favbrands.all()]
             return Response(profile, status=status.HTTP_200_OK)
         return Response(dict(error='User not found'), status=status.HTTP_404_NOT_FOUND)
 
