@@ -32,7 +32,10 @@ class ProPlayersPublicProfileAPI(views.APIView):
         user_profiles = list()
         for user in users:
             profile = user.basic.copy()
-            profile['is_pro'] = ProPlayer.objects.filter(user=user).exists()
+            pro = ProPlayer.objects.filter(user=user).first()
+            profile['is_pro'] = pro is not None
+            if profile['is_pro']:
+                profile['sponsors'] = [sponsor.brand.details for sponsor in pro.sponsors.all()]
             profile['follower_count'] = Follow.objects.filter(followed=user).count()
             profile['stats'] = sr.get_clean_dict(user.stats)
             profile['is_followed'] = Follow.objects.filter(
@@ -51,13 +54,16 @@ class UserProfileByID(views.APIView):
         user = User.objects.filter(id=user_id).first()
         if user is not None:
             profile = user.basic.copy()
-            profile['is_pro'] = ProPlayer.objects.filter(user=user).exists()
+            pro = ProPlayer.objects.filter(user=user).first()
+            profile['is_pro'] = pro is not None
+            if profile['is_pro']:
+                profile['sponsors'] = [sponsor.brand.details for sponsor in pro.sponsors.all()]
             profile['follower_count'] = Follow.objects.filter(followed=user).count()
             profile['stats'] = sr.get_clean_dict(user.stats)
             profile['engagement'] = EngagementStats.stats_of_user(user)
             profile['is_followed'] = Follow.objects.filter(
                 followed=user, follower=request.user).exists()
-            profile['favorite_brands'] = [fav.brand.details for fav in request.user.favbrands.all()]
+            profile['favorite_brands'] = [fav.brand.details for fav in user.favbrands.all()]
             return Response(profile, status=status.HTTP_200_OK)
         return Response(dict(error='User not found'), status=status.HTTP_404_NOT_FOUND)
 
