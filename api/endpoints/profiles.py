@@ -11,7 +11,10 @@ class PlayerProfileAPI(views.APIView):
 
     def get(self, request: Request) -> Response:
         profile = request.user.basic.copy()
-        profile['is_pro'] = ProPlayer.objects.filter(user=request.user).exists()
+        pro = ProPlayer.objects.filter(user=request.user).first()
+        profile['is_pro'] = pro is not None
+        if profile['is_pro']:
+            profile['sponsors'] = [sponsor.brand.details for sponsor in pro.sponsors.all()]
         # followers = [f.follower.details for f in Follow.objects.filter(
         #     followed=request.user)]
         profile['follower_count'] = Follow.objects.filter(followed=request.user).count()
