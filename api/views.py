@@ -14,6 +14,7 @@ from .endpoints.users import *
 from .endpoints.test import *
 from .endpoints.chat import *
 from .endpoints.brands import *
+from .endpoints.feedbacks import *
 from . import serializers
 
 

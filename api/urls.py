@@ -44,6 +44,10 @@ urlpatterns = [
     # users
     path('user-data', views.UserDataAPI.as_view()),
 
+    # feedbacks
+    path('feedback-types', views.FeedbackTypesAPI.as_view()),
+    path('feedbacks', views.FeedbacksAPI.as_view()),
+
     # brands
     path('brands', views.BrandsAPI.as_view()),
     path('user/brands/favorites', views.FavoriteBrandAPI.as_view()),

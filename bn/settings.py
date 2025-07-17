@@ -35,7 +35,8 @@ INSTALLED_APPS += [
     'pinscore',
     'teams',
     'chat',
-    'brands'
+    'brands',
+    'feedback',
 ]
 
 # external apps
