@@ -23,7 +23,7 @@ class FeedbacksAPI(views.APIView):
         kwargs = dict(
             user=request.user,
             feedback_type=FeedbackType.objects.get(
-                request.data.get('feedback_type_id')),
+                id=request.data.get('feedback_type_id')),
             title=request.data.get('title'),
             details=request.data.get('details')
         )
