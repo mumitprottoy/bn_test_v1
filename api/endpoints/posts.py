@@ -15,11 +15,10 @@ class PostPaginator(PageNumberPagination):
 
 
 class PostFeedAPI(views.APIView):
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     
     def get(self, request: Request) -> Response:
-        # post privacy based view will be implemented
-        user = User.objects.first()
+        user = request.user
         viewer = PostViewer(user)
         queryset = viewer.get_viewable_posts_queryset()
         paginator = PostPaginator()
@@ -33,7 +32,6 @@ class UserPostAPI(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
      
     def get(self, request: Request) -> Response:
-        # post privacy based view will be implemented
         return Response(dict(
             posts = [p.details() for p in models.PostMetaData.objects.filter(
                 user=request.user).order_by('-id')]
@@ -122,3 +120,12 @@ class UserPostsByID(views.APIView):
             return Response([post.details() for post in models.PostMetaData.objects.filter(
                 user=user).order_by('-id')])
         return Response(dict(error='User not found'))
+    
+
+class PostsByID(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request: Request, post_id: int) -> Response:
+        return Response(
+            models.PostMetaData.objects.get(
+                id=post_id).details(request.user))
