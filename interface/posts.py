@@ -67,5 +67,6 @@ class PostViewer:
         
     
     def get_viewable_posts_queryset(self) -> QuerySet:
-        return models.PostMetaData.objects.filter(id__in=self.get_post_ids()).order_by('-id')
+        return models.PostMetaData.objects.filter(
+            id__in=self.get_post_ids()).order_by('-id')
 

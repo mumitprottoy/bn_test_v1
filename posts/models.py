@@ -80,6 +80,7 @@ class PostMetaData(models.Model):
         has_event = hasattr(self, 'event')
         has_image = self.imageurls.exists()
         has_video = self.videourls.exists() 
+        is_liked_by_me = False
         author = dict(
             user_id = self.user.id,
             name = self.user.get_full_name(),
@@ -88,6 +89,8 @@ class PostMetaData(models.Model):
         if viewer is not None:
             author['is_following'] = self.is_follower(viewer)
             author['viewer_is_author'] = self.user == viewer
+            is_liked_by_me = self.likes.filter(user=viewer).exists()
+
         created = timesince(self.created_at)
         last_update = timesince(self.updated_at)
         metadata = dict(
@@ -123,7 +126,8 @@ class PostMetaData(models.Model):
             videos=videos,
             poll=poll,
             event=event,
-            tags=self.tags
+            tags=self.tags,
+            is_liked_by_me = is_liked_by_me
         )
     
     def save(self, *args, **kwargs) -> None:
