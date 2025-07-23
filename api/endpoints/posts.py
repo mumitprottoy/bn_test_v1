@@ -38,7 +38,6 @@ class UserPostAPI(views.APIView):
         ))
     
     def post(self, request: Request) -> Response:
-
         print(request.data)
         poster = Poster(user=request.user, **request.data)
         metadata = poster.create_post()

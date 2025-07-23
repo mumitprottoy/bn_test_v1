@@ -78,8 +78,7 @@ class PostMetaData(models.Model):
         has_text = hasattr(self, 'text')
         has_poll = hasattr(self, 'poll')
         has_event = hasattr(self, 'event')
-        has_image = self.imageurls.exists()
-        has_video = self.videourls.exists() 
+        has_media = self.media.exists() 
         is_liked_by_me = False
         author = dict(
             user_id = self.user.id,
@@ -104,8 +103,7 @@ class PostMetaData(models.Model):
             created = sr.pretty_timesince(self.created_at),
             last_update = sr.pretty_timesince(self.updated_at),
             has_text = has_text,
-            has_image = has_image,
-            has_video = has_video,
+            has_media=has_media,
             has_poll = has_poll,
             has_event = has_event,
         )
@@ -122,8 +120,7 @@ class PostMetaData(models.Model):
             likes=likes,
             comments=comments,
             caption=caption,
-            images=images,
-            videos=videos,
+            media=[media.url for media in self.media.all()],
             poll=poll,
             event=event,
             tags=self.tags,
@@ -322,10 +319,7 @@ class PostCommentReplyPic(models.Model):
     url = models.TextField(default='')
 
 
-# class PostMediaContent(models.Model):
-#     metadata = models.ForeignKey(
-#         PostMetaData, on_delete=models.CASCADE, related_name='media')
-#     url = models.URLField(max_length=500)
-
-#     def __str__(self) -> str:
-#         return self.
+class PostMediaContent(models.Model):
+    metadata = models.ForeignKey(
+        PostMetaData, on_delete=models.CASCADE, related_name='media')
+    url = models.URLField(max_length=500)
