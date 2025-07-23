@@ -30,6 +30,7 @@ class PostFeedAPI(views.APIView):
 
 class UserPostAPI(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [parsers.MultiPartParser, parsers.FormParser]
      
     def get(self, request: Request) -> Response:
         return Response(dict(
@@ -38,8 +39,10 @@ class UserPostAPI(views.APIView):
         ))
     
     def post(self, request: Request) -> Response:
-        print(request.data)
-        poster = Poster(user=request.user, **request.data)
+        kwargs = dict(request.data)
+        if 'media' in request.FILES:
+            kwargs['media'] = request.FILES.getlist('media')
+        poster = Poster(user=request.user, **kwargs)
         metadata = poster.create_post()
         return Response(metadata.details(), status=status.HTTP_200_OK)
         # except Exception as e: 
