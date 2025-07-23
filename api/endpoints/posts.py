@@ -129,3 +129,4 @@ class PostsByID(views.APIView):
         return Response(
             models.PostMetaData.objects.get(
                 id=post_id).details(request.user))
+    

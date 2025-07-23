@@ -1,6 +1,7 @@
 from django.db.models import QuerySet
 from posts import models
 # from posts.models import User
+from cloud.engine import CloudEngine
 
 
 class Poster:
@@ -11,8 +12,7 @@ class Poster:
         privacy: str='Public', # Only me, Followers
         poll: dict | None=None, 
         event: dict | None=None,
-        images: list| None=None,
-        videos: list | None=None,
+        media: list | None=None,
         tags: list=list()):
         
         self.user = user
@@ -21,6 +21,7 @@ class Poster:
         self.event = event
         self.privacy = privacy
         self.tags = tags
+        self.media = media
         
     def create_metadata(self) -> models.PostMetaData:
         return models.PostMetaData.objects.create(user=self.user, privacy=self.privacy, tags=self.tags)
@@ -39,6 +40,13 @@ class Poster:
                 models.PollOption.objects.create(poll=poll, content=option)
 
             return poll
+    
+    def upload_media_content(
+            self, metadata: models.PostMetaData) -> models.PostImageUrl:
+        for file in self.media:
+            engine = CloudEngine(file, 'media', 'mumit1')
+            url = engine.upload()
+            models.Pos
     
     def create_event(self, metadata: models.PostMetaData) -> models.PostEvent:
         if self.event is not None:

@@ -320,3 +320,12 @@ class PostCommentReplyPic(models.Model):
     reply = models.ForeignKey(
         PostCommentReply, on_delete=models.CASCADE, related_name='pics')
     url = models.TextField(default='')
+
+
+# class PostMediaContent(models.Model):
+#     metadata = models.ForeignKey(
+#         PostMetaData, on_delete=models.CASCADE, related_name='media')
+#     url = models.URLField(max_length=500)
+
+#     def __str__(self) -> str:
+#         return self.

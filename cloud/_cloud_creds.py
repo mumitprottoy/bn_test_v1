@@ -11,11 +11,18 @@ access_keys = {
 buckets = {
     'testv0': 'bwlrntktestv0',
     'testv1': 'bwlrntktestv1',
-    'testv2': 'bwlrntktestv2'
+    'testv2': 'bwlrntktestv2',
+    'sponsors': 'bwlrntksponsors',
+    'media': 'bwlrntkpostmediacontent',
+}
+public_base_urls = {
+    'testv0': 'https://pub-2def41345f13434aa37c16ee78e1fbcc.r2.dev',
+    'media': 'https://media.bowlersnetwork.com',
 }
 regions = {
     'auto': 'auto'
 }
+
 
 class DictData:
     
@@ -33,7 +40,7 @@ class CloudCred:
         self.access_key = DictData(**access_keys)
         self.bucket = DictData(**buckets)
         self.region = DictData(**regions)
-        self.public_base_url = public_base_url
+        self.public_base_urls = public_base_urls
     
     def get_endpoint_url(self) -> str:
         return f'https://{self.account_id}.r2.cloudflarestorage.com'

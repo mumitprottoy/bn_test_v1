@@ -22,7 +22,7 @@ class CloudEngine:
         self.access_key = self.creds.access_key.__dict__[key_holder]
         self.secret_key = self.creds.secret_key
         self.endpoint_url = self.creds.get_endpoint_url()
-        self.public_base_url = self.creds.public_base_url
+        self.public_base_url = self.creds.public_base_urls[bucket]
         self.file_name_header_len = file_name_header_len
         self.errors = list()
     
