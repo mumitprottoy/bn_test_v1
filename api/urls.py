@@ -33,7 +33,8 @@ urlpatterns = [
     # profile
     path('user/profile', views.PlayerProfileAPI.as_view()),
     path('user/pro-player-public-profile', views.ProPlayersPublicProfileAPI.as_view()),
-    path('user/profile/upload-profile-picture', views.UploadProfilePicture.as_view()),
+    path('user/profile/upload-profile-picture', views.UploadProfilePictureAPI.as_view()),
+    path('user/profile/upload-cover-photo', views.UploadCoverPhotoAPI.as_view()),
 
     # teams
     path('user/teams', views.TeamsAPI.as_view()),

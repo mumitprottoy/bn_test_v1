@@ -68,7 +68,7 @@ class UserProfileByID(views.APIView):
         return Response(dict(error='User not found'), status=status.HTTP_404_NOT_FOUND)
 
 
-class UploadProfilePicture(views.APIView):
+class UploadProfilePictureAPI(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
     parser_classes = [parsers.MultiPartParser, parsers.FormParser]
 
