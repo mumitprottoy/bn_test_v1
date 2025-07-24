@@ -14,10 +14,12 @@ buckets = {
     'testv2': 'bwlrntktestv2',
     'sponsors': 'bwlrntksponsors',
     'media': 'bwlrntkpostmediacontent',
+    'profiles': 'bwlrntkprofiles'
 }
 public_base_urls = {
     'testv0': 'https://pub-2def41345f13434aa37c16ee78e1fbcc.r2.dev',
     'media': 'https://media.bowlersnetwork.com',
+    'profiles': 'https://profiles.bowlersnetwork.com',
 }
 regions = {
     'auto': 'auto'

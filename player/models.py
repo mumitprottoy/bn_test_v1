@@ -31,8 +31,10 @@ def forbidden_word_validator(value):
 
 class User(AbstractUser):
     email = models.EmailField(unique=True)
-    profile_picture_url = models.TextField(
-        default='https://api.dicebear.com/7.x/shapes/jpg?seed=default-avatar')
+    profile_picture_url = models.URLField(
+        max_length=500, default='https://profiles.bowlersnetwork.com/default-profile-pic.png')
+    cover_photo_url = models.URLField(
+        max_length=500, default='https://profiles.bowlersnetwork.com/default-cover.png')
     xp = models.IntegerField(default=0)
 
     REQUIRED_FIELDS = ['first_name', 'last_name', 'email']
@@ -59,6 +61,7 @@ class User(AbstractUser):
         basic_info = self.minimal.copy()
         basic_info.update(dict(
             intro_video_url=self.introvideo.url,
+            cover_photo_url=self.cover_photo_url,
             xp=self.xp,
             level=self.level,
             card_theme = self.card_theme

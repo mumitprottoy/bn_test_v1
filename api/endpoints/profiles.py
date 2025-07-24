@@ -74,10 +74,25 @@ class UploadProfilePicture(views.APIView):
 
     def post(self, request: Request) -> Response:
         image = request.data.get('image')
-        cloud_engine = CloudEngine(image)
+        cloud_engine = CloudEngine(image, 'profiles')
         image_pub_url = cloud_engine.upload()
         if image_pub_url is not None:
             request.user.profile_picture_url = image_pub_url
+            request.user.save()
+        return Response(dict(
+            message='Success', image_public_url=image_pub_url), status=status.HTTP_200_OK)
+
+
+class UploadCoverPhotoAPI(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [parsers.FormParser, parsers.MultiPartParser]
+
+    def post(self, request: Request) -> Response:
+        image = request.data.get('image')
+        cloud_engine = CloudEngine(image, 'profiles')
+        image_pub_url = cloud_engine.upload()
+        if image_pub_url is not None:
+            request.user.cover_photo_url = image_pub_url
             request.user.save()
         return Response(dict(
             message='Success', image_public_url=image_pub_url), status=status.HTTP_200_OK)

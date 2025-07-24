@@ -179,6 +179,15 @@ class Follow(models.Model):
         
     def __str__(self):
         return f'{self.followed.username} followed by {self.follower.username}'
+    
+
+class CoverPhoto(models.Model):
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name='covers')
+    url = models.URLField(max_length=500)
+
+    def __str__(self) -> str:
+        return self.user.username + f' ({self.user.email})'
 
 
 class IntroVideo(models.Model):
