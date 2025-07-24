@@ -9,7 +9,7 @@ class ProPlayer(models.Model):
 
     @property
     def sponsors_list(self) -> list[dict]:
-        return [brand.details for brand in self.sponsors.all()]
+        return [sponsor.brand.details for sponsor in self.sponsors.all()]
     
     @property
     def social_links(self) -> list[dict]:
