@@ -28,3 +28,31 @@ class Sponsors(models.Model):
                 name='unique_sponsor_player_pair'
             )
         ]
+
+
+class Social(models.Model):
+    name = models.CharField(max_length=30, unique=True)
+    logo = models.URLField(max_length=500)
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class SocialLink(models.Model):
+    pro = models.ForeignKey(ProPlayer, on_delete=models.CASCADE)
+    social = models.ForeignKey(Social, on_delete=models.CASCADE)
+    url = models.URLField(max_length=500)
+
+    def __str__(self) -> str:
+        return f'{self.pro.__str__()} [{self.social.name}]'
+    
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=('pro', 'social', 'url'),
+                name='unique_social'
+            )
+        ]
+    
+
+    

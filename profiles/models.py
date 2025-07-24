@@ -192,7 +192,7 @@ class CoverPhoto(models.Model):
 
 class IntroVideo(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    url = models.TextField()
+    url = models.URLField(max_length=500, default='https://profiles.bowlersnetwork.com/default_intro_video.mp4')
 
     def __str__(self) -> str:
         return self.user.username + f' ({self.user.email})'

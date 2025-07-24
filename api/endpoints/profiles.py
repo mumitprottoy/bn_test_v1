@@ -1,6 +1,6 @@
 from .libs import *
 from profiles.models import Follow, FavoriteBrand
-from utils import subroutines as sr
+from utils import subroutines as sr, constants as const
 from pros.models import ProPlayer, Sponsors
 from interface.stats import EngagementStats
 from cloud.engine import CloudEngine
@@ -74,13 +74,18 @@ class UploadProfilePictureAPI(views.APIView):
 
     def post(self, request: Request) -> Response:
         image = request.data.get('image')
-        cloud_engine = CloudEngine(image, 'profiles')
-        image_pub_url = cloud_engine.upload()
-        if image_pub_url is not None:
-            request.user.profile_picture_url = image_pub_url
-            request.user.save()
-        return Response(dict(
-            message='Success', image_public_url=image_pub_url), status=status.HTTP_200_OK)
+        if image and image.name.lower().split('.')[1] in const.PROFILE_PIC_SUPPORTED_FILES:
+            cloud_engine = CloudEngine(image, 'profiles')
+            image_pub_url = cloud_engine.upload()
+            if image_pub_url is not None:
+                request.user.profile_picture_url = image_pub_url
+                request.user.save()
+            return Response(dict(
+                message='Success', image_public_url=image_pub_url), status=status.HTTP_200_OK)
+        else: return Response(
+            dict(message=f'Unsupported file type. Supported file types: {', '.join(const.PROFILE_PIC_SUPPORTED_FILES)}'),
+            status=status.HTTP_400_BAD_REQUEST
+        )
 
 
 class UploadCoverPhotoAPI(views.APIView):
@@ -89,10 +94,34 @@ class UploadCoverPhotoAPI(views.APIView):
 
     def post(self, request: Request) -> Response:
         image = request.data.get('image')
-        cloud_engine = CloudEngine(image, 'profiles')
-        image_pub_url = cloud_engine.upload()
-        if image_pub_url is not None:
-            request.user.cover_photo_url = image_pub_url
-            request.user.save()
-        return Response(dict(
-            message='Success', image_public_url=image_pub_url), status=status.HTTP_200_OK)
+        if image and image.name.lower().split('.')[1] in const.COVER_PHOTO_SUPPORTED_FILES:
+            cloud_engine = CloudEngine(image, 'profiles')
+            image_pub_url = cloud_engine.upload()
+            if image_pub_url is not None:
+                request.user.cover_photo_url = image_pub_url
+                request.user.save()
+            return Response(dict(
+                message='Success', image_public_url=image_pub_url), status=status.HTTP_200_OK)
+        else: return Response(
+            dict(message=f'Unsupported file type. Supported file types: {', '.join(const.COVER_PHOTO_SUPPORTED_FILES)}'),
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+class UploadIntroVideoAPI(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [parsers.MultiPartParser, parsers.FormParser]
+
+    def post(self, request: Request) -> Response:
+        video = request.data.get('video')
+        if video and video.name.lower().split('.')[1] in const.INTRO_VIDEO_SUPPORTED_FILES:
+            cloud_engine = CloudEngine(video, 'profiles')
+            video_pub_url = cloud_engine.upload()
+            if video_pub_url is not None:
+                request.user.introvideo.url = video_pub_url
+                request.user.introvideo.save()
+            return Response(dict(
+                message='Success', video_public_url=video_pub_url), status=status.HTTP_200_OK)
+        else: return Response(
+            dict(message=f'Unsupported file type. Supported file types: {', '.join(const.INTRO_VIDEO_SUPPORTED_FILES)}'),
+            status=status.HTTP_400_BAD_REQUEST
+        )
