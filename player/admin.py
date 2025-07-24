@@ -24,7 +24,7 @@ class CustomUserAdmin(DefaultUserAdmin):
         (None, {"fields": ("username", "password")}),
         ("Personal Info", {
             "fields": (
-                "first_name", "last_name", "email", "profile_picture_url"
+                "first_name", "last_name", "email", "profile_picture_url", "cover_photo_url"
             )
         }),
         ("Game Progress", {
