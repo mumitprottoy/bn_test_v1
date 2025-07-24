@@ -35,7 +35,8 @@ class ProPlayersPublicProfileAPI(views.APIView):
             pro = ProPlayer.objects.filter(user=user).first()
             profile['is_pro'] = pro is not None
             if profile['is_pro']:
-                profile['sponsors'] = [sponsor.brand.details for sponsor in pro.sponsors.all()]
+                profile['sponsors'] = pro.sponsors_list
+                profile['socials'] = pro.social_links
             profile['follower_count'] = Follow.objects.filter(followed=user).count()
             profile['stats'] = sr.get_clean_dict(user.stats)
             profile['is_followed'] = Follow.objects.filter(
