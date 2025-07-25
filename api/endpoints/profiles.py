@@ -70,6 +70,31 @@ class UserProfileByID(views.APIView):
         return Response(dict(error='User not found'), status=status.HTTP_404_NOT_FOUND)
 
 
+class UserProfileByUsername(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request: Request, username: str) -> Response:
+        user = User.objects.filter(username=username).first()
+        if user is not None:
+            profile = user.basic.copy()
+            pro = ProPlayer.objects.filter(user=user).first()
+            profile['is_me'] = user.id == request.user.id
+            profile['is_pro'] = pro is not None
+            if profile['is_pro']:
+                profile['sponsors'] = pro.sponsors_list
+                profile['socials'] = pro.social_links
+            else: 
+                profile['favorite_brands'] = [fav.brand.details for fav in user.favbrands.all()]
+            profile['follower_count'] = Follow.objects.filter(followed=user).count()
+            profile['stats'] = sr.get_clean_dict(user.stats)
+            profile['engagement'] = EngagementStats.stats_of_user(user)
+            profile['is_followed'] = Follow.objects.filter(
+                followed=user, follower=request.user).exists()
+            
+            return Response(profile, status=status.HTTP_200_OK)
+        return Response(dict(error='User not found'), status=status.HTTP_404_NOT_FOUND)
+
+
 class ProPlayerProfileByUsername(views.APIView):
     
     def get(self, request: Request, username: str) -> Response:

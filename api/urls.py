@@ -29,7 +29,7 @@ urlpatterns = [
     path('pro/profile/<str:username>', views.ProPlayerProfileByUsername.as_view()),
 
     # by user id
-    path('user/<int:user_id>/profile', views.UserProfileByID.as_view()),
+    path('user/profile/<str:username>', views.UserProfileByUsername.as_view()),
     path('user/<int:user_id>/posts', views.UserPostsByID.as_view()),
 
     # profile
