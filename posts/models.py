@@ -80,11 +80,7 @@ class PostMetaData(models.Model):
         has_event = hasattr(self, 'event')
         has_media = self.media.exists() 
         is_liked_by_me = False
-        author = dict(
-            user_id = self.user.id,
-            name = self.user.get_full_name(),
-            profile_pic_url = self.user.profile_picture_url,
-        )
+        author = self.user.minimal
         if viewer is not None:
             author['is_following'] = self.is_follower(viewer)
             author['viewer_is_author'] = self.user == viewer
