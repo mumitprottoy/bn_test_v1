@@ -23,8 +23,9 @@ urlpatterns = [
     path('user/follow-count', views.FollowerCountAPI.as_view()),
     path('user/followers', views.FollowersAPI.as_view()),
 
-    # pro dashboard
+    # pros
     path('user/pro-dashboard-data', views.ProDashboardAPI.as_view()),
+    path('pro/profile/<str:username>', views.ProPlayerProfileByUsername.as_view()),
 
     # by user id
     path('user/<int:user_id>/profile', views.UserProfileByID.as_view()),

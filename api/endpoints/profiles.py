@@ -70,6 +70,25 @@ class UserProfileByID(views.APIView):
         return Response(dict(error='User not found'), status=status.HTTP_404_NOT_FOUND)
 
 
+class ProPlayerProfileByUsername(views.APIView):
+    
+    def get(self, request: Request, username: str) -> Response:
+        user = User.objects.filter(username=username).first()
+        pro = ProPlayer.objects.filter(user=user).first()
+        if pro is not None:
+            profile = user.basic.copy()
+            profile['sponsors'] = pro.sponsors_list
+            profile['socials'] = pro.social_links
+            profile['follower_count'] = Follow.objects.filter(followed=user).count()
+            profile['stats'] = sr.get_clean_dict(user.stats)
+            profile['engagement'] = EngagementStats.stats_of_user(user)
+            if request.user.is_authenticated:
+                profile['is_followed'] = Follow.objects.filter(
+                    followed=user, follower=request.user).exists()
+            return Response(profile, status=status.HTTP_200_OK)
+        return Response(dict(error='User not found'), status=status.HTTP_404_NOT_FOUND)
+
+
 class UploadProfilePictureAPI(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
     parser_classes = [parsers.MultiPartParser, parsers.FormParser]
