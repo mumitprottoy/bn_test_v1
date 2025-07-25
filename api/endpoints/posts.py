@@ -133,4 +133,13 @@ class PostsByID(views.APIView):
         return Response(
             models.PostMetaData.objects.get(
                 id=post_id).details(request.user))
+
+
+class PostsByUID(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request: Request, uid: str) -> Response:
+        return Response(
+            models.PostMetaData.objects.get(
+                uid=uid).details(request.user))
     
