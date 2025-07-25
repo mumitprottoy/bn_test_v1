@@ -39,7 +39,9 @@ class UserPostAPI(views.APIView):
         ))
     
     def post(self, request: Request) -> Response:
-        kwargs = dict(request.data)
+        kwargs = dict()
+        for k in request.data:
+            kwargs[k] = request.data.get(k)
         if 'media' in request.FILES:
             kwargs['media'] = request.FILES.getlist('media')
         poster = Poster(user=request.user, **kwargs)
