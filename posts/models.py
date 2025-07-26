@@ -106,8 +106,6 @@ class PostMetaData(models.Model):
         likes = self.all_likes,
         comments = self.all_comments,
         caption = self.text.content if has_text else None
-        images = [u.url for u in self.imageurls.all()]
-        videos = [u.url for u in self.videourls.all()]
         poll = self.poll.analysis if has_poll else None
         event = sr.get_clean_dict(self.event) if has_event else None
         return dict(
@@ -271,11 +269,7 @@ class PostComment(models.Model):
         pics=[pic.url for pic in self.pics.all()] if hasattr(self, 'pics') else list()
         return dict(
             comment_id=self.id,
-            user = dict(
-                user_id = self.user.id,
-                name = self.user.get_full_name(),
-                profile_pic_url = self.user.profile_picture_url
-            ),
+            user = self.user.minimal,
             text = self.content,
             pics = pics,
             replies = self.reply_list
@@ -299,11 +293,7 @@ class PostCommentReply(models.Model):
         pics=[pic.url for pic in self.pics.all()] if hasattr(self, 'pics') else list()
         return dict(
             reply_id = self.id,
-            user = dict(
-                user_id = self.user.id,
-                name = self.user.get_full_name(),
-                profile_pic_url = self.user.profile_picture_url
-            ),
+            user = self.user.minimal,
             text = self.content,
             pics = pics
         )
