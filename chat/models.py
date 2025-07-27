@@ -92,7 +92,7 @@ class MessageMetaData(models.Model):
     @property
     def time_datails(self) -> dict:
         return dict(
-            sent_at=const.DATETIME_STR_FORMAT_1,
+            sent_at=self.sent_at.strftime(const.DATETIME_STR_FORMAT_1),
             timesince=sr.pretty_timesince(self.sent_at)
         )
 
