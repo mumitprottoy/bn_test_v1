@@ -96,7 +96,6 @@ class MessageMetaData(models.Model):
             timesince=sr.pretty_timesince(self.sent_at)
         )
 
-    @property
     def details_for_user(self, for_user: User) -> dict:
         has_text_content = hasattr(self, 'textcontent')
         return dict(
