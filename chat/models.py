@@ -11,9 +11,11 @@ class Room(models.Model):
     name = models.CharField(max_length=50, unique=True, default='')
     room_type = models.CharField(max_length=10, choices=ROOM_TYPE_CHOICES, default=PRIVATE)
 
-    def last_message_for_user(self, for_user: User) -> dict:
-        return self.messages.last().details_for_user(for_user)
-    
+    def last_message_for_user(self, for_user: User) -> dict | None:
+        last_message = self.messages.last()
+        if last_message is not None:
+            return last_message.details_for_user(for_user)
+
     def messages_for_user(self, for_user: User) -> list[dict]:
         return [msg.details_for_user(for_user) for msg in self.messages.all()]
 
