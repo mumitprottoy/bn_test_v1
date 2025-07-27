@@ -25,6 +25,8 @@ class Room(models.Model):
             if self.room_type == self.GROUP:
                 team = Team.objects.filter(name=self.name).first()
                 return dict(
+                    room_id=self.id,
+                    name=self.name,
                     display_name=team.name, 
                     display_image_url=team.logo_url,
                     last_message=last_message
@@ -32,11 +34,15 @@ class Room(models.Model):
             for mate in self.mates.all():
                 if mate.user != for_user:
                     return dict(
+                        room_id=self.id,
+                        name=self.name,
                         display_name=mate.user.username, 
                         display_image_url=mate.user.profile_picture_url,
                         last_message=last_message
                     )
             return dict(
+                    room_id=self.id,
+                    name=self.name,
                     display_name=for_user.username, 
                     display_image_url=for_user.profile_picture_url,
                     last_message=last_message

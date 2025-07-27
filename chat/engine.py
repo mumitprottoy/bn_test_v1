@@ -52,6 +52,8 @@ class ChatEngine:
             if room.room_type == Room.GROUP and room.name in teams:
                 team = teams[room.name]
                 info = dict(
+                    room_id=room.id,
+                    name=room.name,
                     display_name=team.name,
                     display_image_url=team.logo_url,
                     last_message=last_message.details_for_user(self.user) if last_message else None
@@ -61,6 +63,8 @@ class ChatEngine:
                 for mate in room.mates.all():
                     if mate.user != self.user:
                         info = dict(
+                            room_id=room.id,
+                            name=room.name,
                             display_name=mate.user.username,
                             display_image_url=mate.user.profile_picture_url,
                             last_message=last_message.details_for_user(self.user) if last_message else None
