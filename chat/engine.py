@@ -5,6 +5,7 @@ from teams.models import Team
 from cloud.engine import CloudEngine
 from player.models import User
 
+
 class ChatEngine:
     
     def __init__(self, user: User):
@@ -13,7 +14,15 @@ class ChatEngine:
         self.message_map = {}
     
     def get_or_create_private_room(self, other_user: User) -> dict:
-        pass
+        common_room = (Room.objects.filter(room_type=Room.PRIVATE, mates__user=self.user)
+                       & Room.objects.filter(room_type=Room.PRIVATE, mates__user=other_user))
+        if common_room.exists():
+            return common_room.first().display_info_for_user(self.user)
+        else:
+            room = Room.objects.create(room_type=Room.PRIVATE)
+            for user in (self.user, other_user):
+                RoomMate.objects.create(room=room, user=user)
+            return room.display_info_for_user(self.user)
 
     def get_all_rooms(self) -> dict[str, list]:
         latest_msg_subquery = MessageMetaData.objects.filter(

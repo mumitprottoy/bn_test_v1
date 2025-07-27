@@ -33,7 +33,12 @@ class Room(models.Model):
                         display_name=mate.user.username, 
                         display_image_url=mate.user.profile_picture_url,
                         last_message=last_message
-                    )  
+                    )
+            return dict(
+                    display_name=for_user.username, 
+                    display_image_url=for_user.profile_picture_url,
+                    last_message=last_message
+                )
           
     def save(self, *args, **kwargs) -> None:
         if not self._state.adding:

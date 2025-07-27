@@ -57,5 +57,9 @@ urlpatterns = [
     path('user/brands/favorites', views.FavoriteBrandAPI.as_view()),
 
     # tests
-    path('test-image-upload', views.TestImageUploadAPI.as_view())
+    path('test-image-upload', views.TestImageUploadAPI.as_view()),
+
+    # chat
+    path('chat/rooms', views.RoomsAPI.as_view()),
+    path('chat/room/<int:room_id>/messages', views.ChatMessagesAPI.as_view()),
 ]
