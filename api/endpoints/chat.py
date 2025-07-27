@@ -10,10 +10,10 @@ class RoomsAPI(views.APIView):
         super().initial(request, *args, **kwargs)
         self.engine = engine.ChatEngine(request.user)
 
-    def get(self, request: Request, room_id: int) -> Response:
+    def get(self, request: Request) -> Response:
         return Response(self.engine.get_all_rooms())
     
-    def post(self, request: Request, roomt_id: int) -> Response:
+    def post(self, request: Request) -> Response:
         other_user = User.objects.filter(username=request.data.get('other_username')).first()
         if other_user is None:
             return Response(dict(error='User does not exist'), status=status.HTTP_404_NOT_FOUND)
@@ -37,11 +37,11 @@ class ChatMessagesAPI(views.APIView):
         if not self.room.mates.filter(user=request.user).exists():
             raise exceptions.PermissionDenied(error_messages.NOT_ROOM_MATE)
 
-    def get(self, request: Request) -> Response:
+    def get(self, request: Request, room_id: int) -> Response:
         messages = self.engine.get_room_messages(self.room)
         return Response(messages)
     
-    def post(self, request: Request) -> Response:
+    def post(self, request: Request, room_id: int) -> Response:
         kwargs = dict()
         for k in request.data:
             kwargs[k] = request.data.get(k)
