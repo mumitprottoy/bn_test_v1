@@ -15,6 +15,8 @@ class RoomsAPI(views.APIView):
     
     def post(self, request: Request) -> Response:
         other_user = User.objects.filter(username=request.data.get('other_username')).first()
+        if other_user is None:
+            return Response(dict(error='User does not exist'), status=status.HTTP_404_NOT_FOUND)
         room_info = self.engine.get_or_create_private_room(other_user)
         return Response(room_info)
 
