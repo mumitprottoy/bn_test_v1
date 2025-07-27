@@ -104,8 +104,8 @@ class MessageMetaData(models.Model):
             sender=self.sender.minimal,
             timeDetails=self.time_datails,
             message=dict(
-                textContent=self.textcontent.text if has_text_content else None,
-                mediaURLs=[content.url for content in self.mediacontents.all()])
+                text=self.textcontent.text if has_text_content else None,
+                media=[content.url for content in self.mediacontents.all()])
         )
 
     def save(self, *args, **kwargs) -> None:
