@@ -5,6 +5,7 @@ from profiles.models import Follow
 from utils import keygen as kg, subroutines as sr, constants as const
 from django.utils.timesince import timesince
 
+
 def generate_uid() -> str:
     return kg.KeyGen().timestamped_alphanumeric_id()
 
@@ -77,17 +78,16 @@ class PostMetaData(models.Model):
     def details(self, viewer=None) -> dict:
         has_text = hasattr(self, 'text')
         has_poll = hasattr(self, 'poll')
-        has_event = hasattr(self, 'event')
         has_media = self.media.exists() 
+        has_event = hasattr(self, 'event')
         is_liked_by_me = False
         author = self.user.minimal
+
         if viewer is not None:
             author['is_following'] = self.is_follower(viewer)
             author['viewer_is_author'] = self.user == viewer
             is_liked_by_me = self.likes.filter(user=viewer).exists()
 
-        created = timesince(self.created_at)
-        last_update = timesince(self.updated_at)
         metadata = dict(
             id = self.id,
             uid = self.uid,
@@ -103,20 +103,16 @@ class PostMetaData(models.Model):
             has_poll = has_poll,
             has_event = has_event,
         )
-        likes = self.all_likes,
-        comments = self.all_comments,
-        caption = self.text.content if has_text else None
-        poll = self.poll.analysis if has_poll else None
-        event = sr.get_clean_dict(self.event) if has_event else None
+
         return dict(
             metadata=metadata,
             author=author,
-            likes=likes,
-            comments=comments,
-            caption=caption,
-            media=[media.url for media in self.media.all()],
-            poll=poll,
-            event=event,
+            likes=self.all_likes,
+            comments=self.all_comments,
+            caption=self.text.content if has_text else None,
+            media=[media.url for media in self.media.all()] if has_media else None,
+            poll=self.poll.analysis if has_poll else None,
+            event=sr.get_clean_dict(self.event) if has_event else None,
             tags=self.tags,
             is_liked_by_me = is_liked_by_me
         )

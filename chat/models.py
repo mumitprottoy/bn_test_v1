@@ -36,9 +36,15 @@ class Room(models.Model):
                     )  
           
     def save(self, *args, **kwargs) -> None:
+        if not self._state.adding:
+            original_room_type = Room.objects.get(id=self.id).room_type
+            if self.room_type != original_room_type:
+                raise ValueError("Cannot change room type")
+            
         if not self.name:
             from utils.keygen import KeyGen
             self.name = KeyGen().alphanumeric_key(50)
+        
         super().save(*args, **kwargs)
 
     def __str__(self) -> str:

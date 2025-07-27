@@ -1,15 +1,21 @@
 from django.db.models import Prefetch, OuterRef, Subquery
-from chat.models import Room, RoomMate, MessageMetaData
+from django.core.files.uploadedfile import UploadedFile
+from chat.models import Room, RoomMate, MessageMetaData, MessageTextContent, MessageMediaContent
 from teams.models import Team
+from cloud.engine import CloudEngine
+from player.models import User
 
-
-class ChatService:
-    def __init__(self, user):
+class ChatEngine:
+    
+    def __init__(self, user: User):
         self.user = user
         self.rooms = None
         self.message_map = {}
+    
+    def get_or_create_private_room(self, other_user: User) -> dict:
+        pass
 
-    def get_all_rooms(self):
+    def get_all_rooms(self) -> dict[str, list]:
         latest_msg_subquery = MessageMetaData.objects.filter(
             room=OuterRef('pk')
         ).order_by('-sent_at').values('id')[:1]
@@ -54,8 +60,28 @@ class ChatService:
                         break
         return result
 
-    def get_room_messages(self, room):
+    def get_room_messages(self, room: Room) -> list[dict]:
         messages = MessageMetaData.objects.filter(room=room).prefetch_related(
             'mediacontents'
         ).select_related('sender', 'textcontent')
         return [msg.details_for_user(self.user) for msg in messages]
+    
+    def create_message(
+            self, room_id: int, text: str | None=None, media_files: list[UploadedFile] | None=None) -> dict | None:
+        room = Room.objects.get(id=room_id)
+        if text or media_files:
+            metadata = MessageMetaData.objects.create(room=room, sender=self.user)
+            
+            if text is not None:
+                MessageTextContent.objects.create(metadata=metadata, text=text)
+            
+            if media_files is not None:
+                for file in media_files:
+                    cloud_engine = CloudEngine(file, 'chat')
+                    pub_url = cloud_engine.upload()
+                    
+                    if pub_url is not None:
+                        MessageMediaContent.objects.create(metadata=metadata, url=pub_url)
+            
+            return metadata.details_for_user(self.user)
+
