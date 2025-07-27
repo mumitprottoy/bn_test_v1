@@ -14,7 +14,7 @@ class RoomsAPI(views.APIView):
         return Response(self.engine.get_all_rooms())
     
     def post(self, request: Request) -> Response:
-        other_user = User.objects.filter(username=request.data.get('username')).first()
+        other_user = User.objects.filter(username=request.data.get('other_username')).first()
         room_info = self.engine.get_or_create_private_room(other_user)
         return Response(room_info)
 
