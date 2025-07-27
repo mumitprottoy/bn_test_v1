@@ -89,16 +89,15 @@ class ChatEngine:
         return [msg.details_for_user(self.user) for msg in messages]
     
     def create_message(
-            self, room_id: int, text: str | None=None, media_files: list[UploadedFile] | None=None) -> dict | None:
-        room = Room.objects.get(id=room_id)
-        if text or media_files:
+            self, room: Room, text: str | None=None, media: list[UploadedFile] | None=None) -> dict | None:
+        if text or media:
             metadata = MessageMetaData.objects.create(room=room, sender=self.user)
             
             if text is not None:
                 MessageTextContent.objects.create(metadata=metadata, text=text)
             
-            if media_files is not None:
-                for file in media_files:
+            if media is not None:
+                for file in media:
                     cloud_engine = CloudEngine(file, 'chat')
                     pub_url = cloud_engine.upload()
                     

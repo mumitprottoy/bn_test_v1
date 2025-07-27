@@ -45,8 +45,8 @@ class ChatMessagesAPI(views.APIView):
         kwargs = dict()
         for k in request.data:
             kwargs[k] = request.data.get(k)
-        if 'media_files' in kwargs:
-            kwargs['media_files'] = request.FILES.getlist('media_files')
-        message = self.engine.create_message(**kwargs)
+        if 'media' in kwargs:
+            kwargs['media'] = request.FILES.getlist('media')
+        message = self.engine.create_message(room=self.room, **kwargs)
         return Response(message)
 
