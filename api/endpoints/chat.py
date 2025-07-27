@@ -10,10 +10,10 @@ class RoomsAPI(views.APIView):
         super().initial(request, *args, **kwargs)
         self.engine = engine.ChatEngine(request.user)
 
-    def get(self, request: Request) -> Response:
+    def get(self, request: Request, room_id: int) -> Response:
         return Response(self.engine.get_all_rooms())
     
-    def post(self, request: Request) -> Response:
+    def post(self, request: Request, roomt_id: int) -> Response:
         other_user = User.objects.filter(username=request.data.get('other_username')).first()
         if other_user is None:
             return Response(dict(error='User does not exist'), status=status.HTTP_404_NOT_FOUND)
