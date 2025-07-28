@@ -37,4 +37,7 @@ class EmailCredAdmin(admin.ModelAdmin):
             return ['email']
 
 
-admin.site.register(EmailConfig)
+@admin.register(EmailConfig)
+class EmailConfigAdmin(admin.ModelAdmin):
+    list_display = ('name', 'backend', 'host', 'port', 'use_tls')
+    fields = ('name', 'backend', 'host', 'port', 'use_tls')
