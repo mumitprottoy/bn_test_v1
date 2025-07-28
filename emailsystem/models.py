@@ -22,9 +22,6 @@ class EmailConfig(models.Model):
     def __str__(self) -> str:
         return self.name
 
-try: EmailConfig.get_default()
-except: pass
-
 
 class EmailCred(models.Model):
     email = models.EmailField(unique=True)
