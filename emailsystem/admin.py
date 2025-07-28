@@ -40,4 +40,5 @@ class EmailCredAdmin(admin.ModelAdmin):
 @admin.register(EmailConfig)
 class EmailConfigAdmin(admin.ModelAdmin):
     list_display = ('name', 'backend', 'host', 'port', 'use_tls')
+    readonly_fields = ('name', 'backend', 'host', 'port', 'use_tls')
     fields = ('name', 'backend', 'host', 'port', 'use_tls')
