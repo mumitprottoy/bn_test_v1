@@ -1,9 +1,40 @@
 from django.contrib import admin
-from django.apps import apps
-from django.contrib.admin.sites import AlreadyRegistered
+from django import forms
+from .models import EmailCred, EmailConfig
 
-app_models = apps.get_app_config(__name__.split('.')[-2]).get_models()
+class EmailCredCreationForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput, help_text="Enter raw password here.")
 
-for model in app_models:
-    try:admin.site.register(model)
-    except AlreadyRegistered:pass
+    class Meta:
+        model = EmailCred
+        fields = ['email', 'password']
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        if commit:
+            instance.save()
+        return instance
+
+
+@admin.register(EmailCred)
+class EmailCredAdmin(admin.ModelAdmin):
+    list_display = ('email',)
+
+    def get_form(self, request, obj=None, **kwargs):
+        if obj is None:
+            kwargs['form'] = EmailCredCreationForm
+        return super().get_form(request, obj, **kwargs)
+
+    def get_readonly_fields(self, request, obj=None):
+        if obj:
+            return ['email']
+        return []
+
+    def get_fields(self, request, obj=None):
+        if obj is None:
+            return ['email', 'password']
+        else:
+            return ['email']
+
+
+admin.site.register(EmailConfig)
