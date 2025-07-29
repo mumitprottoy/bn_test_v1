@@ -27,7 +27,7 @@ class Room(models.Model):
 
     def display_info_for_user(self, for_user: User) -> dict | None:
         last_message = self.last_message_for_user(for_user)
-        last_activity = sr.pretty_timesince(self.created_at) if last_message is None else last_message['timeDetails']['timeSince']
+        last_activity = sr.pretty_timesince(self.created_at) if last_message is None else last_message['timeDetails']['timesince']
         if self.mates.filter(user=for_user).exists():
             if self.room_type == self.GROUP:
                 team = Team.objects.filter(name=self.name).first()
