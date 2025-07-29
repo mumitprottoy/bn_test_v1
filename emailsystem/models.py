@@ -19,6 +19,10 @@ class EmailConfig(models.Model):
             use_tls=True
         )[0]
     
+    @property
+    def connection_kwargs(self) -> dict:
+        return dict(backend=self.backend, host=self.host, port=self.port, use_tls=self.use_tls)
+    
     def __str__(self) -> str:
         return self.name
 
@@ -27,6 +31,10 @@ class EmailCred(models.Model):
     key = models.CharField(max_length=20, unique=True, default='system')
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=50)
+
+    @property
+    def connection_kwargs(self) -> dict:
+        return dict(username=self.email, password=self.password)
 
     def __str__(self) -> str:
         return self.email
