@@ -40,7 +40,9 @@ class TeamMembersAPI(views.APIView):
             raise exceptions.PermissionDenied(detail='Members only')
 
     def get(self, request: Request, team_id: int) -> Response:
-        return Response(self.team.member_details, status=status.HTTP_200_OK)
+        team_details = self.team.details.copy()
+        team_details.update(dict(members=self.team.member_details))
+        return Response(team_details, status=status.HTTP_200_OK)
     
     # leave group
     def post(self, request: Request, team_id: int) -> Response:

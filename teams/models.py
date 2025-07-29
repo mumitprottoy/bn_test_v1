@@ -1,6 +1,7 @@
 from django.db import models
 from player.models import User
 from utils import constants as const
+from chat.models import Room
 
 
 class Team(models.Model):
@@ -14,6 +15,10 @@ class Team(models.Model):
     
     def is_member(self, user: User) -> bool:
         return self.members.filter(user=user).exists()
+    
+    @property
+    def chat_room(self) -> Room:
+        return Room.objects.get(name=self.name, room_type=Room.GROUP)
 
     @property
     def member_count(self) -> int:
@@ -38,6 +43,7 @@ class Team(models.Model):
     def details(self) -> dict:
         return dict(
             team_id=self.id,
+            team_chat_room_id=self.chat_room.id,
             name=self.name,
             logo_url=self.logo_url,
             created_by=self.created_by.basic,
