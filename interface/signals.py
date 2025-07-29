@@ -24,14 +24,14 @@ def add_team_creator_as_member(instance: Team, created: bool, *args, **kwargs) -
 def create_group_room(instance: Team, created: bool, *args, **kwargs) -> None:
     team = instance
     if created:
-        Team.objects.create(name=team.name, room_type=Room.GROUP)
+        Room.objects.create(name=team.name, room_type=Room.GROUP)
 
 
 @receiver(post_save, sender=TeamMember)
-def create_group_room(instance: TeamMember, created: bool, *args, **kwargs) -> None:
+def create_group_room_mates(instance: TeamMember, created: bool, *args, **kwargs) -> None:
     member = instance
     if created:
-        room = Room.objects.get(name=member.team.name)
+        room = Room.objects.get_or_create(name=member.team.name)
         RoomMate.objects.get_or_create(room=room, user=member.user)
 
 @receiver(post_save, sender=User)
