@@ -1,0 +1,18 @@
+{% extends "emails/to_user_base.html" %}
+
+{% block content %}
+    <p>
+        Thank you for joining BowlersNetwork. We're thrilled to have you on board.
+        </p>
+        <p>
+          To get started, please verify your email address using the code below:
+        </p>
+        <div class="code-box">{{code}}</div>
+        <p>
+          This code will expire in 10 minutes. If you didn’t request this, you can safely ignore this email.
+        </p>
+        <p>
+          Happy bowling! 🎳 <br />
+          — The BowlersNetwork Team
+    </p>
+{% endblock content %}

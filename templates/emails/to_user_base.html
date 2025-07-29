@@ -75,21 +75,9 @@
         <h1>BowlersNetwork</h1>
       </div>
       <div class="content">
-        <h2>Hello, Mumit Prottoy!</h2>
-        <p>
-          Thank you for joining BowlersNetwork. We're thrilled to have you on board.
-        </p>
-        <p>
-          To get started, please verify your email address using the code below:
-        </p>
-        <div class="code-box">{{code}}</div>
-        <p>
-          This code will expire in 10 minutes. If you didn’t request this, you can safely ignore this email.
-        </p>
-        <p>
-          Happy bowling! 🎳 <br />
-          — The BowlersNetwork Team
-        </p>
+        <h2>Hello, {{full_name}}!</h2>
+        {% block content %}
+        {% endblock content %}
       </div>
       <div class="footer">
         &copy; 2025 BowlersNetwork. All rights reserved.<br />
