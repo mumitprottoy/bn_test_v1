@@ -18,7 +18,7 @@ class EmailCredCreationForm(forms.ModelForm):
 
 @admin.register(EmailCred)
 class EmailCredAdmin(admin.ModelAdmin):
-    list_display = ('email',)
+    list_display = ('key', 'email')
 
     def get_form(self, request, obj=None, **kwargs):
         if obj is None:
@@ -27,14 +27,14 @@ class EmailCredAdmin(admin.ModelAdmin):
 
     def get_readonly_fields(self, request, obj=None):
         if obj:
-            return ['email']
+            return ['key', 'email']
         return []
 
     def get_fields(self, request, obj=None):
         if obj is None:
-            return ['email', 'password']
+            return ['key', 'email', 'password']
         else:
-            return ['email']
+            return ['key', 'email']
 
 
 @admin.register(EmailConfig)
