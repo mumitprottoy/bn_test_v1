@@ -32,8 +32,8 @@ class ChatEngine:
         group = [room.display_info_for_user(self.user) for room in rooms.filter(
                 room_type=Room.GROUP)]
         return dict(
-            private=sorted(private, key=lambda x: x['last_activity']) if private.__len__() > 0 else private,
-            group=sorted(group, key=lambda x: x['last_activity']) if group.__len__() > 0 else group
+            private=sorted(private, key=lambda x: x['__last_activity']) if private.__len__() > 0 else private,
+            group=sorted(group, key=lambda x: x['__last_activity']) if group.__len__() > 0 else group
         )
 
     def get_room_messages(self, room: Room) -> list[dict]:
