@@ -27,6 +27,7 @@ class Room(models.Model):
 
     def display_info_for_user(self, for_user: User) -> dict | None:
         last_message = self.last_message_for_user(for_user)
+        last_activity = sr.pretty_timesince(self.created_at) if last_message is None else last_message['timeDetails']['timeSince']
         if self.mates.filter(user=for_user).exists():
             if self.room_type == self.GROUP:
                 team = Team.objects.filter(name=self.name).first()
@@ -35,7 +36,8 @@ class Room(models.Model):
                     name=self.name,
                     display_name=team.name, 
                     display_image_url=team.logo_url,
-                    last_activity=last_message['timeSinceInSecs'] if last_message is not None else self.created_since,
+                    last_activity=last_activity,
+                    _last_activity=last_message['timeSinceInSecs'] if last_message is not None else self.created_since,
                     last_message=last_message
                 )
             for mate in self.mates.all():
@@ -45,7 +47,8 @@ class Room(models.Model):
                         name=self.name,
                         display_name=mate.user.username, 
                         display_image_url=mate.user.profile_picture_url,
-                        last_activity=last_message['timeSinceInSecs'] if last_message is not None else self.created_since,
+                        last_activity=last_activity,
+                        __last_activity=last_message['timeSinceInSecs'] if last_message is not None else self.created_since,
                         last_message=last_message
                     )
             return dict(
@@ -53,7 +56,8 @@ class Room(models.Model):
                     name=self.name,
                     display_name=for_user.username, 
                     display_image_url=for_user.profile_picture_url,
-                    last_activity=last_message['timeSinceInSecs'] if last_message is not None else self.created_since,
+                    last_activity=last_activity,
+                    _last_activity=last_message['timeSinceInSecs'] if last_message is not None else self.created_since,
                     last_message=last_message
                 )
           
