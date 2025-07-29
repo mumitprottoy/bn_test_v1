@@ -16,18 +16,20 @@ class EmailEngine:
             subject: str,
             template: str,
             context: dict=dict(),
+            display_name = 'BowlersNetwork',
             config_name: str=DEFAULT_CONFIG,
             cred_key: str=SYSTEM_CRED_KEY 
         ):
         self.config = EmailConfig.objects.get(name=config_name)
         self.cred = EmailCred.objects.get(key=cred_key)
+        self.display_name=display_name
         self.recipient_list = recipient_list
         self.subject = subject
         self.template = template
         self.context = context
     
     def __get_sender_email(self) -> str:
-        return self.cred.email
+        return f'{self.display_name} <{self.cred.email}>'
 
     def connect(self):
         connection_kwargs = self.config.connection_kwargs
