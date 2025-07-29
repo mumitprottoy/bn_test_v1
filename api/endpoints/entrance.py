@@ -19,7 +19,7 @@ class SendInvitesWithCSVFileAPI(views.APIView):
             engine = EmailEngine(
                 recipient_list=[_['email']], 
                 subject='Where Bowlers Belong — Your Invite to BowlersNetwork',
-                template='email/invite.html',
+                template='emails/invite.html',
                 context=dict(full_name=f'{_['first_name']} {_['last_name']}', invite_link=invite_link)
                 )
             sent_count += engine.send()
