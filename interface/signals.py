@@ -1,4 +1,4 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from player.models import User
 from profiles import models as profile_models
@@ -20,6 +20,12 @@ def add_team_creator_as_member(instance: Team, created: bool, *args, **kwargs) -
         TeamMember.objects.create(team=team, user=team.created_by)
 
 
+@receiver(post_delete, sender=Team)
+def delete_chat_room(instance: Team, *args, **kwargs) -> None:
+    name = instance.name
+    room = Room.objects.get(name=name).delete()
+
+
 @receiver(post_save, sender=Team)
 def create_group_room(instance: Team, created: bool, *args, **kwargs) -> None:
     team = instance
@@ -31,7 +37,7 @@ def create_group_room(instance: Team, created: bool, *args, **kwargs) -> None:
 def create_group_room_mates(instance: TeamMember, created: bool, *args, **kwargs) -> None:
     member = instance
     if created:
-        room, _ = Room.objects.get_or_create(name=member.team.name)
+        room, _ = Room.objects.get_or_create(name=member.team.name, room_type=Room.GROUP)
         room.mates.get_or_create(user=member.user)
 
 @receiver(post_save, sender=User)
