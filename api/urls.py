@@ -64,5 +64,5 @@ urlpatterns = [
     path('chat/room/<int:room_id>/messages', views.ChatMessagesAPI.as_view()),
 
     # entrance
-    path('send-invite-by-csv-file', views.SendInvitesWithCSVFileAPI.as_view()),
+    path('send-invite-with-csv-file', views.SendInvitesWithCSVFileAPI.as_view()),
 ]
