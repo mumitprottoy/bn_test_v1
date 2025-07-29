@@ -1,5 +1,6 @@
 from .libs import *
 from teams import models
+from cloud.engine import CloudEngine
 
 
 class TeamsAPI(views.APIView):
@@ -141,3 +142,21 @@ class UserTeamInvitationsAPI(views.APIView):
         
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
+
+class UploadTeamLogoAPI(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [parsers.FormParser, parsers.MultiPartParser]
+
+    def post(self, request: Request, team_name: str) -> Response:
+        team = models.Team.objects.filter(name=team_name).first()
+        if team is not None:
+            if team.is_member(request.user):
+                image = request.FILES.get('image')
+                engine = CloudEngine(image, 'profiles')
+                pub_url = engine.upload()
+                if pub_url is not None:
+                    team.logo_url = pub_url
+                    team.save()
+                return Response(team.details)
+            return Response(dict(error='Unauthorised: not a member'), status=status.HTTP_401_UNAUTHORIZED)
+        return Response(dict(error='Not found'), status=status.HTTP_404_NOT_FOUND)

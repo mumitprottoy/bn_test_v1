@@ -11,6 +11,9 @@ class Team(models.Model):
 
     def is_creator(self, user: User) -> bool:
         return user == self.created_by
+    
+    def is_member(self, user: User) -> bool:
+        return self.members.filter(user=user).exists()
 
     @property
     def member_count(self) -> int:
