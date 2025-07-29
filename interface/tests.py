@@ -19,6 +19,17 @@ def test_engagement_stats():
     
     return A()
 
+
+def create_team_rooms() -> None:
+    from teams.models import Team
+    from chat.models import Room, RoomMate
+
+    for team in Team.objects.all():
+        room, _ = Room.objects.get_or_create(name=team.name, room_type=Room.GROUP)
+        for member in team.members.all():
+            RoomMate.objects.get_or_create(room=room, user=member.user)
+
+
 if __name__ == '__main__':
     # test_scores()
     pass

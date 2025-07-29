@@ -3,6 +3,7 @@ from django.dispatch import receiver
 from player.models import User
 from profiles import models as profile_models
 from teams.models import Team, TeamMember
+from chat.models import Room, RoomMate
 
 
 @receiver(post_save, sender=User)
@@ -18,6 +19,20 @@ def add_team_creator_as_member(instance: Team, created: bool, *args, **kwargs) -
     if created:
         TeamMember.objects.create(team=team, user=team.created_by)
 
+
+@receiver(post_save, sender=Team)
+def create_group_room(instance: Team, created: bool, *args, **kwargs) -> None:
+    team = instance
+    if created:
+        Team.objects.create(name=team.name, room_type=Room.GROUP)
+
+
+@receiver(post_save, sender=TeamMember)
+def create_group_room(instance: TeamMember, created: bool, *args, **kwargs) -> None:
+    member = instance
+    if created:
+        room = Room.objects.get(name=member.team.name)
+        RoomMate.objects.get_or_create(room=room, user=member.user)
 
 @receiver(post_save, sender=User)
 def add_intro_video(instance: User, created: bool, *args, **kwargs) -> None:
