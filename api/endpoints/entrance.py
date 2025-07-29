@@ -1,5 +1,6 @@
 import io, csv
 from .libs import *
+from emailsystem.engine import EmailEngine
 
 
 class SendInvitesWithCSVFileAPI(views.APIView):
@@ -12,5 +13,15 @@ class SendInvitesWithCSVFileAPI(views.APIView):
         io_string = io.StringIO(decoded_file)
         reader = csv.DictReader(io_string)
         data = list(reader)
-        return Response(data)
+        invite_link = 'https://youtube.com'
+        sent_count = 0
+        for _ in data:
+            engine = EmailEngine(
+                recipient_list=[_['email']], 
+                subject='Where Bowlers Belong — Your Invite to BowlersNetwork',
+                template='email/invite.html',
+                context=dict(full_name=f'{_['first_name']} {_['last_name']}', invite_link=invite_link)
+                )
+            sent_count += engine.send()
+        return Response(dict(sent_to=f'{sent_count} people', csv_file_data=data))
 
