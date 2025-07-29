@@ -157,8 +157,8 @@ class UploadTeamLogoAPI(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
     parser_classes = [parsers.FormParser, parsers.MultiPartParser]
 
-    def post(self, request: Request, team_name: str) -> Response:
-        team = models.Team.objects.filter(name=team_name).first()
+    def post(self, request: Request, team_id: int) -> Response:
+        team = models.Team.objects.filter(id=team_id).first()
         if team is not None:
             if team.is_member(request.user):
                 image = request.FILES.get('image')

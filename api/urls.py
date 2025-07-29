@@ -42,7 +42,7 @@ urlpatterns = [
     path('user/teams', views.TeamsAPI.as_view()),
     path('user/teams/<int:team_id>/delete', views.TeamDeletionAPI.as_view()),
     path('user/teams/<int:team_id>/members', views.TeamMembersAPI.as_view()),
-    path('user/teams/<str:team_name>/upload-logo', views.UploadTeamLogoAPI.as_view()),
+    path('user/teams/<str:team_id>/upload-logo', views.UploadTeamLogoAPI.as_view()),
     path('user/teams/invite', views.TeamInviteSendingAPI.as_view()),
     path('user/teams/invitations', views.UserTeamInvitationsAPI.as_view()),
 
