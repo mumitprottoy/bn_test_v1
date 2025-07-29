@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from player.models import User
 from utils import exceptions, error_messages, subroutines as sr, constants as const
 from teams.models import Team
@@ -29,6 +30,7 @@ class Room(models.Model):
                     name=self.name,
                     display_name=team.name, 
                     display_image_url=team.logo_url,
+                    last_activity=last_message['timeSinceInSecs'] if last_message is not None else 1e308,
                     last_message=last_message
                 )
             for mate in self.mates.all():
@@ -38,6 +40,7 @@ class Room(models.Model):
                         name=self.name,
                         display_name=mate.user.username, 
                         display_image_url=mate.user.profile_picture_url,
+                        last_activity=last_message['timeSinceInSecs'] if last_message is not None else 1e308,
                         last_message=last_message
                     )
             return dict(
@@ -45,6 +48,7 @@ class Room(models.Model):
                     name=self.name,
                     display_name=for_user.username, 
                     display_image_url=for_user.profile_picture_url,
+                    last_activity=last_message['timeSinceInSecs'] if last_message is not None else 1e308,
                     last_message=last_message
                 )
           
@@ -96,6 +100,10 @@ class MessageMetaData(models.Model):
             timesince=sr.pretty_timesince(self.sent_at)
         )
 
+    @property
+    def time_difference_in_secs(self) -> float:
+        return (timezone.now() - self.sent_at).total_seconds()
+
     def details_for_user(self, for_user: User) -> dict:
         has_text_content = hasattr(self, 'textcontent')
         return dict(
@@ -103,6 +111,7 @@ class MessageMetaData(models.Model):
             roomID=self.room_id,
             sender=self.sender.minimal,
             timeDetails=self.time_datails,
+            timeSinceInSecs=self.time_difference_in_secs,
             message=dict(
                 text=self.textcontent.text if has_text_content else None,
                 media=[content.url for content in self.mediacontents.all()])

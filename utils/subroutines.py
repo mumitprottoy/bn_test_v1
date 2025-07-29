@@ -30,12 +30,12 @@ def pretty_timesince(dt):
         return "a few seconds ago"
 
     time_str = timesince(dt).split(',')[0].strip() 
-    time_str = time_str.replace('minutes', 'minute')
-    time_str = time_str.replace('hours', 'hour')
-    time_str = time_str.replace('days', 'day')
-    time_str = time_str.replace('weeks', 'week')
-    time_str = time_str.replace('months', 'month')
-    time_str = time_str.replace('years', 'year')
+    # time_str = time_str.replace('minutes', 'minute')
+    # time_str = time_str.replace('hours', 'hour')
+    # time_str = time_str.replace('days', 'day')
+    # time_str = time_str.replace('weeks', 'week')
+    # time_str = time_str.replace('months', 'month')
+    # time_str = time_str.replace('years', 'year')
 
     if time_str.startswith('1 '):
         return f"{time_str} ago"
