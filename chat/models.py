@@ -48,7 +48,7 @@ class Room(models.Model):
                         display_name=mate.user.username, 
                         display_image_url=mate.user.profile_picture_url,
                         last_activity=last_activity,
-                        __last_activity=last_message['timeSinceInSecs'] if last_message is not None else self.created_since,
+                        _last_activity=last_message['timeSinceInSecs'] if last_message is not None else self.created_since,
                         last_message=last_message
                     )
             return dict(
