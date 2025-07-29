@@ -1,6 +1,14 @@
 from .libs import *
 from teams import models
 from cloud.engine import CloudEngine
+from chat.models import Room
+
+
+def get_team_details(team: models.Team) -> dict:
+    team_details = team.details.copy()
+    room = Room.objects.get(name=team.name, room_type=Room.GROUP)
+    team_details['team_chat_room_id'] = room.id
+    return team_details
 
 
 class TeamsAPI(views.APIView):
@@ -8,7 +16,7 @@ class TeamsAPI(views.APIView):
 
     def get(self, request: Request) -> Response:
         return Response(dict(my_teams=[
-          member.team.details for member in models.TeamMember.objects.filter(
+          get_team_details(member.team) for member in models.TeamMember.objects.filter(
                 user=request.user
             )
         ]), status=status.HTTP_200_OK)
@@ -40,7 +48,7 @@ class TeamMembersAPI(views.APIView):
             raise exceptions.PermissionDenied(detail='Members only')
 
     def get(self, request: Request, team_id: int) -> Response:
-        team_details = self.team.details.copy()
+        team_details = get_team_details(self.team)
         team_details.update(dict(members=self.team.member_details))
         return Response(team_details, status=status.HTTP_200_OK)
     
