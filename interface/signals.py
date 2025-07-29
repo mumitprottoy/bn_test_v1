@@ -31,7 +31,7 @@ def create_group_room(instance: Team, created: bool, *args, **kwargs) -> None:
 def create_group_room_mates(instance: TeamMember, created: bool, *args, **kwargs) -> None:
     member = instance
     if created:
-        room = Room.objects.get_or_create(name=member.team.name)
+        room, _ = Room.objects.get_or_create(name=member.team.name)
         room.mates.get_or_create(user=member.user)
 
 @receiver(post_save, sender=User)
