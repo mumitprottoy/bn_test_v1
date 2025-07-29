@@ -51,6 +51,6 @@ class EmailEngine:
 
         return email
 
-    def send(self) -> int:
+    def send(self, fail_silently=True) -> int:
         email = self.setup_email()
-        return email.send()
+        return email.send(fail_silently=fail_silently)

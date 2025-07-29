@@ -12,7 +12,8 @@ def test_email() -> None:
         template='emails/verification_code.html',
         context=context
     )
-    engine.send()
+    _count = engine.send(fail_silently=False)
+    print(_count)
 
 
 if __name__ == '__main__':
