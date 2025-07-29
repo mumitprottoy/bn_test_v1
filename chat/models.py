@@ -11,6 +11,11 @@ class Room(models.Model):
 
     name = models.CharField(max_length=50, unique=True, default='')
     room_type = models.CharField(max_length=10, choices=ROOM_TYPE_CHOICES, default=PRIVATE)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    @property
+    def created_since(self) -> float:
+        return (timezone.now() - self.created_at).total_seconds()
 
     def last_message_for_user(self, for_user: User) -> dict | None:
         last_message = self.messages.last()
@@ -30,7 +35,7 @@ class Room(models.Model):
                     name=self.name,
                     display_name=team.name, 
                     display_image_url=team.logo_url,
-                    last_activity=last_message['timeSinceInSecs'] if last_message is not None else 1e308,
+                    last_activity=last_message['timeSinceInSecs'] if last_message is not None else self.created_since,
                     last_message=last_message
                 )
             for mate in self.mates.all():
@@ -40,7 +45,7 @@ class Room(models.Model):
                         name=self.name,
                         display_name=mate.user.username, 
                         display_image_url=mate.user.profile_picture_url,
-                        last_activity=last_message['timeSinceInSecs'] if last_message is not None else 1e308,
+                        last_activity=last_message['timeSinceInSecs'] if last_message is not None else self.created_since,
                         last_message=last_message
                     )
             return dict(
@@ -48,7 +53,7 @@ class Room(models.Model):
                     name=self.name,
                     display_name=for_user.username, 
                     display_image_url=for_user.profile_picture_url,
-                    last_activity=last_message['timeSinceInSecs'] if last_message is not None else 1e308,
+                    last_activity=last_message['timeSinceInSecs'] if last_message is not None else self.created_since,
                     last_message=last_message
                 )
           
