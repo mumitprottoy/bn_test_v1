@@ -73,4 +73,17 @@ class SocialLink(models.Model):
                 name='unique_social'
             )
         ]
+
+
+class ProRotator:
+
+    def __init__(self, last_pro: ProPlayer | None) -> None:
+        self.last_pro = last_pro
     
+    def get_current_pro(self) -> ProPlayer:
+        if self.last_pro is None:
+            return ProPlayer.objects.first()
+        
+        pros = list(ProPlayer.objects.all())
+        index_of_last = pros.index(self.last_pro)
+        return pros[(index_of_last + 1) % pros.__len__()]

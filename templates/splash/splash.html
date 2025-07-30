@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BowlersNetwork — The Future of Bowling</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;800&display=swap');
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #fff;
+      color: #1a3e1a;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem 5vw 4rem;
+      user-select: none;
+      line-height: 1.6;
+    }
+    header {
+      width: 100%;
+      max-width: 1000px;
+      padding-bottom: 4rem;
+      text-align: center;
+    }
+    header img {
+      max-width: 400px;
+      width: 40vw;
+      height: auto;
+      margin: 0 auto;
+      filter: drop-shadow(0 6px 8px rgba(79,153,75,0.25));
+      transition: transform 0.6s ease;
+      cursor: default;
+      display: block;
+    }
+    header img:hover {
+      transform: scale(1.05) rotate(2deg);
+    }
+    section.info-section {
+      max-width: 900px;
+      width: 90vw;
+      margin: 0 auto 4rem;
+      padding: 3rem 3rem 3.5rem;
+      background-color: #fff;
+      border-radius: 18px;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.05);
+      text-align: center;
+    }
+    section.info-section h1 {
+      font-weight: 800;
+      font-size: 3.5rem;
+      color: #2d662d;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+    section.info-section .lead {
+      font-weight: 600;
+      font-size: 1.35rem;
+      color: #3a773a;
+      margin-bottom: 2.8rem;
+      line-height: 1.6;
+      max-width: 720px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    section.info-section .features {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 3rem;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1.4rem 3rem;
+      max-width: 720px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    section.info-section .features li {
+      background: #4f994b22;
+      color: #4f994b;
+      font-weight: 700;
+      font-size: 1.2rem;
+      padding: 0.65rem 2.2rem;
+      border-radius: 9999px;
+      box-shadow: 0 2px 6px rgba(79, 153, 75, 0.22);
+      transition: background-color 0.3s ease;
+      cursor: default;
+    }
+    section.info-section .features li:hover {
+      background-color: #4f994b44;
+    }
+    section.info-section .final {
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: #2a572a;
+      max-width: 750px;
+      margin: 0 auto 0;
+      line-height: 1.7;
+      padding: 0 1rem;
+    }
+    .cta-button {
+      display: inline-block;
+      background-color: #4f994b;
+      color: white;
+      font-weight: 700;
+      font-size: 1.3rem;
+      padding: 1.25rem 4rem;
+      border-radius: 50px;
+      box-shadow: 0 10px 22px rgba(79,153,75,0.5);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      user-select: none;
+      letter-spacing: 0.03em;
+      margin-top: 3rem;
+    }
+    .cta-button:hover {
+      background-color: #3a7235;
+      box-shadow: 0 12px 30px rgba(58,114,53,0.75);
+      transform: translateY(-4px);
+    }
+
+    /* Testimonials */
+    section#testimonials {
+      width: 100%;
+      max-width: 1000px;
+      background: #fff;
+      padding: 4rem 3rem 5rem;
+      border-radius: 18px;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.07);
+      margin: 0 auto 0;
+      text-align: center;
+      user-select: none;
+    }
+    section#testimonials h2 {
+      font-weight: 800;
+      font-size: 3rem;
+      margin-bottom: 4rem;
+      color: #2d662d;
+      letter-spacing: 0.03em;
+    }
+    .testimonial-container {
+      position: relative;
+      max-width: 700px;
+      margin: 0 auto;
+      overflow: hidden;
+      min-height: 220px;
+    }
+    .testimonial {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      position: absolute;
+      width: 100%;
+      left: 0;
+      top: 0;
+      color: #2c4d2c;
+      padding: 0 2rem;
+      box-sizing: border-box;
+    }
+    .testimonial.active {
+      opacity: 1;
+      transform: translateY(0);
+      position: relative;
+    }
+    .testimonial img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #4f994b;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 5px 14px rgba(79,153,75,0.4);
+      user-select: none;
+      transition: transform 0.3s ease;
+    }
+    .testimonial img:hover {
+      transform: scale(1.1);
+    }
+    blockquote {
+      font-style: italic;
+      font-size: 1.3rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+      max-width: 640px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    cite {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #3e703e;
+      letter-spacing: 0.03em;
+      user-select: none;
+      display: block;
+      margin-top: 0.3rem;
+    }
+    @media (max-width: 640px) {
+      section.info-section h1 {
+        font-size: 2.8rem;
+      }
+      section.info-section .lead {
+        font-size: 1.15rem;
+        max-width: 100%;
+      }
+      section.info-section .features li {
+        font-size: 1.05rem;
+        padding: 0.55rem 1.5rem;
+      }
+      section.info-section .final {
+        font-size: 1rem;
+        max-width: 100%;
+        padding: 0 0.8rem;
+      }
+      .cta-button {
+        font-size: 1.15rem;
+        padding: 1rem 3rem;
+      }
+      section#testimonials h2 {
+        font-size: 2.2rem;
+        margin-bottom: 3rem;
+      }
+      blockquote {
+        font-size: 1.15rem;
+      }
+      .testimonial img {
+        width: 80px;
+        height: 80px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="https://logos.bowlersnetwork.com/bn_logo_big.jpeg" alt="BowlersNetwork Logo" />
+  </header>
+
+  <section class="info-section">
+    <h1>Your Game. Your Network.</h1>
+    <p class="lead">
+      A revolutionary platform for bowling is almost here.<br />
+      Pre-register today to be among the first to experience the most connected platform the sport has ever seen — and become eligible for our exclusive beta testing group.
+    </p>
+
+    <ul class="features" aria-label="Key features">
+      <li>For bowlers.</li>
+      <li>For centers.</li>
+      <li>For leagues & associations.</li>
+      <li>For fans.</li>
+      <li>For the future.</li>
+    </ul>
+
+    <p class="final">
+      We're building something that brings the entire bowling community together — from pros to league players, youth associations to national tours.<br />
+      Be part of it before the rest of the world even knows it’s coming.
+    </p>
+
+    <a href="#register" class="cta-button" role="button" tabindex="0">Reserve Your Spot Now</a>
+  </section>
+
+  <section id="testimonials" aria-label="Testimonials from bowling legends">
+    <h2>What Legends Are Saying</h2>
+    <div class="testimonial-container" role="list">
+      <article class="testimonial active" role="listitem" aria-live="polite">
+        <img src="https://logos.bowlersnetwork.com/parker_bohn.jpg" alt="Parker Bohn III" />
+        <blockquote>"Finally, a platform that brings the bowling world together. BowlersNetwork is the future of our sport."</blockquote>
+        <cite>Parker Bohn III</cite>
+      </article>
+      <article class="testimonial" role="listitem" aria-live="polite">
+        <img src="https://logos.bowlersnetwork.com/parker_bohn.jpg" alt="Norm Duke" />
+        <blockquote>"I've waited my whole career for something like this. It’s going to change the game."</blockquote>
+        <cite>Norm Duke</cite>
+      </article>
+      <article class="testimonial" role="listitem" aria-live="polite">
+        <img src="https://logos.bowlersnetwork.com/parker_bohn.jpg" alt="Pete Weber" />
+        <blockquote>"This isn't just a website. It's a movement — built for every level of the bowling community."</blockquote>
+        <cite>Pete Weber</cite>
+      </article>
+      <article class="testimonial" role="listitem" aria-live="polite">
+        <img src="https://logos.bowlersnetwork.com/parker_bohn.jpg" alt="Jason Belmonte" />
+        <blockquote>"BowlersNetwork finally provides a home for all bowlers — from lanes to legends."</blockquote>
+        <cite>Jason Belmonte</cite>
+      </article>
+    </div>
+  </section>
+
+  <script>
+    const testimonials = document.querySelectorAll('.testimonial');
+    let current = 0;
+
+    function showTestimonial(index) {
+      testimonials.forEach((t, i) => {
+        t.classList.toggle('active', i === index);
+      });
+    }
+
+    setInterval(() => {
+      current = (current + 1) % testimonials.length;
+      showTestimonial(current);
+    }, 5500);
+  </script>
+
+</body>
+</html>
