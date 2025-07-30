@@ -23,7 +23,8 @@ def add_team_creator_as_member(instance: Team, created: bool, *args, **kwargs) -
 @receiver(post_delete, sender=Team)
 def delete_chat_room(instance: Team, *args, **kwargs) -> None:
     name = instance.name
-    room = Room.objects.get(name=name).delete()
+    room = Room.objects.filter(name=name, room_type=Room.GROUP)
+    if room.exists(): room.delete()
 
 
 @receiver(post_save, sender=Team)
