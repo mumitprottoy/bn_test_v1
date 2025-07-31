@@ -86,7 +86,7 @@ def send_pre_registration_conformation_email(instance: PreRegistration, created:
         engine = EmailEngine(
             recipient_list=[pre.email],
             subject='Pre-Registration Confirmed — Let’s Roll!',
-            template='emails/pre_resgiter.html',
+            template='emails/pre_register.html',
             context=dict(full_name=f'{pre.first_name} {pre.last_name}')
         )        
         engine.send()
