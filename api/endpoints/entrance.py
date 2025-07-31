@@ -61,7 +61,7 @@ class VerifyEmailAPI(views.APIView):
         email = request.data.get('email')
         code = request.data.get('code')
         email_verification = EmailVerification.objects.filter(
-            email=email, code=code).first()
+            email=email).first()
         if email_verification is None:
             return Response(
                 dict(error='No verification code was sent to this email'), status=status.HTTP_400_BAD_REQUEST)
