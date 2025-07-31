@@ -4,6 +4,8 @@ from player.models import User
 from profiles import models as profile_models
 from teams.models import Team, TeamMember
 from chat.models import Room, RoomMate
+from entrance.models import PreRegistration
+from emailsystem.engine import EmailEngine
 
 
 @receiver(post_save, sender=User)
@@ -77,16 +79,13 @@ def add_bio(instance: User, created: bool, *args, **kwargs) -> None:
         profile_models.Bio.objects.create(user=user, content=f'Hi! I am {user.get_full_name()}.')
 
 
-# @receiver(post_save, sender=User)
-# def add_pics(instance: User, created: bool, *args, **kwargs) -> None:
-#     user = instance
-#     if created:
-#         pic_id = str(random.randint(1,50))
-#         pp_url = f'https://i.pravatar.cc/150?img={pic_id}'
-#         cp_url = f'https://picsum.photos/id/{pic_id}/800/300'
-#         profile_models.Pic.objects.create(
-#             user=user,
-#             profile_pic_url=pp_url,
-#             cover_pic_url=cp_url,
-#         )
-
+@receiver(post_save, sender=PreRegistration)
+def send_pre_registration_conformation_email(instance: PreRegistration, created: bool, *args, **kwargs) -> None:
+    pre = instance
+    if created:
+        engine = EmailEngine(
+            recipient_list=[pre.email],
+            subject='Pre-Registration Confirmed — Let’s Roll!',
+            context=dict(full_name=f'{pre.first_name} {pre.last_name}')
+        )        
+        engine.send()
