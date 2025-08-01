@@ -70,4 +70,5 @@ urlpatterns = [
     path('send-verification-code', views.SendEmailVerificationCode.as_view()),
     path('verify-email', views.VerifyEmailAPI.as_view()),
     path('pre-register', views.PreRegistrationAPI.as_view()),
+    path('validate-signup-data', views.SignupDataValidationAPI.as_view()),
 ]

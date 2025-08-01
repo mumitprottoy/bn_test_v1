@@ -72,3 +72,31 @@ class VerifyEmailAPI(views.APIView):
             return Response(dict(message='Email verified'))
         else:
             return Response(dict(error='Wrong verification code'), status=status.HTTP_401_UNAUTHORIZED)
+
+
+class SignupDataValidationAPI(views.APIView):
+
+    def post(self, request: Request) -> Response:
+        first_name = request.data.get('first_name')
+        last_name = request.data.get('last_name')
+        email = request.data.get('email')
+        username = request.data.get('username')
+        password = request.data.get('password')
+        errors = list()
+        if not first_name.replace(' ', '').isalpha():
+            errors.append('First name must only contain letters.')
+        if not last_name.replace(' ', '').isalpha():
+            errors.append('Last name must only contain letters.')
+        if User.objects.filter(username=username).exists():
+            errors.append('Username already exists.')
+        if User.objects.filter(email=email).exists():
+            errors.append('Email already exists.')
+        if password.__len__() < 8:
+            errors.append('Password must be of at least 8 characters.')
+        
+        is_valid = errors.__len__() == 0
+        if is_valid:
+            return Response(dict(isValid=True))
+        else:
+            return Response(dict(isValid=False, errors=errors))
+        
