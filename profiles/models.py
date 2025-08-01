@@ -35,7 +35,7 @@ class CityAndCountry(models.Model):
     country = models.CharField(max_length=100)
 
     def __str__(self) -> str:
-        return f'{self.city} {self.country}'
+        return f'{self.city} - {self.country}'
 
     class Meta:
         verbose_name_plural = 'City and Countries'
