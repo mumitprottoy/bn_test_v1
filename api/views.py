@@ -67,8 +67,9 @@ class UserRegisterAPI(views.APIView):
             return Response(dict(error='Email is not verified'), status=status.HTTP_400_BAD_REQUEST)
         if serializer.is_valid():
             user = serializer.save()
-            brand_ids = request.data.get('brandIDs')
-            for brand in Brand.objects.filter(id__in=brand_ids):
-                FavoriteBrand.objects.create(user=user, brand=brand)
+            if 'brandIDs' in request.data:
+                brand_ids = request.data.get('brandIDs')
+                for brand in Brand.objects.filter(id__in=brand_ids):
+                    FavoriteBrand.objects.create(user=user, brand=brand)
             return Response({'message': 'User created successfully!'}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

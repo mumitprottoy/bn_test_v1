@@ -177,3 +177,5 @@ class CountriesAPI(views.APIView):
 
     def get(self, request: Request) -> Response:
         return Response([cc.details for cc in CityAndCountry.objects.all()])
+    
+
