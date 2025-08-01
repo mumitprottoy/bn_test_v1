@@ -129,7 +129,7 @@ class UploadProfilePictureAPI(views.APIView):
             return Response(dict(
                 message='Success', image_public_url=image_pub_url), status=status.HTTP_200_OK)
         else: return Response(
-            dict(message=f'Unsupported file type. Supported file types: {', '.join(const.PROFILE_PIC_SUPPORTED_FILES)}'),
+            dict(message=f'Unsupported file type. Supported file types: {", ".join(const.PROFILE_PIC_SUPPORTED_FILES)}'),
             status=status.HTTP_400_BAD_REQUEST
         )
 

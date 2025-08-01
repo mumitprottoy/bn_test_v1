@@ -48,6 +48,9 @@ class EmailVerification(models.Model):
             self.is_verified = is_verified
             self.save()
         return is_verified
+    
+    def __str__(self) -> str:
+        return f'{self.email} | verified: {self.is_verified}'
 
 
 class PreRegistration(models.Model):
