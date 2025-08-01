@@ -112,7 +112,7 @@ class Address(models.Model):
 
 class AuthCode(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='codes')
-    otp = models.CharField(max_length=4, default='') 
+    otp = models.CharField(max_length=6, default='') 
     verification_code = models.CharField(max_length=6, default='')
     is_email_verified = models.BooleanField(default=False)
     
