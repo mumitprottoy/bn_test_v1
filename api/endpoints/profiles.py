@@ -21,6 +21,7 @@ class PlayerProfileAPI(views.APIView):
         # profile['followers'] = followers
         profile['stats'] = sr.get_clean_dict(request.user.stats)
         profile['favorite_brands'] = [fav.brand.details for fav in request.user.favbrands.all()]
+        profile['is_complete'] = profile['favorite_brands'].__len__() > 0
         return Response(profile, status=status.HTTP_200_OK)
 
 
@@ -42,6 +43,7 @@ class ProPlayersPublicProfileAPI(views.APIView):
             profile['is_followed'] = Follow.objects.filter(
                 followed=user, follower=request.user).exists()
             profile['favorite_brands'] = [fav.brand.details for fav in user.favbrands.all()]
+            profile['is_complete'] = profile['favorite_brands'].__len__() > 0
             user_profiles.append(profile)  
         import random
         random.shuffle(user_profiles)
@@ -66,6 +68,7 @@ class UserProfileByID(views.APIView):
             profile['is_followed'] = Follow.objects.filter(
                 followed=user, follower=request.user).exists()
             profile['favorite_brands'] = [fav.brand.details for fav in user.favbrands.all()]
+            profile['is_complete'] = profile['favorite_brands'].__len__() > 0
             return Response(profile, status=status.HTTP_200_OK)
         return Response(dict(error='User not found'), status=status.HTTP_404_NOT_FOUND)
 
@@ -85,6 +88,7 @@ class UserProfileByUsername(views.APIView):
                 profile['socials'] = pro.social_links
             else: 
                 profile['favorite_brands'] = [fav.brand.details for fav in user.favbrands.all()]
+                profile['is_complete'] = profile['favorite_brands'].__len__() > 0
             profile['follower_count'] = Follow.objects.filter(followed=user).count()
             profile['stats'] = sr.get_clean_dict(user.stats)
             profile['engagement'] = EngagementStats.stats_of_user(user)

@@ -74,7 +74,3 @@ class PreRegistration(models.Model):
 
     def __str__(self) -> str:
         return f'{self.first_name} {self.last_name} onboarded by {self.onboarded_by.user.get_full_name()}'
-
-
-
-
