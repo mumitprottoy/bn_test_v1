@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import views, status
 from rest_framework_simplejwt.tokens import RefreshToken
 from entrance.operations import AuthHandler
+from entrance.models import EmailVerification
 from profiles.models import FavoriteBrand
 from pros.models import ProPlayer
 from brands.models import Brand
@@ -60,6 +61,10 @@ class UserRegisterAPI(views.APIView):
 
     def post(self, request):
         serializer = serializers.UserCreateSerializer(data=request.data.get('basicInfo'))
+        email = request.data.get('basicInfo')['email']
+        email_verification = EmailVerification.objects.filter(email=email, is_verified=True).first()
+        if email_verification is None:
+            return Response(dict(error='Email is not verified'), status=status.HTTP_400_BAD_REQUEST)
         if serializer.is_valid():
             user = serializer.save()
             brand_ids = request.data.get('brandIDs')

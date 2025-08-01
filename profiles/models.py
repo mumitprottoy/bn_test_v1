@@ -3,7 +3,7 @@ from django.db import models
 from player.models import User
 from brands.models import Brand
 from utils import constants as const, keygen
-
+from emailsystem.engine import EmailEngine
 
 class Country(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -118,7 +118,7 @@ class AuthCode(models.Model):
     
     def __generate_code(self):
         kg = keygen.KeyGen()
-        return kg.num_key(key_len=4)
+        return kg.num_key(key_len=6)
     
     def change_otp(self):
         self.otp = self.__generate_code()
@@ -240,3 +240,4 @@ class FavoriteBrand(models.Model):
                 name='unique_user_brand_pair'
             )
         ]
+
