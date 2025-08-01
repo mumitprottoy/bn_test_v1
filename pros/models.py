@@ -74,7 +74,6 @@ class SocialLink(models.Model):
             )
         ]
 
-
 class ProRotator:
 
     def __init__(self, last_pro: ProPlayer | None) -> None:

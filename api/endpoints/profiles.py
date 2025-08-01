@@ -171,3 +171,15 @@ class UploadIntroVideoAPI(views.APIView):
             dict(message=f'Unsupported file type. Supported file types: {', '.join(const.INTRO_VIDEO_SUPPORTED_FILES)}'),
             status=status.HTTP_400_BAD_REQUEST
         )
+
+
+class CountriesAPI(views.APIView):
+
+    def get(self, request: Request) -> Response:
+        from data.countries import country_list
+        cities = list()
+        for country_data in country_list:
+            for city in country_data['cities']:
+                cities.append(dict(
+                    
+                ))

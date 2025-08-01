@@ -30,6 +30,23 @@ class City(models.Model):
         return self.__str__() 
 
 
+class CityAndCountry(models.Model):
+    city = models.CharField(max_length=100)
+    country = models.CharField(max_length=100)
+
+    def __str__(self) -> str:
+        return f'{self.city} {self.country}'
+
+    class Meta:
+        verbose_name_plural = 'City and Countries'
+        constraints = [
+            models.UniqueConstraint(
+                fields=('city', 'country'),
+                name='unique_country_city_pair'
+            )
+        ]
+
+
 class Nickname(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=20, default='')
