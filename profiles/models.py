@@ -34,6 +34,14 @@ class CityAndCountry(models.Model):
     city = models.CharField(max_length=500)
     country = models.CharField(max_length=100)
 
+    def details(self) -> dict:
+        return dict(
+            id=self.id,
+            city=self.city,
+            country=self.country,
+            suggestion_string=self.__str__()
+        )
+
     def __str__(self) -> str:
         return f'{self.city} - {self.country}'
 
