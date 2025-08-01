@@ -189,5 +189,5 @@ class SecretDeleteUserAPI(views.APIView):
         if request.data.get('key') != 'zxcvbnm':
             return Response(dict(error='Invalid key'), status=status.HTTP_401_UNAUTHORIZED)
         username = request.data.get('username')
-        User.objects.filter(username).delete()
+        User.objects.filter(username=username).delete()
         return Response(dict(message=f'User with username `{username}` is deleted.'))
