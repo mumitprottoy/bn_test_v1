@@ -92,6 +92,6 @@ def send_pre_registration_conformation_email(instance: PreRegistration, created:
         engine.send()
 
 
-@receiver(post_save, sender=User)
+@receiver(post_delete, sender=User)
 def delete_email_verification(instance: User, *args, **kwargs) -> None:
     EmailVerification.objects.filter(email=instance.email).delete()
