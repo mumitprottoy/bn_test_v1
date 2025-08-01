@@ -6,7 +6,7 @@ def add_city() -> None:
         for city in country_data['cities']:
             CityAndCountry.objects.get_or_create(
                 city=city,
-                country=country_data['country']
+                country=country_data['name']
             )
 
 if __name__ == '__main__':
