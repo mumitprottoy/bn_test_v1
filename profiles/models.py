@@ -34,6 +34,7 @@ class CityAndCountry(models.Model):
     city = models.CharField(max_length=500)
     country = models.CharField(max_length=100)
 
+    @property
     def details(self) -> dict:
         return dict(
             id=self.id,

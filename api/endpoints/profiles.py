@@ -1,5 +1,5 @@
 from .libs import *
-from profiles.models import Follow, FavoriteBrand
+from profiles.models import Follow, CityAndCountry
 from utils import subroutines as sr, constants as const
 from pros.models import ProPlayer, Sponsors
 from interface.stats import EngagementStats
@@ -176,10 +176,4 @@ class UploadIntroVideoAPI(views.APIView):
 class CountriesAPI(views.APIView):
 
     def get(self, request: Request) -> Response:
-        from data.countries import country_list
-        cities = list()
-        for country_data in country_list:
-            for city in country_data['cities']:
-                cities.append(dict(
-                    
-                ))
+        return Response([cc.details for cc in CityAndCountry.objects.all()])
