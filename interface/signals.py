@@ -4,7 +4,7 @@ from player.models import User
 from profiles import models as profile_models
 from teams.models import Team, TeamMember
 from chat.models import Room, RoomMate
-from entrance.models import PreRegistration
+from entrance.models import PreRegistration, EmailVerification
 from emailsystem.engine import EmailEngine
 
 
@@ -90,3 +90,8 @@ def send_pre_registration_conformation_email(instance: PreRegistration, created:
             context=dict(full_name=f'{pre.first_name} {pre.last_name}')
         )        
         engine.send()
+
+
+@receiver(post_save, sender=User)
+def delete_email_verification(instance: User, *args, **kwargs) -> None:
+    EmailVerification.objects.filter(email=instance.email).delete()

