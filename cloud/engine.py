@@ -2,13 +2,13 @@ import boto3
 from ._cloud_creds import cloud_cred
 from utils.keygen import KeyGen
 from django.core.files.uploadedfile import UploadedFile
-
+from botocore.client import Config
 
 class CloudEngine:
 
     def __init__(
             self,
-            file: UploadedFile,  
+            file: UploadedFile=None,  
             bucket: str='testv0', 
             key_holder: str='mumit1', 
             region: str='auto',
@@ -33,7 +33,8 @@ class CloudEngine:
             region_name=self.region,
             endpoint_url=self.endpoint_url,
             aws_access_key_id=self.access_key,
-            aws_secret_access_key=self.secret_key
+            aws_secret_access_key=self.secret_key,
+            config=Config(signature_version='s3v4')
         )
 
     def __set_file_name(self, original_file_name: str) -> str:

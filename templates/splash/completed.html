@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BowlersNetwork – Coming Soon</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;400&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"/>
+
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #f7fff9;
+      color: #222;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .header-geo {
+      width: 100vw;
+      min-height: 420px;
+      background: linear-gradient(135deg, rgba(91,192,84,0.95), #43a047);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .header-geo svg {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    .header-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      color: #fff;
+      padding: 2.5rem 1rem 1.5rem;
+    }
+
+    .header-content .logo {
+      width: 170px;
+      height: 170px;
+      border-radius: 50%;
+      border: 4px solid #fff;
+      object-fit: cover;
+      background: #fff;
+      margin-bottom: 1.2rem;
+      box-shadow: 0 2px 12px rgba(91,192,84,0.18);
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.12));
+    }
+
+    .header-content h1 {
+      font-size: 2.8rem;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      text-shadow: 0 2px 16px rgba(67,160,71,0.18);
+    }
+
+    .header-content .subtitle {
+      font-size: 1.3rem;
+      color: #eafff2;
+    }
+
+    .container {
+      background: #fff;
+      max-width: 900px;
+      width: 90%;
+      margin-top: -60px;
+      padding: 2.5rem 2rem;
+      border-radius: 22px;
+      box-shadow: 0 8px 32px rgba(91,192,84,0.18);
+      text-align: center;
+    }
+
+    /* Success Tick Animation */
+    .success-check {
+      width: 88px;
+      height: 88px;
+    }
+
+    .check-circle {
+      stroke: rgba(91,192,84,0.8);
+      stroke-width: 4;
+      stroke-dasharray: 166;
+      stroke-dashoffset: 166;
+      animation: stroke-circle 0.6s ease-out forwards;
+    }
+
+    .check-mark {
+      stroke: rgba(91,192,84,0.95);
+      stroke-width: 4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 48;
+      stroke-dashoffset: 48;
+      animation: stroke-check 0.4s 0.6s ease-out forwards;
+    }
+
+    @keyframes stroke-circle {
+      to { stroke-dashoffset: 0; }
+    }
+
+    @keyframes stroke-check {
+      to { stroke-dashoffset: 0; }
+    }
+
+    .thank-you-text h2 {
+      margin-top: 1rem;
+      color: #5bc054;
+      font-weight: 800;
+    }
+
+    .thank-you-text p {
+      font-size: 1.15rem;
+      color: #444;
+      margin-top: 0.5rem;
+    }
+
+    @media (max-width: 700px) {
+      .header-content h1 {
+        font-size: 2rem;
+      }
+      .container {
+        padding: 1.2rem 0.8rem;
+        margin-top: 30px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header-geo">
+    <svg viewBox="0 0 1440 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon fill="#43a047" fill-opacity="0.18" points="0,160 480,80 960,240 1440,120 1440,320 0,320"/>
+      <polygon fill="#fff" fill-opacity="0.08" points="0,240 600,160 1200,320 1440,200 1440,320 0,320"/>
+    </svg>
+    <div class="header-content">
+      <img src="https://logos.bowlersnetwork.com/bn_logo_big.png" alt="BowlersNetwork Logo" class="logo">
+      <h1>Your Game. Your Network.</h1>
+      <div class="subtitle">A revolutionary platform for bowling is almost here.</div>
+    </div>
+  </div>
+
+  <div class="container shadow-lg animate__animated animate__fadeIn">
+      <div class="thank-you-text">
+        <h2>Pre-registration is complete!</h2>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

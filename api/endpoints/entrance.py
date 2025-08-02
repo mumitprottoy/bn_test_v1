@@ -2,6 +2,7 @@ import io, csv
 from .libs import *
 from emailsystem.engine import EmailEngine
 from entrance.models import EmailVerification, PreRegistration
+from pros.models import ProPlayer
 
 
 class SendInvitesWithCSVFileAPI(views.APIView):
@@ -30,15 +31,9 @@ class SendInvitesWithCSVFileAPI(views.APIView):
 class PreRegistrationAPI(views.APIView):
     
     def post(self, request: Request) -> Response:
-        email = request.data.get('email')
-        email_verifiaction = EmailVerification.objects.filter(
-            email=email, is_verified=True).first()
-    
-        if email_verifiaction is None:
-            return Response(
-                dict(error='Email is not verified'), status=status.HTTP_401_UNAUTHORIZED)
-        
-        PreRegistration.objects.create(**request.data)
+        onborded_by = ProPlayer.objects.filter(
+            username=request.data.get('channel')).first()
+        PreRegistration.objects.create(**request.data.get('basic_info'), onborded_by=onborded_by)
         return Response(dict(message='Pre-registration completed'))
 
 
