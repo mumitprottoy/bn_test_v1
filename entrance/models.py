@@ -62,15 +62,15 @@ class PreRegistration(models.Model):
     onboarded_by = models.ForeignKey(ProPlayer, on_delete=models.DO_NOTHING, null=True, default=None)
 
     def save(self, *args, **kwargs) -> None:
-        if self._state.adding and self.onboarded_by is None:
+        if not self._state.adding:
+            pre_registration = self.__class__.objects.get(id=self.id)
+            if self.onboarded_by != pre_registration.onboarded_by:
+                raise ValueError('Cannot change pro player')
+        elif self.onboarded_by is None:
             last_pre = self.__class__.objects.last()
             last_pro = last_pre.onboarded_by if last_pre is not None else None
             rotator = ProRotator(last_pro)
             self.onboarded_by = rotator.get_current_pro()
-        else:
-            pre_registration = self.__class__.objects.get(id=self.id)
-            if self.onboarded_by != pre_registration.onboarded_by:
-                raise ValueError('Cannot change pro player')
         super().save(*args, **kwargs)
 
     def __str__(self) -> str:
