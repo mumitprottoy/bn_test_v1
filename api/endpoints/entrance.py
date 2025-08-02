@@ -31,9 +31,12 @@ class SendInvitesWithCSVFileAPI(views.APIView):
 class PreRegistrationAPI(views.APIView):
     
     def post(self, request: Request) -> Response:
+        basic_info = request.data.get('basic_info'), 
+        if PreRegistration.objects.filter(email=basic_info['email']).exists():
+            return Response(dict(error='Email already exists'), status=status.HTTP_400_BAD_REQUEST)
         onborded_by = ProPlayer.objects.filter(
             user__username=request.data.get('channel')).first()
-        PreRegistration.objects.create(onboarded_by=onborded_by, **request.data.get('basic_info'))
+        PreRegistration.objects.create(onboarded_by=onborded_by, **basic_info)
         return Response(dict(message='Pre-registration completed'))
 
 
