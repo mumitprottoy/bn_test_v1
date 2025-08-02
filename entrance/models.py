@@ -61,7 +61,7 @@ class EmailVerification(models.Model):
 class PreRegistration(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    email = models.EmailField(unique=True)
+    email = models.EmailField()
     onboarded_by = models.ForeignKey(ProPlayer, on_delete=models.DO_NOTHING, null=True, default=None)
     key = models.CharField(max_length=100, default=get_key)
     is_activated = models.BooleanField(default=False)
