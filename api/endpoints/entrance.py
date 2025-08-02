@@ -32,7 +32,7 @@ class PreRegistrationAPI(views.APIView):
     
     def post(self, request: Request) -> Response:
         onborded_by = ProPlayer.objects.filter(
-            username=request.data.get('channel')).first()
+            user__username=request.data.get('channel')).first()
         PreRegistration.objects.create(**request.data.get('basic_info'), onborded_by=onborded_by)
         return Response(dict(message='Pre-registration completed'))
 
