@@ -143,6 +143,7 @@ class UploadCoverPhotoAPI(views.APIView):
     parser_classes = [parsers.FormParser, parsers.MultiPartParser]
 
     def post(self, request: Request) -> Response:
+        return Response(dict(method='POST'))
         image = request.data.get('image')
         if image and image.name.lower().split('.')[1] in const.COVER_PHOTO_SUPPORTED_FILES:
             cloud_engine = CloudEngine(image, 'profiles')
