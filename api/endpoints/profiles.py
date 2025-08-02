@@ -173,7 +173,7 @@ class UploadIntroVideoAPI(views.APIView):
             return Response(dict(
                 message='Success', video_public_url=video_pub_url), status=status.HTTP_200_OK)
         else: return Response(
-            dict(message=f'Unsupported file type. Supported file types: {', '.join(const.INTRO_VIDEO_SUPPORTED_FILES)}'),
+            dict(message=f'Unsupported file type ({video.name.lower().split('.')[1]}). Supported file types: {', '.join(const.INTRO_VIDEO_SUPPORTED_FILES)}'),
             status=status.HTTP_400_BAD_REQUEST
         )
 
