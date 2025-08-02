@@ -31,7 +31,7 @@ class SendInvitesWithCSVFileAPI(views.APIView):
 class PreRegistrationAPI(views.APIView):
     
     def post(self, request: Request) -> Response:
-        basic_info = request.data.get('basic_info'), 
+        basic_info = request.data.get('basic_info')
         if PreRegistration.objects.filter(email=basic_info['email']).exists():
             return Response(dict(error='Email already exists'), status=status.HTTP_400_BAD_REQUEST)
         onborded_by = ProPlayer.objects.filter(
