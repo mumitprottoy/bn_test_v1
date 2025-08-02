@@ -75,3 +75,7 @@ def random_shift_api(request, cycle: int):
         except Exception as e:
             print(str(e))
     return JsonResponse({'message': 'OK'})
+
+
+def splash(request):
+    return render(request, 'splash/splash_demo.html')

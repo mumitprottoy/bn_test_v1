@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BowlersNetwork – Coming Soon</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;400&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .header-geo {
+            width: 100vw;
+            min-height: 420px;
+            background: linear-gradient(135deg, rgba(91,192,84,0.95) 0%, #43a047 100%);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .header-geo svg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0;
+        }
+        .header-content {
+            position: relative;
+            z-index: 2;
+            color: #fff;
+            text-align: center;
+            padding: 2.5rem 1rem 1.5rem 1rem;
+        }
+        .header-content .logo {
+            width: 170px;
+            height: 170px;
+            margin-bottom: 1.2rem;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.12));
+            border-radius: 50%;
+            border: 4px solid #fff;
+            box-shadow: 0 2px 12px rgba(91,192,84,0.18);
+            background: #fff;
+            object-fit: cover;
+        }
+        .header-content h1 {
+            font-size: 2.8rem;
+            font-weight: 900;
+            letter-spacing: 1.5px;
+            margin-bottom: 0.7rem;
+            color: #fff;
+            text-shadow: 0 2px 16px rgba(67,160,71,0.18);
+        }
+        .header-content .subtitle {
+            font-size: 1.3rem;
+            color: #eafff2;
+            margin-bottom: 1.2rem;
+        }
+        .header-content .cta {
+            margin-top: 1.5rem;
+        }
+        body {
+            font-family: 'Montserrat', Arial, sans-serif;
+            background: #fff;
+            color: #222;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            max-width: 1000px;
+            margin: -60px auto 0 auto;
+            background: #fff;
+            border-radius: 22px;
+            box-shadow: 0 8px 32px rgba(91,192,84,0.18);
+            padding: 2.5rem 2rem 2rem 2rem;
+            text-align: center;
+            position: relative;
+        }
+        .logo {
+            width: 180px;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 2px 8px rgba(91,192,84,0.25));
+        }
+        h1 {
+            font-size: 2.4rem;
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: rgba(91,192,84,0.95);
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            color: #5bc054;
+        }
+        .features {
+            margin: 1.5rem 0 2rem 0;
+        }
+        .feature-cards {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem 1.5rem;
+        }
+        .feature-card {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(91,192,84,0.13), 0 1.5px 8px rgba(67,160,71,0.07);
+            padding: 2.2rem 1.7rem 1.7rem 1.7rem;
+            min-width: 240px;
+            max-width: 320px;
+            flex: 1 1 260px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.32s cubic-bezier(.4,2,.6,1), box-shadow 0.32s, background 0.32s;
+            border: 2.5px solid rgba(91,192,84,0.10);
+            position: relative;
+            overflow: hidden;
+        }
+        .feature-card:hover {
+            transform: translateY(-14px) scale(1.045) rotate(-1.5deg);
+            box-shadow: 0 12px 40px rgba(91,192,84,0.22), 0 2px 12px rgba(67,160,71,0.13);
+            background: #f7fff9;
+        }
+        .feature-title {
+            font-size: 1.32rem;
+            font-weight: 900;
+            color: #43a047;
+            margin-bottom: 0.7rem;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+        .feature-desc {
+            font-size: 1.09rem;
+            color: #222;
+            text-align: center;
+        }
+        @media (max-width: 700px) {
+            .feature-cards { gap: 1.2rem 0.5rem; }
+            .feature-card { min-width: 90vw; max-width: 98vw; padding: 1.5rem 0.7rem; }
+        }
+        .cta {
+            background: rgba(91,192,84,0.95);
+            color: #fff;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            padding: 1rem 2.2rem;
+            font-size: 1.1rem;
+            margin: 1.5rem 0 1rem 0;
+            cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px rgba(91,192,84,0.18);
+        }
+        .cta:hover {
+            background: #43a047;
+        }
+        .testimonials {
+            margin: 2.5rem 0 1.5rem 0;
+            background: linear-gradient(120deg, #f7fff9 60%, #eafff2 100%);
+            border-radius: 18px;
+            box-shadow: 0 2px 12px rgba(91,192,84,0.08);
+            padding: 2rem 1rem 1.5rem 1rem;
+        }
+        .testimonial-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.2rem;
+            justify-content: center;
+            overflow-x: unset;
+            scroll-behavior: unset;
+            transition: all 0.4s cubic-bezier(.4,2,.6,1);
+            /* Remove scrollbars for flex cards layout */
+        }
+        /* Remove custom scrollbars for testimonial-cards */
+        .testimonial {
+            background: #fff;
+            border-radius: 16px;
+            padding: 1.5rem 1.2rem 1.2rem 1.2rem;
+            max-width: 300px;
+            min-width: 220px;
+            color: #222;
+            box-shadow: 0 2px 16px rgba(91,192,84,0.10);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 2px solid rgba(91,192,84,0.10);
+            opacity: 0.9;
+            transition: transform 0.4s cubic-bezier(.4,2,.6,1), opacity 0.4s;
+        }
+        .testimonial img {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            margin-bottom: 0.7rem;
+            border: 2.5px solid rgba(91,192,84,0.35);
+            object-fit: cover;
+        }
+        .testimonial .name {
+            font-weight: 700;
+            margin-top: 0.5rem;
+            color: #5bc054;
+        }
+        .testimonial .role {
+            font-size: 0.95rem;
+            color: #43a047;
+            margin-bottom: 0.5rem;
+        }
+/* Remove custom form flex styles to allow Bootstrap grid and form-floating to work as intended */
+        input[type="text"], input[type="email"] {
+            padding: 0.8rem;
+            border-radius: 6px;
+            border: 2px solid rgba(91,192,84,0.18);
+            font-size: 1rem;
+            background: #f7fff9;
+            color: #222;
+        }
+        input[type="text"]:focus, input[type="email"]:focus {
+            outline: 2px solid #5bc054;
+        }
+        .form-btn {
+            background: rgba(91,192,84,0.95);
+            color: #fff;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            padding: 0.9rem 0;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px rgba(91,192,84,0.18);
+        }
+        .form-btn:hover {
+            background: #43a047;
+        }
+        .pre-reg-card {
+            background: rgba(255,255,255,0.85);
+            border-radius: 22px;
+            box-shadow: 0 8px 32px rgba(91,192,84,0.13), 0 1.5px 8px rgba(67,160,71,0.07);
+            padding: 2.5rem 1.5rem 1.5rem 1.5rem;
+            max-width: 900px;
+            margin: 0 auto 2.2rem auto;
+            backdrop-filter: blur(6px);
+            border: 2.5px solid rgba(91,192,84,0.10);
+        }
+        .form-floating > .form-control:focus ~ label {
+            color: #43a047;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+            transform: translateY(-0.5rem) scale(1.08);
+            transition: all 0.25s cubic-bezier(.4,2,.6,1);
+        }
+        .form-floating > .form-control:focus {
+            border-color: #5bc054;
+            box-shadow: 0 0 0 0.22rem rgba(91,192,84,0.18), 0 2px 16px rgba(91,192,84,0.10);
+            background: rgba(255,255,255,0.95);
+            transition: box-shadow 0.22s cubic-bezier(.4,2,.6,1), background 0.22s;
+        }
+        .form-floating > .form-control {
+            background: rgba(255,255,255,0.7);
+            border-radius: 12px;
+            border: 2px solid rgba(91,192,84,0.18);
+            box-shadow: 0 1.5px 8px rgba(91,192,84,0.07);
+            font-size: 1.08rem;
+            color: #222;
+            transition: box-shadow 0.22s, border-color 0.22s, background 0.22s;
+        }
+        .form-floating > label {
+            color: #43a047;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.22s cubic-bezier(.4,2,.6,1);
+        }
+        .modern-btn {
+            background: linear-gradient(90deg, rgba(91,192,84,0.95) 0%, #43a047 100%);
+            color: #fff;
+            font-weight: 800;
+            border: none;
+            border-radius: 10px;
+            padding: 1rem 0;
+            font-size: 1.15rem;
+            box-shadow: 0 4px 16px rgba(91,192,84,0.18);
+            transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+        }
+        .modern-btn:hover {
+            background: linear-gradient(90deg, #43a047 0%, rgba(91,192,84,0.95) 100%);
+            box-shadow: 0 8px 32px rgba(91,192,84,0.22);
+            transform: translateY(-2px) scale(1.03);
+        }
+        .disclaimer {
+            font-size: 0.95rem;
+            color: #43a047;
+            margin-top: 1.2rem;
+        }
+        @media (max-width: 700px) {
+            .container { max-width: 98vw; padding: 1.2rem 0.5rem; margin-top: 40px !important; }
+            .testimonial-cards { flex-direction: row; align-items: flex-start; flex-wrap: wrap; gap: 1rem; }
+            .testimonial { min-width: 90vw; max-width: 98vw; }
+            .header-content h1 { font-size: 2rem; }
+        }
+        /* Carousel animation */
+        .testimonial.active {
+            opacity: 1;
+            transform: scale(1.08);
+            z-index: 2;
+            box-shadow: 0 4px 24px rgba(91,192,84,0.18);
+        }
+        .testimonial.inactive {
+            opacity: 0.7;
+            transform: scale(1);
+            z-index: 1;
+        }
+    </style>
+    
+    <body style="background: #f7fff9;">
+        <div class="header-geo">
+            <svg viewBox="0 0 1440 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <polygon fill="#43a047" fill-opacity="0.18" points="0,160 480,80 960,240 1440,120 1440,320 0,320"/>
+                <polygon fill="#fff" fill-opacity="0.08" points="0,240 600,160 1200,320 1440,200 1440,320 0,320"/>
+            </svg>
+            <div class="header-content">
+                <img src="https://logos.bowlersnetwork.com/bn_logo_big.png" alt="BowlersNetwork Logo" class="logo">
+                <h1>Your Game. Your Network.</h1>
+                <div class="subtitle">A revolutionary platform for bowling is almost here.</div>
+                <!-- Button removed from header for better placement -->
+            </div>
+        </div>
+        <div class="container shadow-lg">
+            <p class="lead mb-4">Pre-register today to be among the first to experience the most connected platform the sport has ever seen — and become eligible for our exclusive beta testing group.</p>
+            <button class="cta" onclick="document.getElementById('preRegForm').scrollIntoView({ behavior: 'smooth' });">Pre-register Now</button>
+
+            <!-- Testimonials section -->
+            <div class="testimonials mt-5 mb-4">
+                <h2 style="margin-bottom:1rem; color:rgba(91,192,84,0.95); font-size:1.3rem;">What Bowlers Are Saying</h2>
+                <div class="testimonial-cards" id="testimonialCarousel">
+                    <div class="testimonial">
+                        <img src="https://logos.bowlersnetwork.com/players/Norm_Duke.jpg" alt="Norm Duke">
+                        <div>“I’ve been around this game a long time, and I’ve seen a lot of ideas come and go. But this? This is different. BowlersNetwork has the potential to unite the sport in a way we’ve never seen, not just for pros, but for everyone who loves the game.”</div>
+                        <div class="name">Norm Duke</div>
+                    </div>
+                    <div class="testimonial">
+                        <img src="https://logos.bowlersnetwork.com/players/Chuck_Gardner.jpg" alt="Chuck Gardner">
+                        <div>“I’ve dedicated my life to helping bowlers and growing this sport, and I truly believe BowlersNetwork is the tool we’ve all been waiting for. It brings everything together, players, fans, centers, brands, and gives bowling the kind of exposure it deserves.”</div>
+                        <div class="name">Chuck Gardner</div>
+                    </div>
+                    <div class="testimonial">
+                        <img src="https://logos.bowlersnetwork.com/players/parker_bohn.jpg" alt="Parker Bohn III">
+                        <div>“This sport has been my passion for decades, and when I saw what BowlersNetwork was building, I knew I had to be part of it. This is about more than tournaments or content, it’s about creating something meaningful for the entire bowling community.”</div>
+                        <div class="name">Parker Bohn III</div>
+                    </div>
+                    <div class="testimonial">
+                        <img src="https://logos.bowlersnetwork.com/players/Carolyn_Dorin_Ballard.jpg" alt="Carolyn Dorin-Ballard">
+                        <div>“For years we’ve needed a centralized place that brings the bowling world together. When I saw what BowlersNetwork was becoming, I knew this was the right step forward, for players, organizers, and fans alike.”</div>
+                        <div class="name">Carolyn Dorin-Ballard</div>
+                    </div>
+                    <div class="testimonial">
+                        <img src="https://logos.bowlersnetwork.com/players/Liz_Johnson.png" alt="Liz Johnson">
+                        <div>“What excites me about BowlersNetwork is that it finally gives our sport the spotlight it deserves, and not just for the pros. It’s going to elevate tournaments, promote the people behind the scenes, and connect bowlers at every level.”</div>
+                        <div class="name">Liz Johnson</div>
+                    </div>
+                </div>
+            </div>
+            <!-- End testimonials section -->
+
+            <div class="features mb-4">
+                <div class="feature-cards d-flex flex-wrap justify-content-center gap-4">
+                    <div class="feature-card">
+                        <h3 class="feature-title">For Bowlers</h3>
+                        <div class="feature-desc">Track your scores, connect with friends, join leagues, and showcase your achievements in one seamless platform designed for every bowler.</div>
+                    </div>
+                    <div class="feature-card">
+                        <h3 class="feature-title">For Centers</h3>
+                        <div class="feature-desc">Engage your customers, manage events, and grow your business with tools that bring your center into the digital age.</div>
+                    </div>
+                    <div class="feature-card">
+                        <h3 class="feature-title">For Leagues & Associations</h3>
+                        <div class="feature-desc">Simplify league management, scheduling, and communication while building a stronger, more connected community.</div>
+                    </div>
+                    <div class="feature-card">
+                        <h3 class="feature-title">For Fans</h3>
+                        <div class="feature-desc">Follow your favorite bowlers, watch live events, and stay updated with the latest news and highlights from the world of bowling.</div>
+                    </div>
+                    <div class="feature-card">
+                        <h3 class="feature-title">For the Future</h3>
+                        <div class="feature-desc">Experience innovation that unites the entire bowling ecosystem, paving the way for the next generation of the sport.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pre-register form below features section -->
+            <form id="preRegForm" action="#" method="post" autocomplete="off" class="mt-4 pre-reg-card">
+                <div class="row g-4 justify-content-center">
+                    <div class="col-md-4 col-12">
+                        <div class="form-floating mb-3">
+                            <input type="text" name="first_name" class="form-control form-control-lg" id="firstName" placeholder="First Name" required>
+                            <label for="firstName">First Name</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-12">
+                        <div class="form-floating mb-3">
+                            <input type="text" name="last_name" class="form-control form-control-lg" id="lastName" placeholder="Last Name" required>
+                            <label for="lastName">Last Name</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-12">
+                        <div class="form-floating mb-3">
+                            <input type="email" name="email" class="form-control form-control-lg" id="email" placeholder="Email Address" required>
+                            <label for="email">Email Address</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-2 justify-content-center">
+                    <div class="col-md-4 col-10">
+                        <button type="submit" class="form-btn btn btn-success btn-lg w-100 modern-btn">Pre-register</button>
+                    </div>
+                </div>
+            </form>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+            <script>
+                // Removed auto-scrolling for testimonials; now shown as flex cards
+            </script>
+        </div>
+</body>
+</html>
+                        

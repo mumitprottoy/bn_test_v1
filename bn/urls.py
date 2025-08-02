@@ -31,4 +31,5 @@ urlpatterns = [
     path('base/', entrance_views.base_, name='base'),
     path('logout/', entrance_views.logout, name='logout'),
     path('pinscore', pinscore, name='pinscore'),
+    path('splash/', entrance_views.splash, name='splash'),
 ]
