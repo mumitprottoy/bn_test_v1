@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from pros.models import ProPlayer, ProRotator
+from pros.models import ProPlayer, ProPlayerRotator
 from utils.keygen import KeyGen
 from emailsystem.engine import EmailEngine
 
@@ -72,10 +72,7 @@ class PreRegistration(models.Model):
             if self.onboarded_by != pre_registration.onboarded_by:
                 raise ValueError('Cannot change pro player')
         elif self.onboarded_by is None:
-            last_pre = self.__class__.objects.last()
-            last_pro = last_pre.onboarded_by if last_pre is not None else None
-            rotator = ProRotator(last_pro)
-            self.onboarded_by = rotator.get_current_pro()
+            self.onboarded_by = ProPlayerRotator.get_current_pro()
         super().save(*args, **kwargs)
 
     def __str__(self) -> str:
