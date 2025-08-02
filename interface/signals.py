@@ -6,6 +6,7 @@ from teams.models import Team, TeamMember
 from chat.models import Room, RoomMate
 from entrance.models import PreRegistration, EmailVerification
 from emailsystem.engine import EmailEngine
+from pros.models import ProPlayerRotator
 
 
 @receiver(post_save, sender=User)
@@ -83,6 +84,9 @@ def add_bio(instance: User, created: bool, *args, **kwargs) -> None:
 def send_pre_registration_conformation_email(instance: PreRegistration, created: bool, *args, **kwargs) -> None:
     pre = instance
     if created:
+        default_rotator = ProPlayerRotator.get_default()
+        default_rotator.last_pro = pre.onboarded_by
+        default_rotator.save()
         engine = EmailEngine(
             recipient_list=[pre.email],
             subject='Pre-Registration Confirmed — Let’s Roll!',

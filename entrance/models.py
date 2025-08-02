@@ -7,6 +7,9 @@ from emailsystem.engine import EmailEngine
 def get_six_digit_code() -> str:
     return KeyGen().num_key()
 
+def get_key() -> str:
+    return KeyGen().timestamped_alphanumeric_id()
+
 User = get_user_model()
 
 class OnBoarding(models.Model):
@@ -60,6 +63,8 @@ class PreRegistration(models.Model):
     last_name = models.CharField(max_length=50)
     email = models.EmailField(unique=True)
     onboarded_by = models.ForeignKey(ProPlayer, on_delete=models.DO_NOTHING, null=True, default=None)
+    key = models.CharField(max_length=100, default=get_key)
+    is_activated = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs) -> None:
         if not self._state.adding:
