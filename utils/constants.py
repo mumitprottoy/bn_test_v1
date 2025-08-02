@@ -3,9 +3,9 @@ DATETIME_STR_FORMAT_1 = "%I : %M %p %a %d %b, %Y"
 PROFILE_PIC_SUPPORTED_FILES = ['jpg', 'jpeg', 'png', 'gif']
 COVER_PHOTO_SUPPORTED_FILES = ['jpg', 'jpeg', 'png']
 INTRO_VIDEO_SUPPORTED_FILES = [
-    ".mp4",   # H.264 + AAC codec required
-    ".webm",  # VP8/VP9 + Vorbis/Opus
-    ".ogg",   # Ogg Theora video
+    "mp4",   # H.264 + AAC codec required
+    "webm",  # VP8/VP9 + Vorbis/Opus
+    "ogg",   # Ogg Theora video
 ]
 MEDIA_CONTENT_SUPPORTED_FILES = [
     # Image types supported in browsers
