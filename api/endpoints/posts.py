@@ -30,7 +30,7 @@ class PostFeedAPI(views.APIView):
 
 class UserPostAPI(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
-    parser_classes = [parsers.MultiPartParser, parsers.FormParser]
+    parser_classes = [parsers.MultiPartParser, parsers.FormParser, parsers.JSONParser]
      
     def get(self, request: Request) -> Response:
         return Response(dict(
