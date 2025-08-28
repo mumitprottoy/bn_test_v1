@@ -46,8 +46,8 @@ class UserPostAPI(views.APIView):
             kwargs['media'] = request.FILES.getlist('media')
         poster = Poster(user=request.user, **kwargs)
         metadata = poster.create_post()
-        # return Response(metadata.details(), status=status.HTTP_200_OK)
-        return Response(request.data)
+        return Response(metadata.details(), status=status.HTTP_200_OK)
+        # return Response(request.data)
         # except Exception as e: 
         #     # error in dev; MUST be changed in prod
         #     return Response(dict(errors=[str(e)]), status=status.HTTP_400_BAD_REQUEST)
