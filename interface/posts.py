@@ -43,10 +43,11 @@ class Poster:
     
     def upload_media_content(
             self, metadata: models.PostMetaData) -> models.PostMediaContent:
-        for file in self.media:
-            engine = CloudEngine(file, 'media', 'mumit1')
-            url = engine.upload()
-            models.PostMediaContent.objects.create(metadata=metadata, url=url)
+        if self.media is not None:
+            for file in self.media:
+                engine = CloudEngine(file, 'media', 'mumit1')
+                url = engine.upload()
+                models.PostMediaContent.objects.create(metadata=metadata, url=url)
     
     def create_event(self, metadata: models.PostMetaData) -> models.PostEvent:
         if self.event is not None:
