@@ -195,12 +195,11 @@ class PostPoll(models.Model):
                 return True, opt.id
         return False, -1
     
-    def vote(self, voter: User, opt: 'PollOption') -> dict | None:
+    def vote(self, voter: User, opt: 'PollOption') -> dict:
         voted_already, _ = opt.poll.voted_already(voter)
-        if (opt.poll.poll_type == self.Single) and voted_already:
-            return False
-        _, created = PollVote.objects.get_or_create(poll_option=opt, voter=voter)
-        return opt.poll.analysis if created else None
+        if not ((opt.poll.poll_type == self.Single) and voted_already):
+            _, created = PollVote.objects.get_or_create(poll_option=opt, voter=voter)
+        return opt.poll.analysis
        
     @property
     def analysis(self) -> list[dict]:
