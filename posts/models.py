@@ -190,7 +190,7 @@ class PostPoll(models.Model):
     
     def voted_already(self, voter: User) -> tuple[bool, int]:
         for opt in self.options.all():
-            if opt.__class__.objects.filter(
+            if PollVote.objects.filter(
                 poll_option=opt, voter=voter).exists():
                 return True, opt.id
         return False, -1
