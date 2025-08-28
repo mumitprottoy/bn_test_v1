@@ -142,4 +142,14 @@ class PostsByUID(views.APIView):
         return Response(
             models.PostMetaData.objects.get(
                 uid=uid).details(request.user))
-    
+
+
+class PollVoteAPI(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request: Request, option_id: int) -> Response:
+        opt = models.PollOption.objects.filter(id=option_id).first()
+        if opt is not None:
+            response = opt.poll.vote(voter=request.user, opt=opt)
+            return Response(response, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)

@@ -183,19 +183,25 @@ class PostPoll(models.Model):
     title = models.TextField(default='')
     poll_type = models.CharField(
         max_length=15, choices=POLL_TYPE_CHOICES, default=Single)
-    
-    def vote(self, voter: User, option_id: int) -> bool:
-        option = self.options.filter(id=option_id)
-        vote = self.votes.filter(voter=voter)
-        if vote is not None:
-            if self.poll_type == self.Single:
-                return False
             
-    
     @property
     def total_vote(self) -> int:
         return sum([opt.total_vote for opt in self.options.all()])
     
+    def voted_already(self, voter: User) -> tuple[bool, int]:
+        for opt in self.options.all():
+            if opt.__class__.objects.filter(
+                poll_option=opt, voter=voter).exists():
+                return True, opt.id
+        return False, -1
+    
+    def vote(self, voter: User, opt: 'PollOption') -> dict | None:
+        voted_already, _ = opt.poll.voted_already(voter)
+        if (opt.poll.poll_type == self.Single) and voted_already:
+            return False
+        _, created = PollVote.objects.get_or_create(poll_option=opt, voter=voter)
+        return opt.poll.analysis if created else None
+       
     @property
     def analysis(self) -> list[dict]:
         poll_analysis = list()
