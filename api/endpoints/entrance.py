@@ -15,7 +15,7 @@ class SendInvitesWithCSVFileAPI(views.APIView):
         io_string = io.StringIO(decoded_file)
         reader = csv.DictReader(io_string)
         data = list(reader)
-        invite_link = 'https://youtube.com'
+        invite_link = 'https://bowlersnetwork.com'
         sent_count = 0
         for _ in data:
             engine = EmailEngine(
