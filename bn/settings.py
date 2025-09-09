@@ -38,6 +38,8 @@ INSTALLED_APPS += [
     'brands',
     'feedback',
     'emailsystem',
+    'centers',
+    'tournaments',
 ]
 
 # external apps

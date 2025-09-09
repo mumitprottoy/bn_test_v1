@@ -17,6 +17,7 @@ from .endpoints.chat import *
 from .endpoints.brands import *
 from .endpoints.feedbacks import *
 from .endpoints.entrance import *
+from .endpoints.tournaments import *
 from . import serializers
 
 
