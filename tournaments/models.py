@@ -27,6 +27,7 @@ class Tournamant(models.Model):
     @property
     def details(self) -> dict:
         return dict(
+            id=self.id,
             name=self.name,
             start_date=self.start_date,
             reg_deadline=self.reg_deadline,
