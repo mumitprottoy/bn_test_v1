@@ -37,6 +37,10 @@ class Tournamant(models.Model):
             already_enrolled=self.participants.count()
         )
     
+    @property
+    def all_teams(self) -> list[dict]:
+        return [p.details for p in self.participants.all()]
+    
     def save(self, *args, **kwargs) -> None:
         if self.participants_count not in range(1,6):
             raise ValueError('Invalid participant count. Max: 5; Min: 1.')
@@ -47,6 +51,16 @@ class ParticipantSet(models.Model):
     tournament = models.ForeignKey(
         Tournamant, on_delete=models.CASCADE, related_name='participants')
     name = models.CharField(max_length=200, default='')
+    profile_picture = models.URLField(max_length=200, default='')
+
+    @property
+    def details(self) -> list:
+        return dict(
+            display_name=self.name,
+            profile_picture=self.profile_picture,
+            players = [m.user.basic for m in self.members.all()]
+        )
+        
     
     class Meta:
         constraints = [
