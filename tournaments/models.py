@@ -62,7 +62,6 @@ class ParticipantSet(models.Model):
             players = [m.user.basic for m in self.members.all()]
         )
         
-    
     class Meta:
         constraints = [
             models.UniqueConstraint(
@@ -84,3 +83,17 @@ class ParticipantMember(models.Model):
                 if participant.members.filter(user=self.user).exists():
                     raise ValueError('User already exists in this tournament')
         super().save(*args, **kwargs)
+
+
+class ScratchTournament(models.Model):
+    tournament = models.OneToOneField(
+        Tournamant, on_delete=models.CASCADE, related_name='scratch')
+    average = models.IntegerField(default=200)
+
+
+class HandicapTournament(models.Model):
+    tournament = models.OneToOneField(
+        Tournamant, on_delete=models.CASCADE, related_name='handicap'
+    )
+    percentage = models.IntegerField(default=90)
+    average = models.IntegerField(default=200)
