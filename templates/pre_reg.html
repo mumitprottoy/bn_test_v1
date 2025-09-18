@@ -9,35 +9,38 @@
 
 <div class="container my-5">
     <h1 class="mb-4 text-center">Pre-Registrations</h1>
+    <p>Total: {{total}}</p>
 
     {% if pre_regs %}
-        <div class="row g-4">
+        <div class="d-flex flex-column gap-3">
             {% for reg in pre_regs %}
-                <div class="col-12 col-md-6 col-lg-4">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-body">
-                            <h5 class="card-title mb-1">{{ reg.first_name }} {{ reg.last_name }}</h5>
-                            <p class="text-muted mb-2">{{ reg.email }}</p>
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title mb-1">{{ reg.first_name }} {{ reg.last_name }}</h5>
+                        <p class="text-muted mb-2">{{ reg.email }}</p>
 
-                            <p class="mb-1">
-                                <strong>Onboarded By:</strong> 
-                                {{ reg.onboarded_by.user.get_full_name|default:"-" }}
-                            </p>
+                        <p class="mb-1">
+                            <strong>Onboarded By:</strong> 
+                            {% if reg.onboarded_by and reg.onboarded_by.user %}
+                                {{ reg.onboarded_by.user.get_full_name }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </p>
 
-                            <p class="mb-1">
-                                <strong>Status:</strong> 
-                                {% if reg.is_activated %}
-                                    <span class="badge bg-success">Activated</span>
-                                {% else %}
-                                    <span class="badge bg-secondary">Pending</span>
-                                {% endif %}
-                            </p>
+                        <p class="mb-1">
+                            <strong>Status:</strong> 
+                            {% if reg.is_activated %}
+                                <span class="badge bg-success">Activated</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Pending</span>
+                            {% endif %}
+                        </p>
 
-                            <p class="mb-0">
-                                <strong>Created At:</strong> 
-                                <span class="utc-time" data-time="{{ reg.created_at|date:'c' }}"></span>
-                            </p>
-                        </div>
+                        <p class="mb-0">
+                            <strong>Created At:</strong> 
+                            <span class="utc-time" data-time="{{ reg.created_at|date:'c' }}"></span>
+                        </p>
                     </div>
                 </div>
             {% endfor %}
