@@ -32,4 +32,5 @@ urlpatterns = [
     path('logout/', entrance_views.logout, name='logout'),
     path('pinscore', pinscore, name='pinscore'),
     path('splash/', entrance_views.splash, name='splash'),
+    path('pre-registers', entrance_views.pre_registrations, name='pre-registers'),
 ]

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login as _login, logout as _logout, get_user_model
-from .models import OnBoarding
+from .models import OnBoarding, PreRegistration
 
 User = get_user_model()
 
@@ -79,3 +79,8 @@ def random_shift_api(request, cycle: int):
 
 def splash(request):
     return render(request, 'splash/splash_demo.html')
+
+
+def pre_registrations(request):
+    pre_regs = PreRegistration.objects.all().order_by('-created_at')
+    return render(request, 'pre_reg.html', context={'pre_regs': pre_regs})
