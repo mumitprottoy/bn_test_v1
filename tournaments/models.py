@@ -5,6 +5,8 @@ from player.models import User
 class Tournamant(models.Model):
     INVITATIONAL = 'Invitational'; OPEN = 'Open'
     ACCESS_CHOICES = ((INVITATIONAL, INVITATIONAL), (OPEN, OPEN))
+    HANDICAP = 'Handicap'; SCRATCH = 'Scratch'
+    TYPE_CHOICES = ((HANDICAP, HANDICAP), (SCRATCH, SCRATCH))
 
     name = models.CharField(max_length=200, unique=True, default='')
     start_date = models.DateTimeField()
@@ -15,6 +17,9 @@ class Tournamant(models.Model):
     long = models.CharField(max_length=50, default='')
     address = models.CharField(max_length=300, default='')
     access_type = models.CharField(max_length=20, choices=ACCESS_CHOICES)
+    tournament_type = models.CharField(max_length=30, choices=TYPE_CHOICES, default=SCRATCH)
+    average = models.IntegerField(default=200)
+    percentage = models.IntegerField(default=100)
 
     @property
     def format(self) -> str:
