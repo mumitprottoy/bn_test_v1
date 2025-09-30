@@ -40,7 +40,10 @@ class Tournamant(models.Model):
             reg_fee=self.reg_fee,
             access_type=self.access_type,
             format=self.format,
-            already_enrolled=self.participants.count()
+            already_enrolled=self.participants.count(),
+            tournament_type=self.tournament_type,
+            average=self.average,
+            percentage=self.percentage
         )
     
     @property
