@@ -94,4 +94,11 @@ class SignupDataValidationAPI(views.APIView):
             return Response(dict(isValid=True))
         else:
             return Response(dict(isValid=False, errors=errors))
-        
+
+
+class TestAdressAPI(views.APIView):
+
+    def post(self, request: Request) -> Response:
+        from entrance.models import TestAdress
+        addr = TestAdress.objects.create(**request.data)
+        return Response(addr.details)

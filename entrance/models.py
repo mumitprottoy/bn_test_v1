@@ -80,3 +80,21 @@ class PreRegistration(models.Model):
 
     def __str__(self) -> str:
         return f'{self.first_name} {self.last_name} onboarded by {self.onboarded_by.user.get_full_name()}'
+
+
+class TestAdress(models.Model):
+    lat = models.CharField(max_length=40)
+    long = models.CharField(max_length=40)
+    str_address = models.CharField(max_length=500)
+
+    @property
+    def details(self) -> dict:
+        return dict(
+            id=self.id,
+            lat=self.lat,
+            long=self.long,
+            str_address=self.str_address
+        )
+
+    def __str__(self) -> str:
+        return self.str_address
