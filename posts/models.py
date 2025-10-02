@@ -4,6 +4,7 @@ from player.models import User
 from profiles.models import Follow
 from utils import keygen as kg, subroutines as sr, constants as const
 from django.utils.timesince import timesince
+from django.utils import timezone
 
 
 def generate_uid() -> str:
@@ -153,12 +154,14 @@ class PostEvent(models.Model):
         PostMetaData, on_delete=models.CASCADE, related_name='event')
     title = models.TextField(default='Epic event!')
     date = models.BigIntegerField(default=-1)
+    event_date = models.DateTimeField(default=timezone.now)
     time = models.CharField(max_length=20, default='', blank=True, null=True)
     country = models.CharField(max_length=100, default='', blank=True, null=True)
     city = models.CharField(max_length=100, default='', blank=True, null=True)
     place_id = models.CharField(max_length=100, default='', blank=True, null=True)
     longitude = models.CharField(max_length=100, default='', blank=True, null=True)
     latitude = models.CharField(max_length=100, default='', blank=True, null=True)
+    str_address = models.CharField(max_length=500, default='', blank=True, null=True)
     post_code = models.CharField(max_length=15, blank=True, null=True)
     description = models.TextField(default='Epic event!', blank=True, null=True)
     
