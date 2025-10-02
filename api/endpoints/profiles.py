@@ -197,7 +197,9 @@ class SecretDeleteUserAPI(views.APIView):
 class DeleteAccountAPI(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request: Request) -> Response:
-        request.user.is_active = False
-        request.user.save()
-        return Response(dict(user_id=request.user.id, name=request.user.get_full_name(), status='Account Deleted.'))
+    def post(self, request: Request) -> Response:
+        if request.user.check_password(request.data.get('password')):
+            request.user.is_active = False
+            request.user.save()
+            return Response(dict(user_id=request.user.id, name=request.user.get_full_name(), status='Account Deleted.'))
+        return Response(dict(error='Incorrect password'), status=status.HTTP_401_UNAUTHORIZED)
