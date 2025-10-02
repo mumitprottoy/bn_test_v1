@@ -168,11 +168,11 @@ class PostEvent(models.Model):
     def __str__(self):
         return f'Event: PostMetadata {self.metadata.id}'
     
-    def save(self, *args, **kwargs) -> None:
-        if self.date == -1:
-            self.date = sr.current_timestamp()
+    # def save(self, *args, **kwargs) -> None:
+    #     if self.date == -1:
+    #         self.date = sr.current_timestamp()
         
-        super().save(*args, **kwargs)
+    #     super().save(*args, **kwargs)
     
 
 class PostPoll(models.Model):
