@@ -192,3 +192,12 @@ class SecretDeleteUserAPI(views.APIView):
         username = request.data.get('username')
         User.objects.filter(username=username).delete()
         return Response(dict(message=f'User with username `{username}` is deleted.'))
+    
+
+class DeleteAccountAPI(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request: Request) -> Response:
+        request.user.is_active = False
+        request.user.save()
+        return Response(dict(user_id=request.user.id, name=request.user.get_full_name(), status='Account Deleted.'))
