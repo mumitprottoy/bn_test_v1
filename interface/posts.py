@@ -2,7 +2,7 @@ from django.db.models import QuerySet
 from posts import models
 # from posts.models import User
 from cloud.engine import CloudEngine
-
+from django.utils.dateparse import parse_datetime
 
 class Poster:
     
@@ -51,7 +51,10 @@ class Poster:
     
     def create_event(self, metadata: models.PostMetaData) -> models.PostEvent:
         if self.event is not None:
-            return models.PostEvent.objects.create(metadata=metadata, **self.event)
+            event = models.PostEvent(metadata=metadata, **self.event)
+            event.event_date = parse_datetime(event.event_date)
+            event.save()
+            return event
     
     def create_post(self) -> models.PostMetaData:
         metadata = self.create_metadata()
