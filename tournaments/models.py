@@ -36,6 +36,8 @@ class Tournamant(models.Model):
             name=self.name,
             start_date=self.start_date,
             reg_deadline=self.reg_deadline,
+            lat=self.lat,
+            long=self.long,
             address=self.address,
             reg_fee=self.reg_fee,
             access_type=self.access_type,
