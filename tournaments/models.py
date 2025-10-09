@@ -1,5 +1,6 @@
 from django.db import models
 from player.models import User
+from django.contrib.postgres.fields import ArrayField
 
 
 class Tournamant(models.Model):
@@ -20,6 +21,12 @@ class Tournamant(models.Model):
     tournament_type = models.CharField(max_length=30, choices=TYPE_CHOICES, default=SCRATCH)
     average = models.IntegerField(default=200)
     percentage = models.IntegerField(default=100)
+    categories = ArrayField(
+        base_field=models.CharField(max_length=50),
+        blank=True,
+        default=list,
+        help_text="List of categories for the tournaments"
+    )
 
     @property
     def format(self) -> str:
