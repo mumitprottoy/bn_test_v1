@@ -33,4 +33,5 @@ urlpatterns = [
     path('pinscore', pinscore, name='pinscore'),
     path('splash/', entrance_views.splash, name='splash'),
     path('pre-registers', entrance_views.pre_registrations, name='pre-registers'),
+    path('pre-registers-json', entrance_views.pre_registration_json, name='pre-registers-json'),
 ]

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login as _login, logout as _logout, get_user_model
 from .models import OnBoarding, PreRegistration
+from django.http import JsonResponse
 
 User = get_user_model()
 
@@ -85,3 +86,16 @@ def pre_registrations(request):
     total = PreRegistration.objects.count()
     pre_regs = PreRegistration.objects.all().order_by('-id')
     return render(request, 'pre_reg.html', context={'pre_regs': pre_regs, 'total': total})
+
+
+def pre_registration_json(request):
+    pre_regs = [dict(
+        reg_id=pr.id,
+        first_name=pr.first_name,
+        last_name=pr.last_name,
+        email=pr.email,
+        key=pr.key,
+        registered_at=pr.created_at,
+        registered_at_str = pr.created_at.strftime("%d %b, %Y %a %H:%M")
+    ) for pr in PreRegistration.objects.all().order_by('id')]
+    return JsonResponse(dict(pre_registers=pre_regs))
