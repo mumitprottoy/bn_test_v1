@@ -9,7 +9,7 @@ def get_six_digit_code() -> str:
     return KeyGen().num_key()
 
 def get_key() -> str:
-    return KeyGen().timestamped_alphanumeric_id()
+    return KeyGen().timestamped_alphanumeric_id(head_len=20)
 
 User = get_user_model()
 

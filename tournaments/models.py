@@ -27,6 +27,8 @@ class Tournamant(models.Model):
         default=list,
         help_text="List of categories for the tournaments"
     )
+    event_banner = models.URLField()
+    logo = models.URLField()
 
     @property
     def format(self) -> str:

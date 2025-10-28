@@ -40,6 +40,7 @@ INSTALLED_APPS += [
     'emailsystem',
     'centers',
     'tournaments',
+    'leagues'
 ]
 
 # external apps
