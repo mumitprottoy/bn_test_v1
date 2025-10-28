@@ -31,10 +31,14 @@ class SendInvitesWithCSVFileAPI(views.APIView):
 class PreRegistrationAPI(views.APIView):
     
     def post(self, request: Request) -> Response:
-        onborded_by = ProPlayer.objects.filter(
-            user__username=request.data.get('channel')).first()
-        PreRegistration.objects.create(onboarded_by=onborded_by, **request.data.get('basic_info'))
-        return Response(dict(message='Pre-registration completed'))
+        email = request.data.get(email)
+        email_verification = EmailVerification.objects.filter(email=email).first()
+        if email_verification is not None and email_verification.is_verified:
+            onborded_by = ProPlayer.objects.filter(
+                user__username=request.data.get('channel')).first()
+            PreRegistration.objects.create(onboarded_by=onborded_by, **request.data)
+            return Response(dict(message='Pre-registration completed'))
+        return Response(dict(error='Email not verified'), status=status.HTTP_400_BAD_REQUEST)
 
 
 class SendEmailVerificationCode(views.APIView):
