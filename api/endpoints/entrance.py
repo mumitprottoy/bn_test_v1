@@ -31,7 +31,7 @@ class SendInvitesWithCSVFileAPI(views.APIView):
 class PreRegistrationAPI(views.APIView):
     
     def post(self, request: Request) -> Response:
-        email = request.data.get(email)
+        email = request.data.get('email')
         email_verification = EmailVerification.objects.filter(email=email).first()
         if email_verification is not None and email_verification.is_verified:
             onborded_by = ProPlayer.objects.filter(
