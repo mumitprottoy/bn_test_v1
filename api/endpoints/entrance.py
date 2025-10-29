@@ -34,6 +34,8 @@ class PreRegistrationAPI(views.APIView):
         email = request.data.get('email')
         email_verification = EmailVerification.objects.filter(email=email).first()
         if email_verification is not None and email_verification.is_verified:
+            if PreRegistration.objects.filter(email=email).exists():
+                return Response(dict(error='Already pre-registered'), status=status.HTTP_400_BAD_REQUEST)
             onborded_by = ProPlayer.objects.filter(
                 user__username=request.data.get('channel')).first()
             PreRegistration.objects.create(onboarded_by=onborded_by, **request.data)
