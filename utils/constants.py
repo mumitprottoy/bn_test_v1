@@ -1,5 +1,6 @@
 DATE_STR_FORMAT_1 = "%B %d, %Y"
 DATETIME_STR_FORMAT_1 = "%I : %M %p %a %d %b, %Y"
+DEFAULT_CENTER_LOGO = 'https://logos.bowlersnetwork.com/pinsX.jpg'
 PROFILE_PIC_SUPPORTED_FILES = ['jpg', 'jpeg', 'png', 'gif']
 COVER_PHOTO_SUPPORTED_FILES = ['jpg', 'jpeg', 'png']
 INTRO_VIDEO_SUPPORTED_FILES = [

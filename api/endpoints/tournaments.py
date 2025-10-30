@@ -2,21 +2,32 @@ from .libs import *
 from tournaments.models import Tournamant, ParticipantSet, ParticipantMember
 from teams.models import Team
 from django.utils.dateparse import parse_datetime
+from centers.models import CenterAdmin
 
 
 class TournamentsAPI(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request: Request) -> Response:
-        tournaments = [t.details for t in Tournamant.objects.all()]
+        center_admin = CenterAdmin.objects.get(user=request.user)
+        tournaments = [t.details for t in Tournamant.objects.filter(host=center_admin.center)]
         return Response(tournaments)
 
     def post(self, request: Request) -> Response:
         tournament = Tournamant(**request.data)
         tournament.start_date = parse_datetime(tournament.start_date)
         tournament.reg_deadline = parse_datetime(tournament.reg_deadline)
+        center_admin = CenterAdmin.objects.get(user=request.user)
+        tournament.host = center_admin.center
         tournament.save()
         return Response(tournament.details)
+
+
+class AllTournamentsAPI(views.APIView):
+
+    def get(self, request: Request) -> Response:
+        tournaments = [t.details for t in Tournamant.objects.all()]
+        return Response(tournaments)
 
 
 class AddSinglesMemberAPI(views.APIView):

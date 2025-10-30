@@ -1,6 +1,7 @@
 from django.db import models
 from player.models import User
 from django.contrib.postgres.fields import ArrayField
+from centers.models import Center
 
 
 class Tournamant(models.Model):
@@ -14,21 +15,22 @@ class Tournamant(models.Model):
     reg_deadline = models.DateTimeField()
     reg_fee = models.FloatField()
     participants_count = models.IntegerField(default=1)
-    lat = models.CharField(max_length=50, default='')
-    long = models.CharField(max_length=50, default='')
-    address = models.CharField(max_length=300, default='')
+
     access_type = models.CharField(max_length=20, choices=ACCESS_CHOICES)
     tournament_type = models.CharField(max_length=30, choices=TYPE_CHOICES, default=SCRATCH)
     average = models.IntegerField(default=200)
     percentage = models.IntegerField(default=100)
+
+    # categories: Men's, Women's, Seniors', Juniors', Mixed
     categories = ArrayField(
-        base_field=models.CharField(max_length=50),
+        base_field=models.CharField(max_length=100),
         blank=True,
         default=list,
-        help_text="List of categories for the tournaments"
+        help_text="Categories: Men's, Women's, Seniors', Juniors', Mixed"
     )
-    event_banner = models.URLField()
-    logo = models.URLField()
+    event_banner = models.URLField(default='')
+    logo = models.URLField(default='')
+    host = models.ForeignKey(Center, on_delete=models.CASCADE, null=True, default=None)
 
     @property
     def format(self) -> str:
@@ -45,16 +47,14 @@ class Tournamant(models.Model):
             name=self.name,
             start_date=self.start_date,
             reg_deadline=self.reg_deadline,
-            lat=self.lat,
-            long=self.long,
-            address=self.address,
             reg_fee=self.reg_fee,
             access_type=self.access_type,
             format=self.format,
             already_enrolled=self.participants.count(),
             tournament_type=self.tournament_type,
             average=self.average,
-            percentage=self.percentage
+            percentage=self.percentage,
+            host=self.host.details
         )
     
     @property

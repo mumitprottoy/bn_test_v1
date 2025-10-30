@@ -77,6 +77,7 @@ urlpatterns = [
 
     # tournaments
     path('tournaments', views.TournamentsAPI.as_view()),
+    path('all-tournaments', views.AllTournamentsAPI.as_view()),
     path('tournament/<int:tournament_id>/add-singles-member/<int:user_id>', views.AddSinglesMemberAPI.as_view()),
     path('tournament/<int:tournament_id>/add-teams-member/<int:team_id>', views.AddTeamsMemberAPI.as_view()),
     path('tournament/<int:tournament_id>/teams', views.TournamentAllTeamsAPI.as_view()),
