@@ -3,7 +3,7 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from .models import EmailConfig, EmailCred
 
-DEFAULT_CONFIG = 'default'
+DEFAULT_CONFIG = 'google'
 SYSTEM_CRED_KEY = 'system'
 ATTACHMENT_MIME_TYPE = 'text/html'
 
