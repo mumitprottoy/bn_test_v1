@@ -7,12 +7,13 @@ class EmailID:
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-SMTP_SERVER = 'smtp.hostinger.com'
+SMTP_SERVER = 'smtp.gmail.com'
 EMAIL_PORT = 465
 EMAILS = {
     'system' : {
         'address': 'system@bowlersnetwork.com',
-        'password': '$y$temEm@i1bwlrntk'
+        # 'password': '$y$temEm@i1bwlrntk'
+        'password': 'xezsrfjbswvfjtyg'
     }
 }
 

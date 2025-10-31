@@ -12,9 +12,9 @@ class EmailConfig(models.Model):
     @classmethod
     def get_default(cls) -> 'EmailConfig':
         return cls.objects.get_or_create(
-            name='default',
+            name='google',
             backend='django.core.mail.backends.smtp.EmailBackend',
-            host='smtp.hostinger.com',
+            host='smtp.gmail.com',
             port=587,
             use_tls=True
         )[0]
