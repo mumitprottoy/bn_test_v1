@@ -89,13 +89,6 @@ def pre_registrations(request):
 
 
 def pre_registration_json(request):
-    pre_regs = [dict(
-        reg_id=pr.id,
-        first_name=pr.first_name,
-        last_name=pr.last_name,
-        email=pr.email,
-        key=pr.key,
-        registered_at=pr.created_at,
-        registered_at_str = pr.created_at.strftime("%d %b, %Y %a %H:%M")
-    ) for pr in PreRegistration.objects.all().order_by('id')]
+    pre_regs = [pr.details for pr in PreRegistration.objects.filter(
+        is_activated=True).order_by('id')]
     return JsonResponse(dict(pre_registers=pre_regs))

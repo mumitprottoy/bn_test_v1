@@ -75,6 +75,10 @@ urlpatterns = [
     path('pre-register', views.PreRegistrationAPI.as_view()),
     path('validate-signup-data', views.SignupDataValidationAPI.as_view()),
 
+    # centers
+    path('create-center', views.CenterCreationAPI.as_view()),
+    path('get-center-by-current-user', views.GetCenterDataByCurrentUserAPI.as_view()),
+
     # tournaments
     path('tournaments', views.TournamentsAPI.as_view()),
     path('all-tournaments', views.AllTournamentsAPI.as_view()),

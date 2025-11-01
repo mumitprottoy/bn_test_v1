@@ -92,6 +92,8 @@ class SignupDataValidationAPI(views.APIView):
             errors.append('Username already exists.')
         if User.objects.filter(email=email).exists():
             errors.append('Email already exists.')
+        if not EmailVerification.objects.filter(email=email, is_verified=True).exists():
+            errors.append('Email is not verified.')
         if password.__len__() < 8:
             errors.append('Password must be of at least 8 characters.')
         

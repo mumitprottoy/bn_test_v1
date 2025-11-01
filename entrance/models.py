@@ -68,6 +68,17 @@ class PreRegistration(models.Model):
     is_activated = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    @property
+    def details(self) -> dict:
+        return dict(
+            reg_id=self.id,
+            reg_date=self.created_at.isoformat(),
+            email=self.email,
+            first_name=self.first_name,
+            last_name=self.last_name,
+            is_verified=self.is_activated,
+            onboarded_by=self.onboarded_by.user.get_full_name()
+        )
 
     def save(self, *args, **kwargs) -> None:
         if not self._state.adding:

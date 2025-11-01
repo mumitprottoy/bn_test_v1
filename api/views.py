@@ -18,6 +18,7 @@ from .endpoints.brands import *
 from .endpoints.feedbacks import *
 from .endpoints.entrance import *
 from .endpoints.tournaments import *
+from .endpoints.centers import *
 from . import serializers
 
 
