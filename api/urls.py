@@ -76,7 +76,7 @@ urlpatterns = [
     path('validate-signup-data', views.SignupDataValidationAPI.as_view()),
 
     # centers
-    path('create-center', views.CenterCreationAPI.as_view()),
+    path('create-center', views.CentersAPI.as_view()),
     path('get-center-by-current-user', views.GetCenterDataByCurrentUserAPI.as_view()),
 
     # tournaments

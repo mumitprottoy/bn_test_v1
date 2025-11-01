@@ -4,8 +4,14 @@ from utils import error_messages, constants as const
 from cloud.engine import CloudEngine
 
 
-class CenterCreationAPI(views.APIView):
+class CentersAPI(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request: Request):
+        center_admin = CenterAdmin.objects.filter(user=request.user).first()
+        if center_admin is not None:
+            return Response(dict(center=center_admin.center.details))
+        return Response(dict(center=None))
 
     def post(self, request: Request) -> Response:
         if Center.objects.filter(name=request.data.get('name')).exists():
@@ -25,6 +31,12 @@ class CenterCreationAPI(views.APIView):
         CenterAdmin.objects.create(user=request.user, center=center)
 
         return Response(center.details)
+
+
+class AllCentersAPI(views.APIView):
+
+    def get(self, request: Request) -> Response:
+        pass
 
 
 class GetCenterDataByCurrentUserAPI(views.APIView):

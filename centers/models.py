@@ -13,7 +13,15 @@ class Center(models.Model):
 
     @property
     def details(self) -> dict:
-        return get_clean_dict(self)
+        return dict(
+            id=self.id,
+            name=self.name,
+            address_str=self.address_str,
+            lat=self.lat,
+            long=self.long,
+            logo=self.logo,
+            admin=self.admin.user.minimal
+        )
     
     def __str__(self) -> str:
         return self.name
