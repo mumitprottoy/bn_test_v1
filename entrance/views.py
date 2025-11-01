@@ -83,9 +83,8 @@ def splash(request):
 
 
 def pre_registrations(request):
-    total = PreRegistration.objects.count()
-    pre_regs = PreRegistration.objects.all().order_by('-id')
-    return render(request, 'pre_reg.html', context={'pre_regs': pre_regs, 'total': total})
+    pre_regs = PreRegistration.objects.filter(is_activated=True).order_by('-id')
+    return render(request, 'pre_reg.html', context={'pre_regs': pre_regs, 'total': pre_regs.count()})
 
 
 def pre_registration_json(request):
