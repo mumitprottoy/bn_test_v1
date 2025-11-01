@@ -12,6 +12,11 @@ class CenterCreationAPI(views.APIView):
             return Response(
                 dict(error=error_messages.NAME_ALREADY_EXISTS), status=status.HTTP_400_BAD_REQUEST)
         
+        if Center.objects.filter(
+            lat=request.data.get('lat'), long=request.data.get('long')).exists():
+            return Response(
+                dict(error=error_messages.GEO_COORDINATE_EXISTS), status=status.HTTP_400_BAD_REQUEST)
+
         if CenterAdmin.objects.filter(user=request.user).exists():
             return Response(
                 dict(error=error_messages.ALREADY_ADMIN), status=status.HTTP_400_BAD_REQUEST)
