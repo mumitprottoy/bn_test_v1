@@ -18,7 +18,7 @@ class CenterCreationAPI(views.APIView):
         center = Center.objects.create(**request.data)
         CenterAdmin.objects.create(user=request.user, center=center)
 
-        return Response()
+        return Response(center.details)
 
 
 class GetCenterDataByCurrentUserAPI(views.APIView):

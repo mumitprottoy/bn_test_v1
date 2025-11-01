@@ -79,6 +79,10 @@ class PreRegistration(models.Model):
             is_verified=self.is_activated,
             onboarded_by=self.onboarded_by.user.get_full_name()
         )
+    
+    @classmethod
+    def get_all(cls) -> list[dict]:
+        return [pr.details for pr in cls.objects.filter(is_activated=True)]
 
     def save(self, *args, **kwargs) -> None:
         if not self._state.adding:
