@@ -8,12 +8,13 @@ class CenterCreationAPI(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request: Request) -> Response:
-        if CenterAdmin.objects.filter(user=request.user).exists():
-            return Response(
-                dict(error=error_messages.ALREADY_ADMIN), status=status.HTTP_400_BAD_REQUEST)
         if Center.objects.filter(name=request.data.get('name')).exists():
             return Response(
                 dict(error=error_messages.NAME_ALREADY_EXISTS), status=status.HTTP_400_BAD_REQUEST)
+        
+        if CenterAdmin.objects.filter(user=request.user).exists():
+            return Response(
+                dict(error=error_messages.ALREADY_ADMIN), status=status.HTTP_400_BAD_REQUEST)
         
         center = Center.objects.create(**request.data)
         CenterAdmin.objects.create(user=request.user, center=center)
