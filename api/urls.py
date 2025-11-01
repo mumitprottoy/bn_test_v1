@@ -77,6 +77,8 @@ urlpatterns = [
 
     # centers
     path('center', views.CentersAPI.as_view()),
+    path('all-centers', views.AllCentersAPI.as_view()),
+    path('center-by-id/<int:center_id>', views.CenterByIDAPI.as_view()),
     path('get-center-by-current-user', views.GetCenterDataByCurrentUserAPI.as_view()),
 
     # tournaments

@@ -36,7 +36,15 @@ class CentersAPI(views.APIView):
 class AllCentersAPI(views.APIView):
 
     def get(self, request: Request) -> Response:
-        pass
+        return Response(dict(
+            centers=[center.details for center in Center.objects.all()]
+        ))
+
+
+class CenterByIDAPI(views.APIView):
+
+    def get(self, request: Request, center_id: int) -> Response:
+        return Response(dict(center=Center.objects.filter(id=center_id).first()))
 
 
 class GetCenterDataByCurrentUserAPI(views.APIView):
