@@ -31,10 +31,9 @@ class Questionnaire(models.Model):
 
     @classmethod
     def all_questions(cls: 'Questionnaire') -> list[dict]:
-        questions = list()
-        for i in range(cls.objects.count()):
-            questions.append(cls.objects.filter(serial=i+1).first().details)
-        return questions
+        id_serial_map = {q.serial: q.id for q in cls.objects.all()}
+        return [cls.objects.get(
+            id=id_serial_map[i]).details for i in sorted(id_serial_map)]
 
     def __str__(self) -> str:
         return self.question
