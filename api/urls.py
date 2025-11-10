@@ -100,4 +100,5 @@ urlpatterns = [
     path('all-questions', views.AllQuestionsAPI.as_view()),
     path('edit-question/<int:ques_id>', views.EditQuestionAPI.as_view()),
     path('delete-question/<int:ques_id>', views.DeleteQuestionAPI.as_view()),
+    path('serialize-questions', views.SerializeQuestionsAPI.as_view()),
 ]
