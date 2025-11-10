@@ -16,18 +16,11 @@ class Questionnaire(models.Model):
             )
 
     @classmethod
-    def sync_serial(cls: 'Questionnaire', serial: int) -> None:
-        ques_id_list = list()
-        q = cls.objects.filter(serial=serial + 1).first()
-        while q is not None:
-            ques_id_list.append(q.id)
-            serial += 1
-            q = cls.objects.filter(serial=serial + 1).first()
-        for ques_id in ques_id_list:
-            q = Questionnaire.objects.get(id=ques_id)
-            q.serial = q.serial - 1
+    def sync_serial(cls: 'Questionnaire') -> None:
+        questions = [q for q in cls.objects.all()]
+        for i, q in enumerate(questions):
+            q.serial = i + 1
             q.save()
-
 
     @classmethod
     def all_questions(cls: 'Questionnaire') -> list[dict]:
