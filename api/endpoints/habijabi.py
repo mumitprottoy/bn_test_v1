@@ -44,8 +44,9 @@ class DeleteQuestionAPI(views.APIView):
         if code_is_valid(request.data):
             q = Questionnaire.objects.get(id=ques_id)
             details = q.details
+            serial = q.serial
             q.delete()
-            Questionnaire.sync_serial()
+            Questionnaire.sync_serial(serial)
             return Response(dict(
                 deleted_question=details, 
                 updated_questions=Questionnaire.all_questions()
