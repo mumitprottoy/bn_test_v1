@@ -24,10 +24,10 @@ class Questionnaire(models.Model):
 
     @classmethod
     def all_questions(cls: 'Questionnaire') -> list[dict]:
-        s: list[dict] = [q.details for q in cls.objects.all()]
-        for i, q in enumerate(s):
-            s[i], s[q['serial'] - 1] = s[q['serial'] - 1], s[i]
-        return s
+        questions = list()
+        for i in range(cls.objects.count()):
+            questions.append(cls.objects.filter(serial=i+1).first().details)
+        return questions
 
     def __str__(self) -> str:
         return self.question
