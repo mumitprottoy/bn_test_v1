@@ -19,7 +19,7 @@ class Questionnaire(models.Model):
     def all_questions(cls: 'Questionnaire') -> list[dict]:
         s: list[dict] = [q.details for q in cls.objects.all()]
         for i, q in enumerate(s):
-            s[i], s[q['serial']] = s[q['serial']], s[i]
+            s[i], s[q['serial'] - 1] = s[q['serial'] - 1], s[i]
         return s
 
     def __str__(self) -> str:
