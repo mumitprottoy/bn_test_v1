@@ -25,7 +25,7 @@ class Questionnaire(models.Model):
             q = cls.objects.filter(serial=serial + 1).first()
         for ques_id in ques_id_list:
             q = Questionnaire.objects.get(id=ques_id)
-            q.serial = q.serial + 1
+            q.serial = q.serial - 1
             q.save()
 
 
