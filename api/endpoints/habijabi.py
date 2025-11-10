@@ -50,5 +50,5 @@ class SerializeQuestionsAPI(views.APIView):
     def post(self, request: Request) -> Response:
         serials: dict = request.data.get('serials')
         for ques_id, serial in serials.items():
-            Questionnaire.objects.filter(id=ques_id).update(serial=serial)
+            Questionnaire.objects.filter(id=int(ques_id)).update(serial=serial)
         return Response(Questionnaire.all_questions())
