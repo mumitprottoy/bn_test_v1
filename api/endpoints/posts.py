@@ -154,3 +154,10 @@ class PollVoteAPI(views.APIView):
             response = opt.poll.vote(voter=request.user, opt=opt)
             return Response(response, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+
+class ReportPostAPI(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request: Request) -> Response:
+        return Response(request.data)

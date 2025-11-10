@@ -17,6 +17,7 @@ urlpatterns = [
     path('user/post/add-comment/<int:metadata_id>', views.PostAddCommentAPI.as_view()),
     path('user/post/add-reply/<int:comment_id>', views.PostAddReplyAPI.as_view()),
     path('user/post/vote/<int:option_id>', views.PollVoteAPI.as_view()),
+    path('reports/post', views.ReportPostAPI.as_view()),
 
     # stats
     path('user/stats/game-stats', views.GameStatsAPI.as_view()),
