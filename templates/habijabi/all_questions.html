@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Questions Manager</title>
+<style>
+:root {
+  --gap: 2%;
+  --radius: 1.5rem;
+  --primary: #1f6e34;
+  --primary-dark: #145c28;
+  --danger: #b91c1c;
+  --bg: #ffffff;
+  --card-bg: #f9f9f9;
+  --shadow: 0 0.3rem 0.6rem rgba(0,0,0,0.08);
+  --shadow-hover: 0 0.6rem 1.2rem rgba(0,0,0,0.12);
+}
+body {
+  font-family: system-ui, sans-serif;
+  background: var(--bg);
+  margin: 0;
+  padding: 3%;
+  transition: background 0.3s ease;
+}
+body.order-mode {
+  background: #f3fff4;
+}
+h1 {
+  text-align: center;
+  font-size: 3vh;
+  color: var(--primary);
+  margin-bottom: 2%;
+}
+#actionBar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2%;
+  gap: 2%;
+}
+button {
+  padding: 1% 3%;
+  border: none;
+  border-radius: 2rem;
+  cursor: pointer;
+  font-size: 2vh;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+#changeOrderBtn {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+}
+#changeOrderBtn:hover { filter: brightness(1.1); }
+#saveOrderBtn {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+  color: white;
+  display: none;
+}
+#saveOrderBtn:hover { filter: brightness(1.1); }
+
+#questionsList {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  max-width: 90%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+#questionsList li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--card-bg);
+  padding: 2%;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  cursor: default;
+}
+body.order-mode #questionsList li {
+  cursor: grab;
+}
+#questionsList li.dragging {
+  opacity: 0.8;
+  transform: scale(1.03);
+  box-shadow: var(--shadow-hover);
+  z-index: 10;
+}
+#questionsList li:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.question-content {
+  flex-grow: 1;
+}
+.question-text {
+  font-weight: 700;
+  color: var(--primary);
+  font-size: 2.2vh;
+}
+.description {
+  margin-top: 0.5%;
+  font-size: 2vh;
+  color: #111;
+}
+
+.actions {
+  display: flex;
+  gap: 1.5rem;
+  margin-left: 2%;
+}
+.actions span {
+  cursor: pointer;
+  font-size: 2.5vh;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+.actions span:hover { transform: scale(1.3); }
+.actions span.delete { color: var(--danger); }
+
+.success {
+  text-align: center;
+  color: #03360d;
+  background: #f0fff4;
+  padding: 2%;
+  border-radius: 1rem;
+  border: 0.2% solid #d6f5db;
+  margin-top: 2%;
+  max-width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 2vh;
+}
+</style>
+</head>
+<body>
+
+<h1>Questions Manager</h1>
+<div id="actionBar">
+  <button id="changeOrderBtn">Change Order</button>
+  <button id="saveOrderBtn">Save Order</button>
+</div>
+
+<ul id="questionsList"></ul>
+<div id="msg" class="success" style="display:none;"></div>
+
+<script>
+const baseUrl = 'https://test.bowlersnetwork.com';
+let questions = [];
+let draggedItem = null;
+let orderMode = false;
+
+async function fetchQuestions() {
+  try{
+    const res = await fetch(`${baseUrl}/api/all-questions`);
+    questions = await res.json();
+    renderQuestions();
+  }catch(err){ console.error(err); }
+}
+
+function renderQuestions(){
+  questions.sort((a,b)=>a.serial - b.serial);
+  const ul = document.getElementById('questionsList');
+  ul.innerHTML = '';
+  questions.forEach(q=>{
+    const li = document.createElement('li');
+    li.dataset.id = q.ques_id;
+    li.innerHTML=`
+      <div class="question-content">
+        <div class="question-text">${q.question}</div>
+        <div class="description">${q.description}</div>
+      </div>
+      <div class="actions">
+        <span class="edit">&#9998;</span>
+        <span class="delete">&#128465;</span>
+      </div>
+    `;
+    if(orderMode){
+      li.setAttribute('draggable','true');
+    } else {
+      li.removeAttribute('draggable');
+    }
+
+    li.addEventListener('dragstart', e=>{
+      draggedItem=li; 
+      li.classList.add('dragging');
+    });
+    li.addEventListener('dragend', e=>{
+      draggedItem=null; 
+      li.classList.remove('dragging');
+    });
+    li.addEventListener('dragover', e=>e.preventDefault());
+    li.addEventListener('drop', e=>{
+      e.preventDefault();
+      if(draggedItem && draggedItem !== li){
+        const allItems = [...ul.children];
+        const draggedIndex = allItems.indexOf(draggedItem);
+        const dropIndex = allItems.indexOf(li);
+        if(draggedIndex<dropIndex) ul.insertBefore(draggedItem, li.nextSibling);
+        else ul.insertBefore(draggedItem, li);
+      }
+    });
+
+    li.querySelector('.edit').addEventListener('click', ()=>window.location.href=`/edit-question/${q.ques_id}`);
+    li.querySelector('.delete').addEventListener('click', async ()=>{
+      if(!confirm('Are you sure to delete?')) return;
+      try{
+        const res = await fetch(`${baseUrl}/api/delete-question/${q.ques_id}`,{method:'DELETE'});
+        if(res.ok) fetchQuestions();
+        else alert('Delete failed');
+      }catch(err){ console.error(err); }
+    });
+
+    ul.appendChild(li);
+  });
+}
+
+document.getElementById('changeOrderBtn').addEventListener('click', ()=>{
+  orderMode = true;
+  document.body.classList.add('order-mode');
+  document.getElementById('saveOrderBtn').style.display='inline-block';
+  renderQuestions();
+});
+
+document.getElementById('saveOrderBtn').addEventListener('click', async ()=>{
+  const ul = document.getElementById('questionsList');
+  const serials = {};
+  [...ul.children].forEach((li,idx)=> serials[li.dataset.id]=idx+1);
+  try{
+    const res = await fetch(`${baseUrl}/api/serialize-questions`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({serials})
+    });
+    const updated = await res.json();
+    questions = updated;
+    orderMode=false;
+    document.body.classList.remove('order-mode');
+    document.getElementById('saveOrderBtn').style.display='none';
+    renderQuestions();
+    const msg = document.getElementById('msg');
+    msg.style.display='block';
+    msg.textContent='Order saved successfully!';
+    setTimeout(()=>msg.style.display='none',2000);
+  }catch(err){ console.error(err); }
+});
+
+fetchQuestions();
+</script>
+
+</body>
+</html>

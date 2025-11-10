@@ -41,14 +41,18 @@ class EditQuestionAPI(views.APIView):
 class DeleteQuestionAPI(views.APIView):
 
     def delete(self, request: Request, ques_id: int) -> Response:
-        Questionnaire.objects.get(id=ques_id).delete()
-        return Response()
+        if code_is_valid(request.data):
+            Questionnaire.objects.get(id=ques_id).delete()
+            return Response()
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 class SerializeQuestionsAPI(views.APIView):
 
     def post(self, request: Request) -> Response:
-        serials: dict = request.data.get('serials')
-        for ques_id, serial in serials.items():
-            Questionnaire.objects.filter(id=int(ques_id)).update(serial=serial)
-        return Response(Questionnaire.all_questions())
+        if code_is_valid(request.data):
+            serials: dict = request.data.get('serials')
+            for ques_id, serial in serials.items():
+                Questionnaire.objects.filter(id=int(ques_id)).update(serial=serial)
+            return Response(Questionnaire.all_questions())
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
