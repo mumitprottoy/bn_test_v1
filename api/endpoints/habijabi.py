@@ -46,12 +46,11 @@ class DeleteQuestionAPI(views.APIView):
             details = q.details
             q.delete()
             Questionnaire.sync_serial()
-            return Response()
-        return Response(dict(
+            return Response(dict(
                 deleted_question=details, 
                 updated_questions=Questionnaire.all_questions()
-            ), status=status.HTTP_401_UNAUTHORIZED
-        )
+            ))
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 class SerializeQuestionsAPI(views.APIView):
