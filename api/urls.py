@@ -93,4 +93,9 @@ urlpatterns = [
 
     # Test
     path('test-address', views.TestAdressAPI.as_view()),
+
+    # habijabi
+    path('add-question', views.AddQuestionAPI.as_view()),
+    path('all-questions', views.AllQuestionsAPI.as_view()),
+    path('edit-question/<int:ques_id>', views.EditQuestionAPI.as_view()),
 ]

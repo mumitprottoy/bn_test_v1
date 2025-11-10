@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Add Questionnaire</title>
+  <style>
+    :root{
+      --gap: 2%;
+      --card-w: 90%;
+      --max-w: 720px;
+      --radius: 1.2rem;
+    }
+    *{box-sizing:border-box}
+    body{
+      font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial;
+      width:95%;max-width:var(--max-w);margin:4% auto;line-height:1.4;color:#111;
+    }
+    h1{font-size:1.6rem;margin-bottom:1%}
+    form.card{
+      background:#fff;border-radius:calc(var(--radius) / 2);
+      padding:calc(var(--gap) * 1.2);box-shadow:0 6px 18px rgba(0,0,0,0.06);
+      width:var(--card-w);max-width:100%;
+    }
+    label{display:block;margin-top:1%;font-weight:600;font-size:0.95rem}
+    input[type="text"], textarea{
+      width:100%;padding:0.9rem;margin-top:0.4rem;border:1px solid #d7d7d7;border-radius:0.6rem;
+      font-size:0.95rem;resize:vertical;
+    }
+    textarea{min-height:18vh}
+    button.primary{
+      display:block;width:100%;padding:0.9rem;margin-top:1.6rem;border-radius:0.8rem;border:0;font-weight:700;
+      background:#067c35;color:white;font-size:1rem;cursor:pointer
+    }
+    .hint{font-size:0.85rem;color:#555;margin-top:0.6rem}
+    #modalOverlay{
+      position:fixed;inset:0;display:none;align-items:center;justify-content:center;
+      background:rgba(2,6,23,0.55);z-index:60;padding:4%;
+    }
+    #modalOverlay.active{display:flex}
+    .modal{
+      background:#fff;width:95%;max-width:440px;border-radius:calc(var(--radius) / 1.5);
+      padding:5%;box-shadow:0 12px 30px rgba(2,6,23,0.22);position:relative;
+    }
+    .modal h2{margin:0 0 0.6rem 0;font-size:1.05rem}
+    .modal input{width:100%;padding:0.85rem;border-radius:0.6rem;border:1px solid #ddd;font-size:1rem}
+    .modal .row{display:flex;gap:4%;margin-top:1rem}
+    .modal .row button{flex:1}
+    .btn-ghost{background:#f3f4f6;border:0;padding:0.8rem;border-radius:0.6rem;cursor:pointer}
+    .btn-primary{background:#067c35;color:#fff;border:0;padding:0.8rem;border-radius:0.6rem;cursor:pointer}
+    @media (min-width:600px){
+      form.card{padding:calc(var(--gap) * 1.6)}
+      .modal{padding:3.6%}
+    }
+    .success{margin-top:1rem;padding:1rem;border-radius:0.6rem;background:#f0fff4;color:#03360d;border:1px solid #d6f5db}
+  </style>
+</head>
+<body>
+  <h1>Add a Question</h1>
+  <a href="#">See all questions</a>
+  <form id="qForm" class="card" novalidate>
+    <label for="q">Question</label>
+    <input id="q" name="question" type="text" placeholder="Write your question here" required />
+    <label for="d">Description</label>
+    <textarea id="d" name="description" placeholder="Add more details..." required></textarea>
+    <div class="hint">When you click Submit a secure modal will ask for a security code. The form will not post to a server.</div>
+    <button type="submit" class="primary">Submit</button>
+  </form>
+  <div id="modalOverlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal" role="document" aria-labelledby="modalTitle">
+      <h2 id="modalTitle">Enter security code</h2>
+      <p class="hint">Provide the code to complete submission. You must click Confirm to store data.</p>
+      <input id="securityCode" name="securityCode" type="text" inputmode="numeric" placeholder="Security code" autocomplete="one-time-code" />
+      <div class="row">
+        <button id="cancelBtn" class="btn-ghost" type="button">Cancel</button>
+        <button id="confirmBtn" class="btn-primary" type="button">Confirm</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    let data = null;
+    const form = document.getElementById('qForm');
+    const overlay = document.getElementById('modalOverlay');
+    const securityInput = document.getElementById('securityCode');
+    const confirmBtn = document.getElementById('confirmBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+    function disableScroll() { document.documentElement.style.overflow = 'hidden'; }
+    function enableScroll() { document.documentElement.style.overflow = ''; }
+    function openModal(){
+      overlay.classList.add('active');
+      overlay.setAttribute('aria-hidden', 'false');
+      securityInput.focus();
+      disableScroll();
+    }
+    function closeModal(){
+      overlay.classList.remove('active');
+      overlay.setAttribute('aria-hidden', 'true');
+      securityInput.value = '';
+      enableScroll();
+      form.querySelector('button[type="submit"]').focus();
+    }
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      const q = document.getElementById('q').value.trim();
+      const d = document.getElementById('d').value.trim();
+      if(!q || !d){return;}
+      openModal();
+    });
+    cancelBtn.addEventListener('click', function(){ closeModal(); });
+    confirmBtn.addEventListener('click', function(){
+      const code = securityInput.value.trim();
+      const q = document.getElementById('q').value.trim();
+      const d = document.getElementById('d').value.trim();
+      if(!code){securityInput.focus();securityInput.setAttribute('aria-invalid','true');return;}
+      data = {question: q,description: d,securityCode: code};
+      form.reset();
+      closeModal();
+    });
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape' && overlay.classList.contains('active')){closeModal();}
+    });
+  </script>
+</body>
+</html>

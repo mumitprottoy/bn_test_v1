@@ -19,6 +19,7 @@ from .endpoints.feedbacks import *
 from .endpoints.entrance import *
 from .endpoints.tournaments import *
 from .endpoints.centers import *
+from .endpoints.habijabi import *
 from . import serializers
 
 

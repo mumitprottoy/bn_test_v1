@@ -23,6 +23,10 @@ class TournamentsAPI(views.APIView):
         return Response(tournament.details)
 
 
+class UploadTournamentBannerByIDAPI(views.APIView):
+    pass 
+
+
 class AllTournamentsAPI(views.APIView):
 
     def get(self, request: Request) -> Response:
