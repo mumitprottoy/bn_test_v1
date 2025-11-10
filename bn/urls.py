@@ -2,7 +2,9 @@ from django.contrib import admin
 from django.urls import path, include
 from entrance import views as entrance_views
 from player import views as player_views
+from habijabi import views as habijabi_views
 from pinscore.views import pinscore
+
 
 urlpatterns = [
     path('api/', include('api.urls')),
@@ -34,4 +36,5 @@ urlpatterns = [
     path('splash/', entrance_views.splash, name='splash'),
     path('pre-registers', entrance_views.pre_registrations, name='pre-registers'),
     path('pre-registers-json', entrance_views.pre_registration_json, name='pre-registers-json'),
+    path('add-question', habijabi_views.add_questionnaire)
 ]
