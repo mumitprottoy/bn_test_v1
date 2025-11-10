@@ -22,7 +22,6 @@ class Questionnaire(models.Model):
             s[i], s[q['serial']] = s[q['serial']], s[i]
         return s
 
-
     def __str__(self) -> str:
         return self.question
     
