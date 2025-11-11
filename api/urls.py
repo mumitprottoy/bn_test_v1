@@ -75,7 +75,7 @@ urlpatterns = [
     path('verify-email', views.VerifyEmailAPI.as_view()),
     path('pre-register', views.PreRegistrationAPI.as_view()),
     path('validate-signup-data', views.SignupDataValidationAPI.as_view()),
-    path('validate-username'),
+    path('validate-username', views.UsernameValidationAPI.as_view()),
 
     # centers
     path('center', views.CentersAPI.as_view()),
