@@ -12,10 +12,7 @@ class AddQuestionAPI(views.APIView):
 
     def post(self, request: Request) -> Response:
         if code_is_valid(request.data):
-            q = Questionnaire.objects.create(
-                question=request.data.get('question'),
-                description=request.data.get('description')
-            )
+            q = Questionnaire.objects.create(**request.data.get('data'))
             return Response(q.details)
         return Response(status=status.HTTP_401_UNAUTHORIZED)
 
@@ -30,11 +27,10 @@ class EditQuestionAPI(views.APIView):
 
     def post(self, request: Request, ques_id: int) -> Response:
         if code_is_valid(request.data):
-            q = Questionnaire.objects.get(id=ques_id)
-            q.question = request.data.get('question')
-            q.description = request.data.get('description')
-            q.save()
-            return Response(q.details)
+            q = Questionnaire.objects.filter(id=ques_id)
+            if not q.exists(): return Response(status=status.HTTP_404_NOT_FOUND)
+            q.update(**request.data.get('data'))
+            return Response(q.first().details)
         return Response(status=status.HTTP_401_UNAUTHORIZED) 
     
 
@@ -42,7 +38,8 @@ class DeleteQuestionAPI(views.APIView):
 
     def delete(self, request: Request, ques_id: int) -> Response:
         if code_is_valid(request.data):
-            q = Questionnaire.objects.get(id=ques_id)
+            q = Questionnaire.objects.filter(id=ques_id).first()
+            if q is None: return Response(status=status.HTTP_404_NOT_FOUND)
             details = q.details
             serial = q.serial
             q.delete()
