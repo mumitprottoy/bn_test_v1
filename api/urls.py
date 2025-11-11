@@ -102,5 +102,8 @@ urlpatterns = [
     path('edit-question/<int:ques_id>', views.EditQuestionAPI.as_view()),
     path('delete-question/<int:ques_id>', views.DeleteQuestionAPI.as_view()),
     path('serialize-questions', views.SerializeQuestionsAPI.as_view()),
-    path('validate-security-code', views.ValidateSecurityCode.as_view()),
+    path('validate-security-code', views.ValidateSecurityCodeAPI.as_view()), 
+    path('send-private-url/<int:pro_onb_id>', views.PrivateURLEmailAPI.as_view()),
+    path('submit-answers', views.SubmitAnswersAPI.as_view()),
+    path('pro-info', views.ProInfoAPI.as_view()),
 ]

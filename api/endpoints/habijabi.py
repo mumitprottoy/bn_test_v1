@@ -1,6 +1,7 @@
 from .libs import *
 from rest_framework.request import QueryDict
 from habijabi.models import Questionnaire
+from onboarding.models import ProPlayer, ProsOnboarding, QuestionnaireAnswers
 
 CODE = '0912'
 
@@ -62,9 +63,45 @@ class SerializeQuestionsAPI(views.APIView):
         return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
-class ValidateSecurityCode(views.APIView):
+class ValidateSecurityCodeAPI(views.APIView):
 
     def post(self, request: Request) -> Response:
         if code_is_valid(request.data):
             return Response()
         return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
+class PrivateURLEmailAPI(views.APIView):
+
+    def get(self, request: Request, pro_onb_id: int) -> Response:
+        pro_onb = ProsOnboarding.objects.get(id=pro_onb_id)
+        pro_onb.send_private_url()
+        return Response()
+
+
+class SubmitAnswersAPI(views.APIView):
+
+    def post(self, request: Request) -> Response:
+        user = User.objects.get(id=request.data.get('user_id'))
+        pro = ProPlayer.objects.get(user=user)
+        for ans in request.data.get('answers'):
+            q = Questionnaire.objects.get(id=ans['ques_id'])
+            QuestionnaireAnswers.objects.create(
+                pro=pro,
+                question=q.question,
+                description=q.description,
+                answer=ans['answer']
+            )
+        ProsOnboarding.objects.filter(email=pro.user.email).update(has_answered=True)
+        return Response(QuestionnaireAnswers.all_answers_of_pro(pro))
+
+
+class ProInfoAPI(views.APIView):
+
+    def get(self, request: Request) -> Response:
+        return [po.details for po in ProsOnboarding.objects.all().order_by('-id')]
+    
+    def post(self, request: Request) -> Response:
+        po = ProsOnboarding.objects.create(**request.data)
+        return Response(po.details)
+    

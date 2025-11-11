@@ -2,6 +2,7 @@ from django.db import models
 from utils.keygen import KeyGen
 from pros.models import User, ProPlayer
 from emailsystem.engine import EmailEngine
+from utils.subroutines import get_clean_dict
 
 
 def get_key() -> str:
@@ -15,6 +16,12 @@ class ProsOnboarding(models.Model):
     is_onboard = models.BooleanField(default=False)
     private_key = models.CharField(
         max_length=100, default=get_key, unique=True)
+    is_notified = models.BooleanField(default=False)
+    has_answered = models.BooleanField(default=False)
+
+    @property
+    def details(self) -> dict:
+        return get_clean_dict(self)
 
     def onboard(self) -> None:
         self.is_onboard = True
@@ -43,6 +50,33 @@ class ProsOnboarding(models.Model):
             {'full_name': f'{self.__str__()}', 'private_url': self.__private_url}
         )
         engine.send()
+        self.is_notified = True
+        self.save()
     
     def __str__(self) -> str:
         return f'{self.first_name} {self.last_name}'
+
+
+class QuestionnaireAnswers(models.Model):
+    pro = models.ForeignKey(ProPlayer, on_delete=models.CASCADE)
+    question = models.TextField()
+    description = models.TextField()
+    answer = models.TextField()
+
+    @property
+    def details(self) -> dict:
+        return dict(
+            question=self.question,
+            description=self.description,
+            answer=self.answer
+        )
+    
+    @classmethod
+    def all_answers_of_pro(
+        cls: 'QuestionnaireAnswers', pro: ProPlayer) -> list[dict]:
+        answers = [qa.details 
+                for qa in QuestionnaireAnswers.objects.filter(pro=pro)]
+        return dict(
+            pro=cls.objects.filter(pro=pro).first().pro.user.minimal,
+            answers=answers
+        )
