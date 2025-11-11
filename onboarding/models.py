@@ -28,6 +28,7 @@ class ProsOnboarding(models.Model):
             username=username,
         )
         user.set_password(password)
+        self.onboard()
         return ProPlayer.objects.create(user=user)
     
     @property
@@ -38,7 +39,7 @@ class ProsOnboarding(models.Model):
         engine = EmailEngine(
             [self.email],
             'Setup Your BowlersNetwork Pro Account',
-            'email/pros_onboarding.html',
+            'emails/pros_onboarding.html',
             {'full_name': f'{self.__str__()}', 'private_url': self.__private_url}
         )
         engine.send()
