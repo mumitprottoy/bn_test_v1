@@ -99,7 +99,7 @@ class SubmitAnswersAPI(views.APIView):
 class ProInfoAPI(views.APIView):
 
     def get(self, request: Request) -> Response:
-        return [po.details for po in ProsOnboarding.objects.all().order_by('-id')]
+        return Response([po.details for po in ProsOnboarding.objects.all().order_by('-id')])
     
     def post(self, request: Request) -> Response:
         po = ProsOnboarding.objects.create(**request.data)
