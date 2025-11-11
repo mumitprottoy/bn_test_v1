@@ -39,8 +39,9 @@ class ProsOnboarding(models.Model):
             [self.email],
             'Setup Your BowlersNetwork Pro Account',
             'email/pros_onboarding.html',
-            {'full_name': f'{self.__str__()}',}
+            {'full_name': f'{self.__str__()}', 'private_url': self.__private_url}
         )
+        engine.send()
     
     def __str__(self) -> str:
         return f'{self.first_name} {self.last_name}'
