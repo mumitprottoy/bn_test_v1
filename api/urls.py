@@ -75,6 +75,7 @@ urlpatterns = [
     path('verify-email', views.VerifyEmailAPI.as_view()),
     path('pre-register', views.PreRegistrationAPI.as_view()),
     path('validate-signup-data', views.SignupDataValidationAPI.as_view()),
+    path('validate-username'),
 
     # centers
     path('center', views.CentersAPI.as_view()),
@@ -101,4 +102,5 @@ urlpatterns = [
     path('edit-question/<int:ques_id>', views.EditQuestionAPI.as_view()),
     path('delete-question/<int:ques_id>', views.DeleteQuestionAPI.as_view()),
     path('serialize-questions', views.SerializeQuestionsAPI.as_view()),
+    path('validate-security-code', views.ValidateSecurityCode.as_view()),
 ]

@@ -104,6 +104,15 @@ class SignupDataValidationAPI(views.APIView):
             return Response(dict(isValid=False, errors=errors))
 
 
+class UsernameValidationAPI(views.APIView):
+
+    def post(self, request: Request) -> Response:
+        if User.objects.filter(
+            username=request.data.get('username')).exists():
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response()
+
+
 class TestAdressAPI(views.APIView):
 
     def post(self, request: Request) -> Response:

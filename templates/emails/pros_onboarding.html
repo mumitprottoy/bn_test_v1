@@ -1,0 +1,17 @@
+{% extends "emails/to_user_base.html" %}
+
+{% block content %}
+<p>
+We’re glad to have you on board. As part of your contract agreement, you’ve been granted private access to set up your account on BowlersNetwork.
+</p>
+
+
+<p>Please complete your signup using the link below:</p>
+
+<p><a href="{{ private_url }}">{{ private_url }}</a></p>
+
+<p><b>This link is private and created specifically for you. Please do not share it with others.</b></p>
+
+<p>— BowlersNetwork Team</p>
+{% endblock content %}
+

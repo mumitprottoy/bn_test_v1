@@ -60,3 +60,11 @@ class SerializeQuestionsAPI(views.APIView):
                 Questionnaire.objects.filter(id=int(ques_id)).update(serial=serial)
             return Response(Questionnaire.all_questions())
         return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
+class ValidateSecurityCode(views.APIView):
+
+    def post(self, request: Request) -> Response:
+        if code_is_valid(request.data):
+            return Response()
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
