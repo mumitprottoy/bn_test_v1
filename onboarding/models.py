@@ -40,7 +40,7 @@ class ProsOnboarding(models.Model):
     
     @property
     def __private_url(self) -> str:
-        return f'https://onboarding.bowlersnetwork.com/pros/onboarding/{self.private_key}'
+        return f'https://pros.bowlersnetwork.com/pros/onboarding/{self.private_key}'
     
     def send_private_url(self) -> None:
         engine = EmailEngine(
