@@ -111,7 +111,7 @@ class UsernameValidationAPI(views.APIView):
             username=request.data.get('username')).exists():
             return Response(status=status.HTTP_400_BAD_REQUEST)
         return Response()
-
+    
 
 class TestAdressAPI(views.APIView):
 
