@@ -109,4 +109,5 @@ urlpatterns = [
     path('pros-private-auth', views.ProsPrivateAuthAPI.as_view()),
     path('submit-answer-by-ques-id/<int:ques_id>', views.SubmitAnswerByQuesIDAPI.as_view()),
     path('submit-survey', views.SubmitSurveyAPI.as_view()),
+    path('pro-survey', views.ProSurveyAPI.as_view()),
 ]

@@ -106,11 +106,12 @@ class Questionnaire(models.Model):
 class QuestionnaireAnswers(models.Model):
     pro = models.ForeignKey(ProPlayer, on_delete=models.CASCADE)
     questionnaire = models.ForeignKey(Questionnaire, on_delete=models.CASCADE)
-    answer = models.TextField()
+    answer = models.TextField(default='')
 
     @property
     def details(self) -> dict:
         return dict(
+            ans_id=self.id,
             question=self.questionnaire.question,
             description=self.questionnaire.description,
             answer=self.answer

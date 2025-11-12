@@ -123,6 +123,8 @@ class ProsPrivateOnboardingAPI(views.APIView):
         pro_onb = ProsOnboarding.objects.filter(private_key=private_key).first()
         if pro_onb is None: return Response(status=status.HTTP_401_UNAUTHORIZED)
         pro = pro_onb.setup_account(**request.data.get('data'))
+        for q in Questionnaire.objects.all():
+            QuestionnaireAnswers.objects.create(pro=pro, questionnaire=q)
         token = RefreshToken.for_user(pro.user)
         return Response(dict(tokan=str(token.access_token), user=pro.user.minimal))
     
@@ -156,4 +158,19 @@ class QuestionForProAPI(views.APIView):
                 q_dict['answer'] = answer.answer
             survey.append(q_dict)
         return Response(survey)
-        
+
+
+class ProSurveyAPI(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request: Request) -> Response:
+        survey = QuestionnaireAnswers.all_answers_of_pro(
+            request.user.pro)
+        return Response(survey)
+    
+    def post(self, request: Request) -> Response:
+        answer = QuestionnaireAnswers.objects.get(
+            id=request.data.get('ans_id'))
+        answer.answer = request.data.get('answer')
+        answer.save()
+        return Response()
