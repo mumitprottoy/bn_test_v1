@@ -80,19 +80,16 @@ class PrivateURLEmailAPI(views.APIView):
         return Response()
 
 
-class SubmitAnswersAPI(views.APIView):
+class SubmitSurveyAPI(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request: Request) -> Response:
-        for ans in request.data.get('answers'):
-            q = Questionnaire.objects.get(id=ans['ques_id'])
-            QuestionnaireAnswers.objects.create(
-                pro=request.user.pro,
-                question=q.id,
-                answer=ans['answer']
-            )
-        ProsOnboarding.objects.filter(email=request.user.email).update(has_answered=True)
-        return Response(QuestionnaireAnswers.all_answers_of_pro(request.user.pro))
+        pro_onb = ProsOnboarding.objects.filter(
+            email=request.user.email).first()
+        if pro_onb is not None:
+            pro_onb.has_answered = True
+            pro_onb.save()
+        return Response()
 
 
 class SubmitAnswerByQuesIDAPI(views.APIView):
