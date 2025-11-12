@@ -42,7 +42,6 @@ INSTALLED_APPS += [
     'tournaments',
     'leagues',
     'habijabi',
-    'onboarding',
 ]
 
 # external apps

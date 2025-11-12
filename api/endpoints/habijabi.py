@@ -1,7 +1,8 @@
 from .libs import *
 from rest_framework.request import QueryDict
-from habijabi.models import Questionnaire
-from onboarding.models import ProPlayer, ProsOnboarding, QuestionnaireAnswers
+from habijabi.models import (
+    ProPlayer, Questionnaire, QuestionnaireAnswers, ProsOnboarding)
+
 
 CODE = '0912'
 
@@ -83,24 +84,28 @@ class SubmitAnswersAPI(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request: Request) -> Response:
-        user = User.objects.get(id=request.data.get('user_id'))
-        pro = ProPlayer.objects.get(user=user)
         for ans in request.data.get('answers'):
             q = Questionnaire.objects.get(id=ans['ques_id'])
             QuestionnaireAnswers.objects.create(
-                pro=pro,
+                pro=request.user.pro,
                 question=q.id,
                 answer=ans['answer']
             )
-        ProsOnboarding.objects.filter(email=pro.user.email).update(has_answered=True)
-        return Response(QuestionnaireAnswers.all_answers_of_pro(pro))
+        ProsOnboarding.objects.filter(email=request.user.email).update(has_answered=True)
+        return Response(QuestionnaireAnswers.all_answers_of_pro(request.user.pro))
 
 
 class SubmitAnswerByQuesIDAPI(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request: Request, ques_id: int) -> Response:
-        pass
+        qa = QuestionnaireAnswers.objects.filter(
+            pro=request.user.pro, ques_id=ques_id).first()
+        if qa is None:
+            qa = QuestionnaireAnswers(pro=request.user.pro, ques_id=ques_id)
+        qa.answer = request.data.get('answer')
+        qa.save()
+        return Response(qa.details)
 
 
 class ProInfoAPI(views.APIView):
