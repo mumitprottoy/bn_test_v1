@@ -29,7 +29,6 @@ urlpatterns = [
     # pros
     path('user/pro-dashboard-data', views.ProDashboardAPI.as_view()),
     path('pro/profile/<str:username>', views.ProPlayerProfileByUsername.as_view()),
-    path('private-signup', views.Priv),
 
     # by user id
     path('user/profile/<str:username>', views.UserProfileByUsername.as_view()),
