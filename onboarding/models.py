@@ -79,3 +79,11 @@ class QuestionnaireAnswers(models.Model):
             pro=cls.objects.filter(pro=pro).first().pro.user.minimal,
             answers=answers
         )
+    
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=('pro', 'ques_id'),
+                name='unique_pro_ques_id_pair'
+            )
+        ]

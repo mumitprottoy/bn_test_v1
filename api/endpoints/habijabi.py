@@ -88,12 +88,17 @@ class SubmitAnswersAPI(views.APIView):
             q = Questionnaire.objects.get(id=ans['ques_id'])
             QuestionnaireAnswers.objects.create(
                 pro=pro,
-                question=q.question,
-                description=q.description,
+                question=q.id,
                 answer=ans['answer']
             )
         ProsOnboarding.objects.filter(email=pro.user.email).update(has_answered=True)
         return Response(QuestionnaireAnswers.all_answers_of_pro(pro))
+
+
+class SubmitAnswerByQuesIDAPI(views.APIView):
+
+    def post(self, request: Request) -> Response:
+        pass
 
 
 class ProInfoAPI(views.APIView):
