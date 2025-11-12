@@ -119,3 +119,4 @@ class TestAdressAPI(views.APIView):
         from entrance.models import TestAdress
         addr = TestAdress.objects.create(**request.data)
         return Response(addr.details)
+    

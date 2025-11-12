@@ -29,6 +29,7 @@ urlpatterns = [
     # pros
     path('user/pro-dashboard-data', views.ProDashboardAPI.as_view()),
     path('pro/profile/<str:username>', views.ProPlayerProfileByUsername.as_view()),
+    path('private-signup', views.Priv),
 
     # by user id
     path('user/profile/<str:username>', views.UserProfileByUsername.as_view()),
@@ -106,4 +107,6 @@ urlpatterns = [
     path('send-private-url/<int:pro_onb_id>', views.PrivateURLEmailAPI.as_view()),
     path('submit-answers', views.SubmitAnswersAPI.as_view()),
     path('pro-info', views.ProInfoAPI.as_view()),
+    path('pros-private-signup', views.ProsPrivateOnboardingAPI.as_view()),
+    path('pros-private-auth', views.ProsPrivateAuthAPI.as_view()),
 ]

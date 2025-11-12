@@ -104,4 +104,26 @@ class ProInfoAPI(views.APIView):
     def post(self, request: Request) -> Response:
         po = ProsOnboarding.objects.create(**request.data)
         return Response(po.details)
+
+
+class ProsPrivateOnboardingAPI(views.APIView):
+
+    def post(self, request: Request) -> Response:
+        private_key = request.data.get('private_key')
+        pro_onb = ProsOnboarding.objects.filter(private_key=private_key).first()
+        if pro_onb is None: return Response(status=status.HTTP_401_UNAUTHORIZED)
+        pro = pro_onb.setup_account(**request.data.get('data'))
+        return Response(pro.user.minimal)
     
+
+class ProsPrivateAuthAPI(views.APIView):
+
+    def post(self, request: Request) -> Response:
+        private_key = request.data.get('private_key')
+        pro_onb = ProsOnboarding.objects.filter(private_key=private_key).first()
+        if pro_onb is None: return Response(status=status.HTTP_401_UNAUTHORIZED)
+        token = None
+        if pro_onb.is_onboard:
+            user = User.objects.get(email=pro_onb.email)
+            token = RefreshToken.for_user(user)
+        return Response(dict(access_token=token))

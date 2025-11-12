@@ -8,8 +8,3 @@ class SocialsAPI(views.APIView):
     def get(self, request: Request) -> Response:
         return Response(
             [sr.get_clean_dict(social) for social in Social.objects.all()])
-
-
-class ProPlayerSocialLinkAPI(views.APIView):
-
-    pass
