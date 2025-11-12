@@ -80,6 +80,7 @@ class PrivateURLEmailAPI(views.APIView):
 
 
 class SubmitAnswersAPI(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request: Request) -> Response:
         user = User.objects.get(id=request.data.get('user_id'))
@@ -96,8 +97,9 @@ class SubmitAnswersAPI(views.APIView):
 
 
 class SubmitAnswerByQuesIDAPI(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
 
-    def post(self, request: Request) -> Response:
+    def post(self, request: Request, ques_id: int) -> Response:
         pass
 
 

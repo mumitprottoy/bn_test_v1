@@ -5,7 +5,7 @@ from brands.models import Brand
 User = get_user_model()
 
 class ProPlayer(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='pro')
 
     @property
     def sponsors_list(self) -> list[dict]:
