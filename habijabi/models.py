@@ -19,10 +19,21 @@ class ProsOnboarding(models.Model):
     is_notified = models.BooleanField(default=False)
     has_answered = models.BooleanField(default=False)
 
+    @property
+    def survey_completion(self) -> int:
+        completion = 0
+        user = User.objects.filter(email=self.email)
+        if user is not None and hasattr(user, 'pro'):
+            q_count = Questionnaire.objects.count()
+            a_count = QuestionnaireAnswers.objects.filter(pro=user.pro).count()
+            completion = int((a_count / q_count) * 100) if q_count > 0 else 0
+        return completion
 
     @property
     def details(self) -> dict:
-        return get_clean_dict(self)
+        d = get_clean_dict(self)
+        d['survey_completion'] = self.survey_completion
+        return d
 
     def onboard(self) -> None:
         self.is_onboard = True
