@@ -133,8 +133,8 @@ class ProsPrivateAuthAPI(views.APIView):
         private_key = request.data.get('private_key')
         pro_onb = ProsOnboarding.objects.filter(private_key=private_key).first()
         if pro_onb is None: return Response(status=status.HTTP_401_UNAUTHORIZED)
-        token = None
         if pro_onb.is_onboard:
             user = User.objects.get(email=pro_onb.email)
             token = RefreshToken.for_user(user)
-        return Response(dict(access_token=str(token.access_token)))
+            return Response(dict(access_token=str(token.access_token)))
+        return Response(dict(access_token=None))
