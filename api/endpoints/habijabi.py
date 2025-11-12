@@ -138,3 +138,22 @@ class ProsPrivateAuthAPI(views.APIView):
             token = RefreshToken.for_user(user)
             return Response(dict(access_token=str(token.access_token)))
         return Response(dict(access_token=None))
+
+
+class QuestionForProAPI(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request: Request) -> Response:
+        pro = request.user.pro
+        survey = list()
+        for q in Questionnaire.all_questions():
+            q_dict = q.copy()
+            q_dict['answer'] = None
+            question = Questionnaire.objects.get(id=q['ques_id'])
+            answer = QuestionnaireAnswers.objects.filter(
+                pro=pro, questionnaire=question).first()
+            if answer is not None:
+                q_dict['answer'] = answer.answer
+            survey.append(q_dict)
+        return Response(survey)
+        
