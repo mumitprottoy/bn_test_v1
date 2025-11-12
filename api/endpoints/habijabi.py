@@ -96,10 +96,11 @@ class SubmitAnswerByQuesIDAPI(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request: Request, ques_id: int) -> Response:
+        q = Questionnaire.objects.get(id=ques_id)
         qa = QuestionnaireAnswers.objects.filter(
-            pro=request.user.pro, ques_id=ques_id).first()
+            pro=request.user.pro, questionnaire=q).first()
         if qa is None:
-            qa = QuestionnaireAnswers(pro=request.user.pro, ques_id=ques_id)
+            qa = QuestionnaireAnswers(pro=request.user.pro, questionnaire=q)
         qa.answer = request.data.get('answer')
         qa.save()
         return Response(qa.details)
