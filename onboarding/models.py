@@ -59,8 +59,7 @@ class ProsOnboarding(models.Model):
 
 class QuestionnaireAnswers(models.Model):
     pro = models.ForeignKey(ProPlayer, on_delete=models.CASCADE)
-    question = models.TextField()
-    description = models.TextField()
+    ques_id = models.IntegerField(default=-1)
     answer = models.TextField()
 
     @property
