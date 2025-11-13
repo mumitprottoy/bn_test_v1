@@ -109,7 +109,14 @@ class SubmitAnswerByQuesIDAPI(views.APIView):
 class ProInfoAPI(views.APIView):
 
     def get(self, request: Request) -> Response:
-        return Response([po.details for po in ProsOnboarding.objects.all().order_by('-id')])
+        pro_info = list()
+        for po in ProsOnboarding.objects.all().order_by('-id'):
+            details = po.details.copy()
+            if details['is_onboard']:
+                user = User.objects.get(email=details['email'])
+                details['answers'] = QuestionnaireAnswers.all_answers_of_pro(user.pro)
+            pro_info.append(details)
+        return Response(pro_info)
     
     def post(self, request: Request) -> Response:
         po = ProsOnboarding.objects.create(**request.data)
