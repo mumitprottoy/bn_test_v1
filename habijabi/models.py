@@ -25,7 +25,9 @@ class ProsOnboarding(models.Model):
         user = User.objects.filter(email=self.email).first()
         if user is not None and hasattr(user, 'pro'):
             q_count = Questionnaire.objects.count()
-            a_count = QuestionnaireAnswers.objects.filter(pro=user.pro).count()
+            a_count = 0
+            for ans in QuestionnaireAnswers.objects.filter(pro=user.pro):
+                if ans.answer: a_count += 1
             completion = int((a_count / q_count) * 100) if q_count > 0 else 0
         return completion
 
