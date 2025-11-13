@@ -22,7 +22,7 @@ class ProsOnboarding(models.Model):
     @property
     def survey_completion(self) -> int:
         completion = 0
-        user = User.objects.filter(email=self.email)
+        user = User.objects.filter(email=self.email).first()
         if user is not None and hasattr(user, 'pro'):
             q_count = Questionnaire.objects.count()
             a_count = QuestionnaireAnswers.objects.filter(pro=user.pro).count()
