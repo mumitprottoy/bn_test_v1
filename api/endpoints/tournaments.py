@@ -1,5 +1,5 @@
 from .libs import *
-from tournaments.models import Tournamant, ParticipantSet, ParticipantMember
+from tournaments.models import Tournamant, TournamentV0, ParticipantSet, ParticipantMember
 from teams.models import Team
 from django.utils.dateparse import parse_datetime
 from centers.models import CenterAdmin
@@ -86,6 +86,10 @@ class TournamentAllTeamsAPI(views.APIView):
 class TournamentsV0API(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
+    def get(self, request: Request) -> Response:
+        return [t.details for t in TournamentV0.objects.filter(
+            director_user_id=request.user.id).order_by('-id')]
+
     def post(self, request: Request) -> Response:
         import json
         from tournaments.models import TournamentV0
@@ -101,3 +105,12 @@ class TournamentsV0API(views.APIView):
 
 class TournamentV0FlyerUploadAPI(views.APIView):
     pass 
+
+
+class TournamentsV0DeleteAPI(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def delete(self, request: Request, tournament_id: int) -> Response:
+        TournamentV0.objects.get(id=tournament_id).delete()
+        return Response()
+        
