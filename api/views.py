@@ -80,3 +80,4 @@ class UserRegisterAPI(views.APIView):
 
 class TestPayloadAPI(views.APIView):
     import json
+    from entrance.models import Test

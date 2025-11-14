@@ -115,5 +115,5 @@ class TestAdress(models.Model):
         return self.str_address
 
 
-class TestPayloadAPI(models.Model):
+class TestPayload(models.Model):
     data = models.TextField()
