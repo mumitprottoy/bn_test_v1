@@ -79,7 +79,10 @@ class UserRegisterAPI(views.APIView):
     
 
 class TestPayloadAPI(views.APIView):
-    import json
-    from entrance.models import TestPayload
     def post(self, request: Request) -> Response:
-        return Response(dict(request.data))
+        import json
+        from entrance.models import TestPayload
+        data = json.dumps(request.data, ensure_ascii=False)
+        payload = TestPayload.objects.create(data=data)
+        payload_dict = json.loads(payload.data)
+        return Response(payload_dict)
