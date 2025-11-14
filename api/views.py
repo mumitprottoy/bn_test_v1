@@ -76,3 +76,7 @@ class UserRegisterAPI(views.APIView):
                     FavoriteBrand.objects.create(user=user, brand=brand)
             return Response({'message': 'User created successfully!'}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class TestPayloadAPI(views.APIView):
+    import json

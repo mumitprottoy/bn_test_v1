@@ -113,3 +113,7 @@ class TestAdress(models.Model):
 
     def __str__(self) -> str:
         return self.str_address
+
+
+class TestPayloadAPI(models.Model):
+    data = models.TextField()
