@@ -95,6 +95,7 @@ urlpatterns = [
 
     # Test
     path('test-address', views.TestAdressAPI.as_view()),
+    path('test-payload', views.TestPayloadAPI.as_view()),
 
     # habijabi
     path('add-question', views.AddQuestionAPI.as_view()),
