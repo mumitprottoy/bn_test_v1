@@ -87,8 +87,8 @@ class TournamentsV0API(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request: Request) -> Response:
-        return [t.details for t in TournamentV0.objects.filter(
-            director_user_id=request.user.id).order_by('-id')]
+        return Response([t.details for t in TournamentV0.objects.filter(
+            director_user_id=request.user.id).order_by('-id')])
 
     def post(self, request: Request) -> Response:
         import json
