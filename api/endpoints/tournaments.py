@@ -81,3 +81,23 @@ class TournamentAllTeamsAPI(views.APIView):
         if tournament is not None:
             return Response(tournament.all_teams)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class TournamentsV0API(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request: Request) -> Response:
+        import json
+        from tournaments.models import TournamentV0
+        data = json.dumps(
+            dict(request.data), indent=4, ensure_ascii=False)
+        tournament = TournamentV0.objects.create(
+            director_name=request.user.get_full_name(),
+            director_user_id=request.user.id,
+            data=data
+        )
+        return Response(tournament.details)
+
+
+class TournamentV0FlyerUploadAPI(views.APIView):
+    pass 

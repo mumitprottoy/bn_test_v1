@@ -1,3 +1,4 @@
+import json
 from django.db import models
 from player.models import User
 from django.contrib.postgres.fields import ArrayField
@@ -120,12 +121,18 @@ class HandicapTournament(models.Model):
 
 class TournamentV0(models.Model):
     data = models.TextField()
+    logo = models.URLField(blank=True, null=True, default=None)
     flyer = models.URLField(blank=True, null=True, default=None)
+    director_name = models.CharField(max_length=100, default='')
+    director_user_id = models.IntegerField(default=-1)
 
     @property
     def details(self) -> dict:
         return dict(
             id=self.id,
-            data=self.data,
-            flyer=self.flyer
+            director_name=self.director_name,
+            director_user_id=self.director_user_id,
+            data=json.loads(self.data),
+            flyer=self.flyer,
+            logo=self.logo
         )
