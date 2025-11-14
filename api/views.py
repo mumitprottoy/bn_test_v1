@@ -80,4 +80,6 @@ class UserRegisterAPI(views.APIView):
 
 class TestPayloadAPI(views.APIView):
     import json
-    from entrance.models import Test
+    from entrance.models import TestPayload
+    def post(self, request: Request) -> Response:
+        return Response(dict(request.data))
