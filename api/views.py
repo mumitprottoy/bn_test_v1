@@ -82,7 +82,7 @@ class TestPayloadAPI(views.APIView):
     def post(self, request: Request) -> Response:
         import json
         from entrance.models import TestPayload
-        data = json.dumps(request.data, ensure_ascii=False)
+        data = json.dumps(request.data, ensure_ascii=False, indent=4)
         payload = TestPayload.objects.create(data=data)
         payload_dict = json.loads(payload.data)
         return Response(payload_dict)
