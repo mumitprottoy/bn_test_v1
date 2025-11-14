@@ -116,3 +116,16 @@ class HandicapTournament(models.Model):
     )
     percentage = models.IntegerField(default=90)
     average = models.IntegerField(default=200)
+
+
+class TournamentV0(models.Model):
+    data = models.TextField()
+    flyer = models.URLField(blank=True, null=True, default=None)
+
+    @property
+    def details(self) -> dict:
+        return dict(
+            id=self.id,
+            data=self.data,
+            flyer=self.flyer
+        )
