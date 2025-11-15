@@ -6,6 +6,7 @@ User = get_user_model()
 
 class ProPlayer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='pro')
+    is_public = models.BooleanField(default=False)
 
     @property
     def sponsors_list(self) -> list[dict]:

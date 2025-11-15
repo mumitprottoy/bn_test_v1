@@ -29,7 +29,7 @@ class ProPlayersPublicProfileAPI(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request: Request) -> Response:
-        users = [pro.user for pro in ProPlayer.objects.all()]
+        users = [pro.user for pro in ProPlayer.objects.filter(is_public=True).all()]
         user_profiles = list()
         for user in users:
             profile = user.basic.copy()
