@@ -1,3 +1,4 @@
+import time
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils import timezone
@@ -85,25 +86,35 @@ class PreRegistration(models.Model):
         return [pr.details for pr in cls.objects.filter(is_activated=True)]
     
     @classmethod
-    def send_email_to_all(
-        cls, subject: str, template: str, context: dict=dict()) -> None:
-        emails = list(set([pre_reg.email for pre_reg in cls.objects.filter(is_activated=True)]))
-        total = emails.__len__()
+    def send_email_to_all(cls, subject, template, context=dict()):
+        emails = list(set(
+            cls.objects.filter(is_activated=True).values_list('email', flat=True)
+        ))
+
+        connection = EmailEngine([], subject, template).get_connection_only()
+        connection.open()
+
+        batch_size = 50
+
         for i, email in enumerate(emails):
-            import time
-            if (i+1) % 50 == 0: 
-                time.sleep(5)
-                print('reconnecting...')
             pre_reg = cls.objects.filter(email=email).first()
             _context = context.copy()
             _context['full_name'] = f'{pre_reg.first_name} {pre_reg.last_name}'
-            EmailEngine(
-                recipient_list=[pre_reg.email],
-                subject=subject,
-                template=template,
-                context=_context
-            ).send()
-            print(f'{i+1} / {total} Sent to: {pre_reg.email}')
+
+            engine = EmailEngine([email], subject, template, _context)
+            email_obj = engine.setup_email(connection)
+            email_obj.send(fail_silently=True)
+
+            print(f'{i+1}/{len(emails)} sent to: {email}')
+
+            if (i + 1) % batch_size == 0:
+                print("Reconnecting...")
+                connection.close()
+                time.sleep(3)
+                connection.open()
+
+        connection.close()
+
     
     @classmethod
     def send_pre_reg_survey_1(cls) -> None:
