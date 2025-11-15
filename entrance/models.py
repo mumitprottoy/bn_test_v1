@@ -87,7 +87,7 @@ class PreRegistration(models.Model):
     @classmethod
     def send_email_to_all(
         cls, subject: str, template: str, context: dict=dict()) -> None:
-        emails = list(set([pre_reg.email for pre_reg in cls.objects.all()]))
+        emails = list(set([pre_reg.email for pre_reg in cls.objects.filter(is_activated=True)]))
         total = emails.__len__()
         for i, email in enumerate(emails):
             pre_reg = cls.objects.filter(email=email).first()
