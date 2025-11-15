@@ -3,6 +3,7 @@ from tournaments.models import Tournamant, TournamentV0, ParticipantSet, Partici
 from teams.models import Team
 from django.utils.dateparse import parse_datetime
 from centers.models import CenterAdmin
+from cloud.engine import CloudEngine
 
 
 class TournamentsAPI(views.APIView):
@@ -104,7 +105,22 @@ class TournamentsV0API(views.APIView):
 
 
 class TournamentV0FlyerUploadAPI(views.APIView):
-    pass 
+    permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [parsers.FormParser, parsers.MultiPartParser]
+
+    def post(self, request: Request, tournament_id: int) -> Response:
+        tournament = TournamentV0.objects.filter(
+            id=tournament_id, user=request.user).first()
+        if tournament is None: 
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        image = request.data.get('file')
+        cloud_engine = CloudEngine(image, 'events')
+        file_pub_url = cloud_engine.upload()
+        if file_pub_url is not None:
+            tournament.flyer = file_pub_url
+            tournament.save()
+        return Response(dict(
+            message='Success', file_public_url=file_pub_url), status=status.HTTP_200_OK)
 
 
 class TournamentsV0DeleteAPI(views.APIView):
