@@ -110,7 +110,7 @@ class TournamentV0FlyerUploadAPI(views.APIView):
 
     def post(self, request: Request, tournament_id: int) -> Response:
         tournament = TournamentV0.objects.filter(
-            id=tournament_id, user=request.user).first()
+            id=tournament_id, director_user_id=request.user.id).first()
         if tournament is None: 
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         image = request.data.get('file')
@@ -128,7 +128,7 @@ class TournamentsV0DeleteAPI(views.APIView):
 
     def delete(self, request: Request, tournament_id: int) -> Response:
         tournament = TournamentV0.objects.filter(
-            id=tournament_id, user=request.user).first()
+            id=tournament_id, director_user_id=request.user.id).first()
         if tournament is None: 
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         tournament.delete()
