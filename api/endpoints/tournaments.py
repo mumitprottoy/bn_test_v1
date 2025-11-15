@@ -127,6 +127,10 @@ class TournamentsV0DeleteAPI(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def delete(self, request: Request, tournament_id: int) -> Response:
-        TournamentV0.objects.get(id=tournament_id).delete()
+        tournament = TournamentV0.objects.filter(
+            id=tournament_id, user=request.user).first()
+        if tournament is None: 
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        tournament.delete()
         return Response()
         
