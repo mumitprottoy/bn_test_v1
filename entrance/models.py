@@ -100,6 +100,10 @@ class PreRegistration(models.Model):
                 context=_context
             ).send()
             print(f'{i+1} / {total} Sent to: {pre_reg.email}')
+    
+    @classmethod
+    def send_pre_reg_survey_1(cls) -> None:
+        cls.send_email_to_all(subject="BowlersNetwork Beta is Launching!", template="emails/pre_reg_survey_1.html")
 
     def save(self, *args, **kwargs) -> None:
         if not self._state.adding:
