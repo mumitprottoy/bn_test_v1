@@ -83,6 +83,22 @@ class PreRegistration(models.Model):
     @classmethod
     def get_all(cls) -> list[dict]:
         return [pr.details for pr in cls.objects.filter(is_activated=True)]
+    
+    @classmethod
+    def send_email_to_all(
+        cls, subject: str, template: str, context: dict=dict()) -> None:
+        pre_regs = list(set([pre_reg for pre_reg in cls.objects.all()]))
+        total = pre_regs.__len__()
+        for i, pre_reg in enumerate(pre_regs):
+            _context = context.copy()
+            _context['full_name'] = f'{pre_reg.first_name} {pre_reg.last_name}'
+            EmailEngine(
+                recipient_list=[pre_reg.email],
+                subject=subject,
+                template=template,
+                context=_context
+            ).send()
+            print(f'{i+1} / {total} Sent to: {pre_reg.email}')
 
     def save(self, *args, **kwargs) -> None:
         if not self._state.adding:
