@@ -1,3 +1,4 @@
+import json
 from .libs import *
 from pinscore.models import Game
 
@@ -10,7 +11,8 @@ class GamesAPI(views.APIView):
 
     def post(self, request: Request) -> Response:
         game = Game.objects.create(
-            user=request.user, data=request.data)
+            user=request.user, data=json.dumps(
+                request.data, indent=4, ensure_ascii=False))
         return Response(game.details)
 
 
