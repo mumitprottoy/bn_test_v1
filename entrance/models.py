@@ -90,6 +90,10 @@ class PreRegistration(models.Model):
         emails = list(set([pre_reg.email for pre_reg in cls.objects.filter(is_activated=True)]))
         total = emails.__len__()
         for i, email in enumerate(emails):
+            import time
+            if (i+1) % 50 == 0: 
+                time.sleep(5)
+                print('reconnecting...')
             pre_reg = cls.objects.filter(email=email).first()
             _context = context.copy()
             _context['full_name'] = f'{pre_reg.first_name} {pre_reg.last_name}'
