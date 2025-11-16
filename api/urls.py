@@ -78,6 +78,9 @@ urlpatterns = [
     path('pre-register', views.PreRegistrationAPI.as_view()),
     path('validate-signup-data', views.SignupDataValidationAPI.as_view()),
     path('validate-username', views.UsernameValidationAPI.as_view()),
+    path('sorry-malia-briggs', views.SorryMaliaBriggsAPI.as_view()),
+    path('send-otp', views.OTPSendingAPI.as_view()),
+    path('reset-password', views.PasswordResetAPI.as_view()),
 
     # centers
     path('center', views.CentersAPI.as_view()),

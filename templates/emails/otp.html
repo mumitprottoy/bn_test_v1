@@ -1,0 +1,18 @@
+{% extends "emails/to_user_base.html" %}
+
+{% block content %}
+    <p>
+        Greetings from BowlersNetwork!
+        </p>
+        <p>
+          Here's the OTP you requested for:
+        </p>
+        <div class="code-box">{{code}}</div>
+        <p>
+          If you didn’t request this, you can safely ignore this email.
+        </p>
+        <p>
+          Happy bowling! 🎳 <br />
+          — The BowlersNetwork Team
+    </p>
+{% endblock content %}

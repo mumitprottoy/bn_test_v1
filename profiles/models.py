@@ -132,7 +132,13 @@ class AuthCode(models.Model):
     def send_otp(self):
         try:
             self.change_otp()
-            # self.send_code('OTP')
+            engine = EmailEngine(
+                recipient_list=[self.user.email],
+                subject=f'Your OTP for BowlersNetwork [{self.otp}]',
+                template='emails/otp.html',
+                context=dict(code=self.otp)
+            )
+            engine.send()
             return True
         except: return False
     
