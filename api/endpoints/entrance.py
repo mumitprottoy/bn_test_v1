@@ -152,5 +152,6 @@ class PasswordResetAPI(views.APIView):
         if user.codes.otp == request.data.get('otp'):
             user.set_password(request.data.get('password'))
             user.save()
+            user.codes.change_otp()
             return Response(dict(username=user.username, message='Login with the new password to continue.'))
         return Response(status=status.HTTP_401_UNAUTHORIZED)
