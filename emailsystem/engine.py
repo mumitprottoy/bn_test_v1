@@ -41,7 +41,7 @@ class EmailEngine:
         connection_kwargs.update(self.cred.connection_kwargs)
         return get_connection(**connection_kwargs)
     
-    def setup_email(self, connection: None) -> EmailMultiAlternatives:
+    def setup_email(self, connection=None) -> EmailMultiAlternatives:
         if connection is None: connection = self.connect()
         html_content = render_to_string(self.template, self.context)
         text_content = strip_tags(html_content)

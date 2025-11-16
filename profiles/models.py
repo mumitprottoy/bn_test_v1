@@ -248,15 +248,17 @@ class FavoriteBrand(models.Model):
 # address_str
 # lat
 # long
+# home center (searchable)
 
 # **playing style**
 # left/right/both handed
 # thumb/no thumb
 
-# ** optional **
-# is_coach
-# usbc card number 
-# home center 
+# **conditional**
+# if age < 18: is_youth=true;
+# guardian's email
+# if age > 18: is_coach?
+# if has_usbc_card_number: usbc_card_number
 
 
 class UserInfo(models.Model):
