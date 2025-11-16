@@ -142,8 +142,12 @@ class ProsPrivateAuthAPI(views.APIView):
         private_key = request.data.get('private_key')
         pro_onb = ProsOnboarding.objects.filter(private_key=private_key).first()
         if pro_onb is None: return Response(status=status.HTTP_401_UNAUTHORIZED)
-        if pro_onb.is_onboard:
-            user = User.objects.get(email=pro_onb.email)
+        user_set = User.objects.filter(email=pro_onb.email)
+        if user_set.exists():
+            pro_onb.is_onboard = True; pro_onb.save()
+            user_set.update(first_name=pro_onb.first_name, last_name=pro_onb.last_name)
+            user = user_set.first()
+            ProPlayer.objects.get_or_create(user=user)
             token = RefreshToken.for_user(user)
             return Response(dict(access_token=str(token.access_token)))
         return Response(dict(access_token=None))
