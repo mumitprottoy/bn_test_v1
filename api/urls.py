@@ -123,4 +123,7 @@ urlpatterns = [
     # Games
     path('games', views.GamesAPI.as_view()),
     path('games/delete/<int:game_id>', views.DeleteGameAPI.as_view()),
+
+    # beta
+    path('private-access/<str:private_key>', views.BetaPrivateAccessAPI.as_view()),
 ]

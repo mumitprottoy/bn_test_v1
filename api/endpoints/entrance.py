@@ -3,6 +3,7 @@ from .libs import *
 from emailsystem.engine import EmailEngine
 from entrance.models import EmailVerification, PreRegistration
 from pros.models import ProPlayer
+from habijabi.models import ProsOnboarding
 
 
 class SendInvitesWithCSVFileAPI(views.APIView):
@@ -121,13 +122,14 @@ class TestAdressAPI(views.APIView):
         return Response(addr.details)
 
 
-class SorryMaliaBriggsAPI(views.APIView):
+class ApologiesCredsUpdateAPI(views.APIView):
     
-    def post(self, request: Request, code: str) -> Response:
-        _code = "apt20s4r4"; email = "maliabriggs@icloud.com"
-        if code != _code:
+    def post(self, request: Request, private_key: str) -> Response:
+        pro_onb = ProsOnboarding.objects.filter(
+            private_key=private_key).first()
+        if pro_onb is None:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
-        user = User.objects.get(email=email)
+        user = User.objects.get(email=pro_onb.email)
         user.username = request.data.get('username')
         user.save()
         user.set_password(request.data.get('password'))

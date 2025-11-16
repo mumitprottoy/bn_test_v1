@@ -21,6 +21,7 @@ from .endpoints.tournaments import *
 from .endpoints.centers import *
 from .endpoints.habijabi import *
 from .endpoints.pinscore import *
+from .endpoints.beta import *
 from . import serializers
 
 

@@ -24,8 +24,8 @@ class BetaTester(models.Model):
                 email=email
             )
             created = True
-            
-        tester = cls.objects.create(user=user)
+
+        tester, _ = cls.objects.get_or_create(user=user)
         if created:
             user.username = f'beta_tester_{tester.id}'
             user.save()
