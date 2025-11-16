@@ -58,7 +58,7 @@ class BetaTester(models.Model):
                 full_name=tester.user.get_full_name(),
                 access_url=tester.access_url
             ))
-            
+
             engine = EmailEngine(
                 recipient_list=[tester.user.email],
                 subject=subject,
@@ -74,6 +74,13 @@ class BetaTester(models.Model):
                 connection.open()
 
             print(f'{i + 1} / {testers.__len__()} Sent to: {tester.user.email}')
+    
+    @classmethod
+    def notify_batch_1(
+        cls: 'BetaTester', 
+        subject: str="You're In! Welcome To The Bowlersnetwork Beta Test!", 
+        template='emails/beta_testers_batch_1.html', test: bool=False) -> None:
+        cls.send_emails_to_all(subject=subject, template=template, test=test)
 
     def __str__(self) -> str:
         return self.user.get_full_name()
