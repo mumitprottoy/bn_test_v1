@@ -149,6 +149,8 @@ class PasswordResetAPI(views.APIView):
 
     def post(self, request: Request) -> Response:
         user = User.objects.get(email=request.data.get('email'))
-        user.set_password(request.data.get('password'))
-        user.save()
-        return Response(dict(username=user.username, message='Login with the new password to continue.'))
+        if user.codes.otp == request.data.get('otp'):
+            user.set_password(request.data.get('password'))
+            user.save()
+            return Response(dict(username=user.username, message='Login with the new password to continue.'))
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
