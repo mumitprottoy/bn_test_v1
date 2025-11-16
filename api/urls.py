@@ -34,7 +34,7 @@ urlpatterns = [
     path('user/profile/<str:username>', views.UserProfileByUsername.as_view()),
     path('user/<int:user_id>/posts', views.UserPostsByID.as_view()),
 
-    # profile
+    # profiles
     path('user/profile', views.PlayerProfileAPI.as_view()),
     path('user/pro-player-public-profile', views.ProPlayersPublicProfileAPI.as_view()),
     path('user/profile/upload-profile-picture/', views.UploadProfilePictureAPI.as_view()),
@@ -42,6 +42,8 @@ urlpatterns = [
     path('user/profile/upload-intro-video/', views.UploadIntroVideoAPI.as_view()),
     path('cities', views.CountriesAPI.as_view()),
     path('secret-delete', views.SecretDeleteUserAPI.as_view()),
+    path('user/info', views.UserInfoAPI.as_view()),
+    path('user/profile-status', views.ProfileStatusAPI.as_view()),
 
     # teams
     path('user/teams', views.TeamsAPI.as_view()),

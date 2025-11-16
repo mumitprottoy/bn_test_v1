@@ -1,5 +1,6 @@
+import json
 from .libs import *
-from profiles.models import Follow, CityAndCountry
+from profiles.models import Follow, CityAndCountry, UserInfo
 from utils import subroutines as sr, constants as const
 from pros.models import ProPlayer, Sponsors
 from interface.stats import EngagementStats
@@ -203,3 +204,31 @@ class DeleteAccountAPI(views.APIView):
             request.user.save()
             return Response(dict(user_id=request.user.id, name=request.user.get_full_name(), status='Account Deleted.'))
         return Response(dict(error='Incorrect password'), status=status.HTTP_401_UNAUTHORIZED)
+
+
+class UserInfoAPI(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def initial(self, request: Request, *args, **kwargs) -> None:
+        super().initial(request, *args, **kwargs)
+        self.user_info, self.created = UserInfo.objects.get_or_create(user=request.user)
+
+    def get(self, request: Request) -> Response:
+        return Response(self.user_info.details)
+    
+    def post(self, request: Request) -> Response:
+        self.user_info.info = json.dumps(request.data, indent=4, ensure_ascii=False)
+        self.user_info.is_added = True
+        self.user_info.save()
+        return Response(self.user_info.details)
+
+
+class ProfileStatusAPI(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request: Request) -> Response:
+        return Response(dict(
+            fav_brands=request.user.favbrands.exists(),
+            game_stats=request.user.stats.is_added,
+            user_info=UserInfo.objects.filter(user=request.user).exists()
+        ))

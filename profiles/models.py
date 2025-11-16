@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 from django.db import models
 from player.models import User
@@ -240,4 +241,35 @@ class FavoriteBrand(models.Model):
                 name='unique_user_brand_pair'
             )
         ]
+
+# **basic info**
+# age
+# gender
+# address_str
+# lat
+# long
+
+# **playing style**
+# left/right/both handed
+# thumb/no thumb
+
+# ** optional **
+# is_coach
+# usbc card number 
+# home center 
+
+
+class UserInfo(models.Model):
+    is_added = models.BooleanField(default=False)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='info')
+    info = models.TextField()
+
+    @property
+    def details(self) -> dict:
+        return dict(
+            user=self.user.minimal,
+            info=json.loads(self.info)
+        )
+
+
 

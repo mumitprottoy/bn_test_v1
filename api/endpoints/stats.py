@@ -11,7 +11,7 @@ class GameStatsAPI(views.APIView):
 
     def post(self, request: Request) -> Response:
         Statistics.objects.filter(
-            user=request.user).update(**request.data)
+            user=request.user).update(is_added=True, **request.data)
         return Response(sr.get_clean_dict(request.user.stats), status=status.HTTP_200_OK)
     
     def get(self, request: Request) -> Response:

@@ -60,6 +60,7 @@ class ProsOnboarding(models.Model):
         user.set_password(password)
         self.onboard()
         return ProPlayer.objects.create(user=user)
+    # please launch for me. I am sleepy and tired.
     
     @property
     def __private_url(self) -> str:

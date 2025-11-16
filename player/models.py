@@ -109,6 +109,7 @@ class User(AbstractUser):
 
 
 class Statistics(models.Model):
+    is_added = models.BooleanField(default=False)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='stats')
     average_score = models.FloatField(default=0.0)
     high_game = models.IntegerField(default=0)
