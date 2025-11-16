@@ -42,12 +42,21 @@ class ProsOnboarding(models.Model):
         self.save()
     
     def setup_account(self, username: str, password: str) -> ProPlayer:
-        user = User.objects.create(
+        user_set = User.objects.filter(email=self.email)
+        if user_set.exists():
+            user_set.update(
             first_name=self.first_name,
             last_name=self.last_name,
-            email=self.email,
-            username=username,
-        )
+            username=username    
+            )
+            user = user_set.first()
+        else:
+            user = User.objects.create(
+                first_name=self.first_name,
+                last_name=self.last_name,
+                username=username,
+                email=self.email,
+            )
         user.set_password(password)
         self.onboard()
         return ProPlayer.objects.create(user=user)
