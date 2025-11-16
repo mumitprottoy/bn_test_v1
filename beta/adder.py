@@ -1,4 +1,4 @@
-import csv
+import os, csv
 from .models import BetaTester
 
 
@@ -10,4 +10,4 @@ def add_testers(file_path: str) -> None:
 
 
 def add_batch_1():
-    add_testers('./beta_testers_1.csv')
+    add_testers(f'{os.getcwd()}/beta_testers_1.csv')
