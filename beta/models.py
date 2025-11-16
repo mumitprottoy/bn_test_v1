@@ -11,6 +11,10 @@ class BetaTester(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     private_key=models.CharField(max_length=100, default=get_key)
 
+    @property
+    def access_url(self) -> str:
+        return f'https://beta.bowlersnetwork.com/private-access/{self.private_key}'
+
     @classmethod
     def create(
         cls: 'BetaTester', first_name: str, last_name: str, email: str) -> 'BetaTester':
@@ -50,7 +54,11 @@ class BetaTester(models.Model):
             testers = [tester]
 
         for i, tester in enumerate(testers):
-            _context['full_name'] = tester.user.get_full_name()
+            _context.update(dict(
+                full_name=tester.user.get_full_name(),
+                access_url=tester.access_url
+            ))
+            
             engine = EmailEngine(
                 recipient_list=[tester.user.email],
                 subject=subject,
