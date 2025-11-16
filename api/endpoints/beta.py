@@ -4,7 +4,7 @@ from beta.models import BetaTester
 
 class BetaPrivateAccessAPI(views.APIView):
 
-    def get(self, request: Request) -> Response:
+    def post(self, request: Request) -> Response:
         tester = BetaTester.objects.filter(
             private_key=request.data.get('private_key')).first()
         if tester is None:
