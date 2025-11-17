@@ -76,6 +76,11 @@ class ProsOnboarding(models.Model):
         engine.send()
         self.is_notified = True
         self.save()
+
+        engine.subject = 'Getting Started with Your BowlersNetwork Partner Access'
+        engine.template = 'emails/pro_player_instructions.html'
+        engine.context = {'full_name': f'{self.__str__()}'}
+        engine.send()
     
     def __str__(self) -> str:
         return f'{self.first_name} {self.last_name}'
