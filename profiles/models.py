@@ -274,10 +274,4 @@ class UserInfo(models.Model):
 
     @property
     def details(self) -> dict:
-        return dict(
-            user=self.user.minimal,
-            info=json.loads(self.info)
-        )
-
-
-
+        return json.loads(self.info)
