@@ -241,7 +241,7 @@ class UserMediaAPI(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request: Request) -> Response:
-        media = dict(photos=list(), videos=list(), gifs=list())
+        media = dict(photos=list(), videos=list(), gifs=list(), others=list())
         urls = [content.url for content in PostMediaContent.objects.filter(
             metadata__in=request.user.post_metadata.all())]
         for url in urls:

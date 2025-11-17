@@ -41,9 +41,10 @@ FILE_TYPE_EXT_MAP = {
 }
 
 def get_media_type(ext: str) -> str:
-    for k in FILE_TYPE_EXT_MAP.keys():
+    for k in FILE_TYPE_EXT_MAP:
         if ext in FILE_TYPE_EXT_MAP[k]:
             return k
+    return 'others'
 
 POPULAR_SOCIALS = {
     "facebook": {
