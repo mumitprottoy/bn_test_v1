@@ -66,16 +66,18 @@ class ProsOnboarding(models.Model):
     def __private_url(self) -> str:
         return f'https://pros.bowlersnetwork.com/pros/onboarding/{self.private_key}'
     
-    def send_private_url(self) -> None:
+    def send_private_url(self, test=False) -> None:
+        email = self.email if not test else 'mumitprottoy@gmail.com'
         engine = EmailEngine(
-            [self.email],
+            [email],
             'Setup Your BowlersNetwork Pro Account',
             'emails/pros_onboarding.html',
             {'full_name': f'{self.__str__()}', 'private_url': self.__private_url}
         )
-        engine.send()
-        self.is_notified = True
-        self.save()
+        if not self.is_notified:
+            engine.send()
+            self.is_notified = True
+            self.save()
 
         engine.subject = 'Getting Started with Your BowlersNetwork Partner Access'
         engine.template = 'emails/pro_player_instructions.html'
