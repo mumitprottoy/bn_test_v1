@@ -2,7 +2,7 @@ from .libs import *
 from player.models import Statistics
 from utils import subroutines as sr
 from interface import stats
-from posts.models import PostMetaData
+from posts.models import PostMetaData, PostMediaContent
 from profiles.models import Follow
 
 

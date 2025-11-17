@@ -44,6 +44,7 @@ urlpatterns = [
     path('secret-delete', views.SecretDeleteUserAPI.as_view()),
     path('user/info', views.UserInfoAPI.as_view()),
     path('user/profile-status', views.ProfileStatusAPI.as_view()),
+    path('user/media', views.UserMediaAPI.as_view()),
 
     # teams
     path('user/teams', views.TeamsAPI.as_view()),

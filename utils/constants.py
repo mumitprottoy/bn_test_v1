@@ -21,10 +21,29 @@ MEDIA_CONTENT_SUPPORTED_FILES = [
     ".mp4",   # H.264 + AAC codec required
     ".webm",  # VP8/VP9 + Vorbis/Opus
     ".ogg",   # Ogg Theora video
+    "mkv",
 
     # (Optional) Audio types — if needed in posts
     # ".mp3", ".wav", ".ogg"
 ]
+
+FILE_TYPE_EXT_MAP = {
+    'photos': [".jpg", ".jpeg",
+    ".png",
+    ".webp",
+    ".avif",
+    ".svg",],
+    'gifs': ['gif'],
+    'videos': [".mp4",   # H.264 + AAC codec required
+    ".webm",  # VP8/VP9 + Vorbis/Opus
+    ".ogg",   # Ogg Theora video
+    "mkv",]
+}
+
+def get_media_type(ext: str) -> str:
+    for k in FILE_TYPE_EXT_MAP.keys():
+        if ext in FILE_TYPE_EXT_MAP[k]:
+            return k
 
 POPULAR_SOCIALS = {
     "facebook": {

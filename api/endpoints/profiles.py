@@ -5,6 +5,7 @@ from utils import subroutines as sr, constants as const
 from pros.models import ProPlayer, Sponsors
 from interface.stats import EngagementStats
 from cloud.engine import CloudEngine
+from posts.models import PostMediaContent
 
 
 class PlayerProfileAPI(views.APIView):
@@ -160,6 +161,7 @@ class UploadCoverPhotoAPI(views.APIView):
             status=status.HTTP_400_BAD_REQUEST
         )
 
+
 class UploadIntroVideoAPI(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
     parser_classes = [parsers.MultiPartParser, parsers.FormParser]
@@ -233,3 +235,16 @@ class ProfileStatusAPI(views.APIView):
             game_stats=request.user.stats.is_added,
             user_info=UserInfo.objects.filter(user=request.user).exists()
         ))
+
+
+class UserMediaAPI(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request: Request) -> Response:
+        media = dict(photos=list(), videos=list(), gifs=list())
+        urls = [content.url for content in PostMediaContent.objects.filter(
+            metadata__in=[request.user.post_metadata.all()])]
+        for url in urls:
+            media[const.get_media_type(
+                f'.{url.split('.')[-1]}')].append(url)
+        return Response(media)
