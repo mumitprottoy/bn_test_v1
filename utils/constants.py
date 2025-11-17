@@ -33,7 +33,7 @@ FILE_TYPE_EXT_MAP = {
     ".webp",
     ".avif",
     ".svg",],
-    'gifs': ['gif'],
+    'gifs': ['.gif'],
     'videos': [".mp4",   # H.264 + AAC codec required
     ".webm",  # VP8/VP9 + Vorbis/Opus
     ".ogg",   # Ogg Theora video
