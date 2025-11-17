@@ -13,7 +13,7 @@ buckets = {
     'testv1': 'bwlrntktestv1',
     'testv2': 'bwlrntktestv2',
     'sponsors': 'bwlrntksponsors',
-    'media': 'blwrntkpostmediacontent',
+    'media': 'bwlrntkpostmediacontent',
     'profiles': 'bwlrntkprofiles',
     'chat': 'bwlrntkchatmedia',
     'events': 'bwlrntkevents'
