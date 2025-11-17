@@ -17,13 +17,13 @@ class PlayerProfileAPI(views.APIView):
         profile['is_pro'] = pro is not None
         if profile['is_pro']:
             profile['sponsors'] = [sponsor.brand.details for sponsor in pro.sponsors.all()]
+            profile['info'] = pro.user.info.details if hasattr(pro.user, 'info') else None
         # followers = [f.follower.details for f in Follow.objects.filter(
         #     followed=request.user)]
         profile['follower_count'] = Follow.objects.filter(followed=request.user).count()
         # profile['followers'] = followers
         profile['stats'] = sr.get_clean_dict(request.user.stats)
         profile['favorite_brands'] = [fav.brand.details for fav in request.user.favbrands.all()]
-        profile['info'] = pro.user.info.details if hasattr(pro.user, 'info') else None
         profile['is_complete'] = profile['favorite_brands'].__len__() > 0
         return Response(profile, status=status.HTTP_200_OK)
 
