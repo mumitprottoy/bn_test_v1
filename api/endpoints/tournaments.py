@@ -133,4 +133,16 @@ class TournamentsV0DeleteAPI(views.APIView):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         tournament.delete()
         return Response()
+    
+
+class PublishTournamentV0API(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request: Request, tournament_id: int) -> Request:
+        tournament = TournamentV0.objects.filter(
+            id=tournament_id, director_user_id=request.user.id).first()
+        if tournament is None: return Response(status=status.HTTP_404_NOT_FOUND)
+        tournament.publish()
+        return Response(tournament.details)
+        
         

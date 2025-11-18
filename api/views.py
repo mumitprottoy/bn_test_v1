@@ -66,7 +66,7 @@ class UserRegisterAPI(views.APIView):
 
     def post(self, request):
         serializer = serializers.UserCreateSerializer(data=request.data.get('basicInfo'))
-        email = request.data.get('basicInfo')['email']
+        email = request.data.get('basicInfo')['email'].lower()
         email_verification = EmailVerification.objects.filter(email=email, is_verified=True).first()
         if email_verification is None:
             return Response(dict(error='Email is not verified'), status=status.HTTP_400_BAD_REQUEST)

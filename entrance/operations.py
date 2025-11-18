@@ -9,6 +9,9 @@ class AuthHandler:
     def authenticate(self):
         print(self.username, self.password)
         user = User.objects.filter(username=self.username).first()
+        if user is None:
+            user = User.objects.filter(email=(self.username).lower()).first()
+
         if user: 
             if user.check_password(self.password):
                 return user

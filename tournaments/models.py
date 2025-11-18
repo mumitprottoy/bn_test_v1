@@ -125,6 +125,7 @@ class TournamentV0(models.Model):
     flyer = models.URLField(blank=True, null=True, default=None)
     director_name = models.CharField(max_length=100, default='')
     director_user_id = models.IntegerField(default=-1)
+    is_published = models.BooleanField(default=False)
 
     @property
     def details(self) -> dict:
@@ -134,5 +135,10 @@ class TournamentV0(models.Model):
             director_user_id=self.director_user_id,
             data=json.loads(self.data),
             flyer=self.flyer,
-            logo=self.logo
+            logo=self.logo,
+            is_published=self.is_published
         )
+    
+    def publish(self) -> None:
+        self.is_published = True
+        self.save()
