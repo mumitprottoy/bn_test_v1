@@ -13,7 +13,7 @@ def send():
     connection = EmailEngine([], subject, template).get_connection_only()
     for i, email in enumerate(emails):
         engine = EmailEngine(
-            recipient_list=email,
+            recipient_list=[email],
             subject=subject,
             template=template
         )
