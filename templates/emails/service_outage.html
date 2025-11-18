@@ -1,0 +1,62 @@
+{% extends "emails/to_user_base.html" %}
+
+{% block content %}
+    <main role="main" class="container" style="max-width:800px; margin:2rem auto; font-family:system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;">
+  <article aria-labelledby="outage-heading">
+    <header>
+      <h1 id="outage-heading" style="font-size:1.6rem; margin-bottom:0.25rem;">Important service disruption notice</h1>
+    </header>
+
+    <section style="background:#fff; border:1px solid #eee; padding:1.25rem; border-radius:8px; box-shadow:0 1px 2px rgba(0,0,0,0.03);">
+      <p>
+        <strong>Hello Users,</strong>
+      </p>
+
+      <p>
+        We want to inform you that our platform is currently experiencing <strong>temporary disruptions</strong> due to a widespread outage with <strong>Cloudflare</strong>, one of the core services we rely on to keep everything running smoothly.
+      </p>
+
+      <p>
+        <strong>This is not an isolated issue:</strong> several major services have been impacted globally, so you may also observe interruptions with other well-known platforms.
+      </p>
+
+      <div role="note" aria-label="affected services" style="margin:0.5rem 0 1rem 0; padding:0.75rem; border-radius:6px; background:#fff8f8; border:1px solid #ffd9d9;">
+        <p style="margin:0 0 0.5rem 0;"><strong>Affected services (examples):</strong></p>
+        <ul style="margin:0 0 0 1.25rem; padding:0;">
+          <li>Twitter / X</li>
+          <li>ChatGPT (OpenAI)</li>
+          <li>Spotify</li>
+          <li>Facebook</li>
+          <li>Telegram</li>
+          <li>League of Legends</li>
+          <li>Letterboxd</li>
+          <li>and many others</li>
+        </ul>
+      </div>
+
+      <h2 style="font-size:1.05rem; margin-top:0.75rem;">What is Cloudflare?</h2>
+      <p>
+        <strong>Cloudflare</strong> is a global network service that helps websites load faster and stay secure. Many platforms, including ours, depend on it for <strong>speed, stability, and protection</strong> from online threats. When Cloudflare experiences an outage, connected services may also face interruptions.
+      </p>
+
+      <p>
+        Because of this incident, you may encounter issues with <strong>loading pages</strong>, <strong>logging in</strong>, or <strong>accessing certain features</strong> on our site.
+      </p>
+
+      <p style="margin-top:0.75rem;">
+        <strong style="color:#d9534f;">Please note:</strong> our engineering team is actively monitoring the situation and coordinating any required mitigations. We will restore full functionality as soon as Cloudflare resolves the issue.
+      </p>
+
+      <p style="margin-top:1rem;">
+        We sincerely apologize for the inconvenience and appreciate your patience and understanding.
+      </p>
+
+      <footer style="margin-top:1.25rem; border-top:1px dashed #eee; padding-top:1rem; color:#444;">
+        <p style="margin:0 0 0.5rem 0;"><strong>Thank you for staying with us.</strong></p>
+        <p style="margin:0;"><strong>Sincerely,</strong></p>
+        <p style="margin:0;"><em>The BowlersNetwork Team</em></p>
+      </footer>
+    </section>
+  </article>
+</main>
+{% endblock content %}
