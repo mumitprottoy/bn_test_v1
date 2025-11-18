@@ -97,6 +97,7 @@ urlpatterns = [
     path('tournaments/v0', views.TournamentsV0API.as_view()),
     path('tournaments/v0/delete/<int:tournament_id>', views.TournamentsV0DeleteAPI.as_view()),
     path('tournaments/v0/upload-flyer/<int:tournament_id>', views.TournamentV0FlyerUploadAPI.as_view()),
+    path('tournaments/v0/publish/<int:tournament_id>', views.PublishTournamentV0API.as_view()),
 
     # Deletion
     path('delete-account', views.DeleteAccountAPI.as_view()),
