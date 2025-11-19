@@ -48,12 +48,11 @@ class EmailVerification(models.Model):
         engine.send()
 
     def verify(self, code: str) -> bool:
-        if self.email.startswith('mumit'): 
-            return True
         is_verified = self.code == code
         if is_verified: 
             self.is_verified = is_verified
             self.save()
+            self.get_updated_code()
         return is_verified
     
     def __str__(self) -> str:
@@ -77,8 +76,7 @@ class PreRegistration(models.Model):
             email=self.email,
             first_name=self.first_name,
             last_name=self.last_name,
-            is_verified=self.is_activated,
-            onboarded_by=self.onboarded_by.user.get_full_name()
+            is_verified=self.is_activated
         )
     
     @classmethod
@@ -130,7 +128,7 @@ class PreRegistration(models.Model):
     #     super().save(*args, **kwargs)
 
     def __str__(self) -> str:
-        return f'{self.first_name} {self.last_name} onboarded by {self.onboarded_by.user.get_full_name()}'
+        return f'{self.first_name} {self.last_name}'
 
 
 class TestAdress(models.Model):
