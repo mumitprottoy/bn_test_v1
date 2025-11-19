@@ -120,14 +120,14 @@ class PreRegistration(models.Model):
     def send_pre_reg_survey_1(cls) -> None:
         cls.send_email_to_all(subject="BowlersNetwork Beta is Launching!", template="emails/pre_reg_survey_1.html")
 
-    def save(self, *args, **kwargs) -> None:
-        if not self._state.adding:
-            pre_registration = self.__class__.objects.get(id=self.id)
-            if self.onboarded_by != pre_registration.onboarded_by:
-                raise ValueError('Cannot change pro player')
-        elif self.onboarded_by is None:
-            self.onboarded_by = ProPlayerRotator.get_current_pro()
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs) -> None:
+    #     if not self._state.adding:
+    #         pre_registration = self.__class__.objects.get(id=self.id)
+    #         if self.onboarded_by != pre_registration.onboarded_by:
+    #             raise ValueError('Cannot change pro player')
+    #     elif self.onboarded_by is None:
+    #         self.onboarded_by = ProPlayerRotator.get_current_pro()
+    #     super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         return f'{self.first_name} {self.last_name} onboarded by {self.onboarded_by.user.get_full_name()}'
