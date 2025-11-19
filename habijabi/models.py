@@ -124,6 +124,7 @@ class Questionnaire(models.Model):
 
 class QuestionnaireAnswers(models.Model):
     pro = models.ForeignKey(ProPlayer, on_delete=models.CASCADE)
+    email = models.EmailField(max_length=50)
     questionnaire = models.ForeignKey(Questionnaire, on_delete=models.CASCADE)
     answer = models.TextField(default='')
 
