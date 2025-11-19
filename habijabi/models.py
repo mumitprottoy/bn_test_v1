@@ -154,3 +154,12 @@ class QuestionnaireAnswers(models.Model):
                 name='unique_pro_questionnaire_pair'
             )
         ]
+
+
+class QADraft(models.Model):
+    email = models.EmailField(max_length=50)
+    q = models.ForeignKey(Questionnaire, on_delete=models.CASCADE)
+    a = models.TextField()
+
+    def __str__(self) -> str:
+        return f'{self.email} : {self.q.question}'
