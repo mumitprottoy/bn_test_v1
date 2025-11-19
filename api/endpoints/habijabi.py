@@ -119,7 +119,9 @@ class ProInfoAPI(views.APIView):
         return Response(pro_info)
     
     def post(self, request: Request) -> Response:
-        po = ProsOnboarding.objects.create(**request.data)
+        po = ProsOnboarding(**request.data)
+        po.email = po.email.lower()
+        po.save()
         return Response(po.details)
 
 

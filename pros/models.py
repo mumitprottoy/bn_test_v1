@@ -75,20 +75,24 @@ class SocialLink(models.Model):
             )
         ]
 
+
 class ProPlayerRotator(models.Model):
-    last_pro = models.ForeignKey(ProPlayer, on_delete=models.CASCADE)
+    last_pro = models.ForeignKey(
+        ProPlayer, on_delete=models.CASCADE, null=True, default=None)
 
     @classmethod
     def get_default(cls) -> 'ProPlayerRotator':
-        if cls.objects.count() > 0:
-            return cls.objects.first()
-        return cls.objects.create(last_pro=ProPlayer.objects.first())
+        if ProPlayer.objects.count() > 0:
+            if cls.objects.count() > 0:
+                return cls.objects.first()
+            return cls.objects.create(last_pro=ProPlayer.objects.first())
     
     @classmethod
-    def get_current_pro(cls) -> ProPlayer:
-        pros = list(ProPlayer.objects.all())
-        rotator = cls.get_default()
-        index_of_last = pros.index(rotator.last_pro)
-        current_pro = pros[(index_of_last + 1) % pros.__len__()]
-        rotator.last_pro = current_pro; rotator.save()
-        return current_pro
+    def get_current_pro(cls) -> ProPlayer | None:
+        if ProPlayer.objects.count() > 0:
+            pros = list(ProPlayer.objects.all())
+            rotator = cls.get_default()
+            index_of_last = pros.index(rotator.last_pro)
+            current_pro = pros[(index_of_last + 1) % pros.__len__()]
+            rotator.last_pro = current_pro; rotator.save()
+            return current_pro
