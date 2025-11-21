@@ -12,7 +12,8 @@ class DiscussionAPI(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request: Request) -> Response:
-        return Response([d.details for d in Discussion.objects.filter(user=request.user)])
+        return Response([d.details for d in Discussion.objects.filter(
+            user=request.user).order_by('-created_at')])
 
     def post(self, request: Request) -> Response:
         topic = DiscussionTopic.objects.get(
@@ -42,7 +43,7 @@ class DiscussionFeedAPI(views.APIView):
 
     def get(self, request: Request) -> Response:
         return Response([d.details_for_user(
-            user=request.user) for d in Discussion.objects.all()])
+            user=request.user) for d in Discussion.objects.all().order_by('-created_at')])
 
 
 class DiscussionVoteAPI(views.APIView):
