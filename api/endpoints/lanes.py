@@ -24,6 +24,19 @@ class DiscussionAPI(views.APIView):
         return Response(discussion.details)
 
 
+class DiscussionOpinionAPI(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request: Request, discussion_id: int) -> Response:
+        discussion = Discussion.objects.get(id=discussion_id)
+        DiscussionOpinion.objects.create(
+            discussion=discussion,
+            user=request.user,
+            opinion=request.data.get('opinion')
+        )
+        return Response(discussion.details_for_user(request.user))
+
+
 class DiscussionFeedAPI(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
