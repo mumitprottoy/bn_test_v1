@@ -89,6 +89,7 @@ class Discussion(models.Model):
             description=self.description,
             created=sr.pretty_timesince(self.created_at),
             edited=sr.pretty_timesince(self.last_edited),
+            is_edited=self.is_edited,
             is_upvoted_by_the_pros=self.is_upvoted_by_the_pros,
             point=point,
             point_str=self.__class__.point_str(point),
