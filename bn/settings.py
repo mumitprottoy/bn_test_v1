@@ -43,6 +43,7 @@ INSTALLED_APPS += [
     'leagues',
     'habijabi',
     'beta',
+    'lanes'
 ]
 
 # external apps

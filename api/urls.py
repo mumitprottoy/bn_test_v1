@@ -127,4 +127,10 @@ urlpatterns = [
 
     # beta
     path('private-login', views.BetaPrivateAccessAPI.as_view()),
+
+    # lanes
+    path('lanes/discussions', views.DiscussionAPI.as_view()),
+    path('lanes/discussions/topics', views.DiscussionTopicAPI.as_view()),
+    path('lanes/discussions/feed', views.DiscussionFeedAPI.as_view()),
+    path('lanes/discussions/vote', views.DiscussionVoteAPI.as_view())
 ]

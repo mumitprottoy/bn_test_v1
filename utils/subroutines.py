@@ -1,7 +1,7 @@
 import datetime
 from django.utils import timezone as tz
 from datetime import datetime
-from django.utils.timezone import now
+from django.utils.timezone import now, make_aware, get_current_timezone
 from django.utils.timesince import timesince
 
 
@@ -18,6 +18,7 @@ def get_clean_dict(obj, target_key: str='_state') -> dict:
 
 
 def pretty_timesince(dt):
+    dt = make_aware(dt, timezone=get_current_timezone())
     if not isinstance(dt, datetime):
         return ""
 
@@ -30,14 +31,8 @@ def pretty_timesince(dt):
         return "a few seconds ago"
 
     time_str = timesince(dt).split(',')[0].strip() 
-    # time_str = time_str.replace('minutes', 'minute')
-    # time_str = time_str.replace('hours', 'hour')
-    # time_str = time_str.replace('days', 'day')
-    # time_str = time_str.replace('weeks', 'week')
-    # time_str = time_str.replace('months', 'month')
-    # time_str = time_str.replace('years', 'year')
 
     if time_str.startswith('1 '):
-        return f"{time_str} ago"
+        return f"{time_str[:-1]} ago"
     else:
         return f"{time_str} ago"
