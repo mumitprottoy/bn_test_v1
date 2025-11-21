@@ -65,7 +65,7 @@ class Discussion(models.Model):
     @property
     def is_upvoted_by_the_pros(self) -> bool:
         for vote in self.votes.all():
-            if hasattr(vote.voter, 'pro'):
+            if hasattr(vote.voter, 'pro') and vote.is_upvote:
                 return True
         return False
 
