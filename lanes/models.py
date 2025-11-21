@@ -76,8 +76,7 @@ class Discussion(models.Model):
     @classmethod
     def point_str(cls: 'Discussion', point: int) -> str:
         if point > 0: return f'+ {point}'
-        if point == 0: return str(point)
-        return f'- {point}'
+        return f'{point}'
 
     @property
     def details(self) -> dict:
