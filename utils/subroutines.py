@@ -1,7 +1,7 @@
 import datetime
 from django.utils import timezone as tz
 from datetime import datetime
-from django.utils.timezone import now, make_aware, get_current_timezone
+from django.utils.timezone import now, make_aware, get_current_timezone, is_naive
 from django.utils.timesince import timesince
 
 
@@ -18,7 +18,8 @@ def get_clean_dict(obj, target_key: str='_state') -> dict:
 
 
 def pretty_timesince(dt):
-    dt = make_aware(dt, timezone=get_current_timezone())
+    if is_naive(dt):
+        dt = make_aware(dt, timezone=get_current_timezone())
     if not isinstance(dt, datetime):
         return ""
 
