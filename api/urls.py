@@ -133,5 +133,6 @@ urlpatterns = [
     path('lanes/discussions/topics', views.DiscussionTopicAPI.as_view()),
     path('lanes/discussions/feed', views.DiscussionFeedAPI.as_view()),
     path('lanes/discussions/vote', views.DiscussionVoteAPI.as_view()),
-    path('lanes/discussions/opinion/<int:discussion_id>', views.DiscussionOpinionAPI.as_view())
+    path('lanes/discussions/opinion/<int:discussion_id>', views.DiscussionOpinionAPI.as_view()),
+    path('lanes/discussions/details/<str:discussion_uid>', views.DiscussionDetailsAPI.as_view()),
 ]

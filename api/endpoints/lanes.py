@@ -61,3 +61,12 @@ class DiscussionVoteAPI(views.APIView):
         
         response.update(request.data)
         return Response(response)
+    
+
+class DiscussionDetailsAPI(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request: Request, discussion_uid: str) -> Response:
+        discussion = Discussion.objects.get(uid=discussion_uid)
+        return Response(discussion.details_for_user(request.user))
+    
