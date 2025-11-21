@@ -61,11 +61,7 @@ class PostMetaData(models.Model):
         _likes = [l for l in self.likes.all()] if hasattr(self, 'likes') else list()
         return dict(
             total = self.total_likes,
-            likers=[dict(
-                user_id = like.user.id,
-                name = like.user.get_full_name(),
-                profile_pic_url = like.user.profile_picture_url
-            ) for like in _likes]
+            likers=[like.user.minimal for like in _likes]
         )
     
     @property
