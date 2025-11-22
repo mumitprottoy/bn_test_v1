@@ -275,3 +275,6 @@ class UserInfo(models.Model):
     @property
     def details(self) -> dict:
         return json.loads(self.info)
+    
+    def __str__(self) -> str:
+        return self.user.__str__()
