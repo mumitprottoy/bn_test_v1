@@ -43,7 +43,9 @@ INSTALLED_APPS += [
     'leagues',
     'habijabi',
     'beta',
-    'lanes'
+    'lanes',
+    'profile_v2',
+    'tube',
 ]
 
 # external apps

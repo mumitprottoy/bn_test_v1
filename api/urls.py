@@ -40,10 +40,7 @@ urlpatterns = [
     path('user/profile/upload-profile-picture/', views.UploadProfilePictureAPI.as_view()),
     path('user/profile/upload-cover-photo/', views.UploadCoverPhotoAPI.as_view()),
     path('user/profile/upload-intro-video/', views.UploadIntroVideoAPI.as_view()),
-    path('cities', views.CountriesAPI.as_view()),
     path('secret-delete', views.SecretDeleteUserAPI.as_view()),
-    path('user/info', views.UserInfoAPI.as_view()),
-    path('user/profile-status', views.ProfileStatusAPI.as_view()),
     path('user/media', views.UserMediaAPI.as_view()),
 
     # teams
@@ -135,4 +132,16 @@ urlpatterns = [
     path('lanes/discussions/vote', views.DiscussionVoteAPI.as_view()),
     path('lanes/discussions/opinion/<int:discussion_id>', views.DiscussionOpinionAPI.as_view()),
     path('lanes/discussions/details/<str:discussion_uid>', views.DiscussionDetailsAPI.as_view()),
+
+    # cloud
+    path('cloud/upload/requests/key', views.FileUploadKeyRequestAPI.as_view()),
+    path('cloud/upload/multipart/requests/initiate', views.MultipartUploadInitiationAPI.as_view()),
+    path('cloud/upload/multipart/requests/presigned-url', views.PartUploadPresignedURLRequestAPI.as_view()),
+    path('cloud/upload/multipart/requests/complete', views.MultipartUploadCompletionRequestAPI.as_view()),
+
+    # tube
+    path('tube/large-videos', views.LargeVideosAPI.as_view()),
+    path('tube/large-videos/validate-metadata', views.LargeVideoMetaDataValidationAPI.as_view()),
+    path('tube/large-vidoes/feed', views.LargeVideosFeedAPI.as_view()),
+    path('tube/large-videos/details/<str:uid>', views.LargeVideoDetailsAPI.as_view()),
 ]

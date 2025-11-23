@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.conf import settings
 from django.core import validators
-from utils import subroutines as sr
+from utils import subroutines as sr, constants as const
 
 
 class LevelXPMapping(models.Model):
@@ -26,15 +26,15 @@ class LevelXPMapping(models.Model):
 def forbidden_word_validator(value):
     forbidden_words = ['organic']
     if value.lower() in forbidden_words:
-        raise ValidationError(f"Using '{value}' is not allowed.")
+        raise ValidationError(f"Using '{value}' as username is not allowed.")
 
 
 class User(AbstractUser):
     email = models.EmailField(unique=True)
     profile_picture_url = models.URLField(
-        max_length=500, default='https://profiles.bowlersnetwork.com/default-profile-pic.png')
+        max_length=500, default=const.DEFAULT_PROFILE_PHOTO)
     cover_photo_url = models.URLField(
-        max_length=500, default='https://profiles.bowlersnetwork.com/default-cover.png')
+        max_length=500, default=const.DEFAULT_COVER_PHOTO)
     xp = models.IntegerField(default=0)
 
     REQUIRED_FIELDS = ['first_name', 'last_name', 'email']
@@ -60,7 +60,6 @@ class User(AbstractUser):
     def basic(self) -> dict:
         basic_info = self.minimal.copy()
         basic_info.update(dict(
-            intro_video_url=self.introvideo.url,
             cover_photo_url=self.cover_photo_url,
             xp=self.xp,
             level=self.level,
@@ -88,24 +87,6 @@ class User(AbstractUser):
         
     def __str__(self):
         return f"{self.username} ({self.email})"
-
-
-# class Team(models.Model):
-#     name = models.CharField(max_length=100, unique=True)
-#     created_by = models.ForeignKey('User', on_delete=models.CASCADE, related_name='created_teams', default=1)
-#     members = models.ManyToManyField('User', related_name='teams', blank=True)
-
-#     def __str__(self):
-#         return f"{self.name} (created by {self.created_by.username})"
-
-
-# class TeamInvitation(models.Model):
-#     team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='invitations')
-#     invited_user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='invitations')
-#     status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('accepted', 'Accepted')], default='pending')
-
-#     def __str__(self):
-#         return f"{self.invited_user.username} → {self.team.name} [{self.status}]"
 
 
 class Statistics(models.Model):

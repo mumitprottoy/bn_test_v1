@@ -1,8 +1,23 @@
+LARGE_MEDIA_BUCKET_KEY = 'cdn'
+DEFAULT_PROFILE_PHOTO = 'https://profiles.bowlersnetwork.com/default_pp_refined.jpg'
+DEFAULT_COVER_PHOTO = 'https://profiles.bowlersnetwork.com/default_cp_refined.jpg'
 DATE_STR_FORMAT_1 = "%B %d, %Y"
 DATETIME_STR_FORMAT_1 = "%I : %M %p %a %d %b, %Y"
 DEFAULT_CENTER_LOGO = 'https://logos.bowlersnetwork.com/pinsX.jpg'
 PROFILE_PIC_SUPPORTED_FILES = ['jpg', 'jpeg', 'png', 'gif']
 COVER_PHOTO_SUPPORTED_FILES = ['jpg', 'jpeg', 'png']
+LARGE_VIDEO_SUPPORTED_FILES = [
+    "mp4",
+    "webm",
+    "ogg",
+    "mov",
+    "m4v",
+    "mkv",
+    "avi",
+    "flv",
+    "wmv"
+]
+
 INTRO_VIDEO_SUPPORTED_FILES = [
     "mp4",   # H.264 + AAC codec required
     "webm",  # VP8/VP9 + Vorbis/Opus
@@ -21,7 +36,7 @@ MEDIA_CONTENT_SUPPORTED_FILES = [
     ".mp4",   # H.264 + AAC codec required
     ".webm",  # VP8/VP9 + Vorbis/Opus
     ".ogg",   # Ogg Theora video
-    "mkv",
+    ".mkv",
 
     # (Optional) Audio types — if needed in posts
     # ".mp3", ".wav", ".ogg"
@@ -37,7 +52,16 @@ FILE_TYPE_EXT_MAP = {
     'videos': [".mp4",   # H.264 + AAC codec required
     ".webm",  # VP8/VP9 + Vorbis/Opus
     ".ogg",   # Ogg Theora video
-    "mkv",]
+    ".mkv",]
+}
+
+BUCKET_EXT_MAP = {
+    'sponsors': ['jpeg', 'jpg', 'png'],
+    'media': ['jpeg', 'jpg', 'gif', 'mp4', 'webm', 'webp', 'avif', 'afi'],
+    'profiles': ['jpeg', 'jpg', 'gif'],
+    'chat': ['jpeg', 'jpg', 'gif', 'mp4', 'webm', 'webp', 'avif', 'afi'],
+    'events': ['jpg', 'jpeg', 'pdf'],
+    'cdn': LARGE_VIDEO_SUPPORTED_FILES,
 }
 
 def get_media_type(ext: str) -> str:

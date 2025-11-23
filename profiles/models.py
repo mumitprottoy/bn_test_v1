@@ -6,81 +6,30 @@ from brands.models import Brand
 from utils import constants as const, keygen
 from emailsystem.engine import EmailEngine
 
-class Country(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    
-    class Meta:
-        verbose_name_plural = 'Countries'
-    
-    def __str__(self) -> str:
-        return self.name
-
-
-class City(models.Model):
-    name = models.CharField(max_length=100)
-    country = models.ForeignKey(Country, on_delete=models.CASCADE, related_name='cities')
-    
-    class Meta:
-        verbose_name_plural = 'Cities'
-    
-    def __str__(self) -> str:
-        return f'{self.name}, {self.country.name}'
-
-    @property
-    def display_name(self) -> str:
-        return self.__str__() 
-
-
-class CityAndCountry(models.Model):
-    city = models.CharField(max_length=500)
-    country = models.CharField(max_length=100)
-
-    @property
-    def details(self) -> dict:
-        return dict(
-            id=self.id,
-            city=self.city,
-            country=self.country,
-            suggestion_string=self.__str__()
-        )
-
-    def __str__(self) -> str:
-        return f'{self.city} - {self.country}'
-
-    class Meta:
-        verbose_name_plural = 'City and Countries'
-        constraints = [
-            models.UniqueConstraint(
-                fields=('city', 'country'),
-                name='unique_country_city_pair'
-            )
-        ]
-
 
 class Nickname(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=20, default='')
+    is_public = models.BooleanField(default=True)
+
+    def __str__(self) -> str:
+        return self.user.__str__()
 
 
 class Bio(models.Model):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name='bio')    
     content = models.TextField(default='')
-    
 
-class Pic(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='pics')
-    profile_pic_url = models.TextField(default='')
-    cover_pic_url = models.TextField(default='')
-    
     def __str__(self) -> str:
-        return self.user.email 
+        self.user.__str__()
 
 
 class BirthDate(models.Model):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name='birth_date')
     date = models.DateField(null=True, blank=True, default=None)
+    is_public = models.BooleanField(default=True)
     
     @property
     def date_str(self) -> str | None:
@@ -88,27 +37,32 @@ class BirthDate(models.Model):
             return self.date.strftime(const.DATE_STR_FORMAT_1)
     
     @property
-    def timestamp_ms(self) -> int | None:
+    def age(self) -> int | None:
         if self.date is not None:
-            return int(datetime.combine(self.date, datetime.min.time()).timestamp() * 1000)
-        
+            today = datetime.today()
+            age = today.year - self.date.year
+            if (today.month, today.day) < (self.date.month, self.date.day):
+                age -= 1
+            return age
+
     def __str__(self) -> str:
-        return f'{self.user.email} | {self.user.username} | {self.date_str}'
+        return self.user.__str__()
 
 
 class Address(models.Model):
     user = models.OneToOneField(
-        User, on_delete=models.CASCADE, related_name='address', null=True, blank=True, default=None)
-    city = models.ForeignKey(
-        City, on_delete=models.CASCADE, null=True, blank=True, default=None)
-    post_code = models.CharField(max_length=15, null=True, blank=True, default='')
-    details = models.TextField(null=True, blank=True, default='')
+        User, on_delete=models.CASCADE, related_name='address', 
+        null=True, blank=True, default=None)
+    zip_code = models.CharField(max_length=15, null=True, default=None)
+    address_str = models.TextField(default='')
+    lat = models.CharField(max_length=50, default='')
+    long = models.CharField(max_length=50, default='')
     
     class Meta:
         verbose_name_plural = 'User Address'
     
     def __str__(self) -> str:
-        return self.user.email + ' | ' + self.user.username
+        return self.user.__str__()
     
 
 class AuthCode(models.Model):
@@ -184,7 +138,7 @@ class AuthCode(models.Model):
         super().save(*args, **kwargs)
         
     def __str__(self):
-        return self.user.email
+        return self.user.__str__()
 
 
 class Follow(models.Model):
@@ -212,23 +166,14 @@ class Follow(models.Model):
         
     def __str__(self):
         return f'{self.followed.username} followed by {self.follower.username}'
-    
-
-class CoverPhoto(models.Model):
-    user = models.OneToOneField(
-        User, on_delete=models.CASCADE, related_name='covers')
-    url = models.URLField(max_length=500)
-
-    def __str__(self) -> str:
-        return self.user.username + f' ({self.user.email})'
 
 
 class IntroVideo(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    url = models.URLField(max_length=500, default='https://profiles.bowlersnetwork.com/default_intro_video.mp4')
+    url = models.URLField(max_length=500, null=True, default=None)
 
     def __str__(self) -> str:
-        return self.user.username + f' ({self.user.email})'
+        return self.user.__str__()
 
 
 class FavoriteBrand(models.Model):
@@ -238,7 +183,7 @@ class FavoriteBrand(models.Model):
         Brand, on_delete=models.CASCADE, related_name='targets')
     
     def __str__(self) -> str:
-        return f'{self.brand.__str__()} ➝ {self.user.username} ({self.user.email})'
+        return f'{self.brand.__str__()} ➝ {self.user.__str__()}'
     
     class Meta:
         constraints = [
@@ -247,34 +192,3 @@ class FavoriteBrand(models.Model):
                 name='unique_user_brand_pair'
             )
         ]
-
-# **basic info**
-# age
-# gender
-# address_str
-# lat
-# long
-# home center (searchable)
-
-# **playing style**
-# left/right/both handed
-# thumb/no thumb
-
-# **conditional**
-# if age < 18: is_youth=true;
-# guardian's email
-# if age > 18: is_coach?
-# if has_usbc_card_number: usbc_card_number
-
-
-class UserInfo(models.Model):
-    is_added = models.BooleanField(default=False)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='info')
-    info = models.TextField()
-
-    @property
-    def details(self) -> dict:
-        return json.loads(self.info)
-    
-    def __str__(self) -> str:
-        return self.user.__str__()

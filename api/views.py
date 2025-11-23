@@ -23,6 +23,8 @@ from .endpoints.habijabi import *
 from .endpoints.pinscore import *
 from .endpoints.beta import *
 from .endpoints.lanes import *
+from .endpoints.cloud import *
+from .endpoints.tube import *
 from . import serializers
 
 

@@ -16,7 +16,8 @@ buckets = {
     'media': 'bwlrntkpostmediacontent',
     'profiles': 'bwlrntkprofiles',
     'chat': 'bwlrntkchatmedia',
-    'events': 'bwlrntkevents'
+    'events': 'bwlrntkevents',
+    'cdn': 'bwlrntkcdn',
 
 }
 public_base_urls = {
@@ -24,7 +25,8 @@ public_base_urls = {
     'media': 'https://media.bowlersnetwork.com',
     'profiles': 'https://profiles.bowlersnetwork.com',
     'chat': 'https://chatmedia.bowlersnetwork.com',
-    'events': 'eventsmedia.bowlersnetwork.com',
+    'events': 'https://eventsmedia.bowlersnetwork.com',
+    'cdn': 'https://cdn.bowlersnetwork.com'
 }
 regions = {
     'auto': 'auto'
