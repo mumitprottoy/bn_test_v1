@@ -1,5 +1,6 @@
 from .libs import *
 from tube.models import LargeVideo
+from cloud.engine import CloudEngine
 
 
 class LargeVideoMetaDataValidationAPI(views.APIView):
@@ -21,7 +22,7 @@ class LargeVideosAPI(views.APIView):
         large_video = LargeVideo(**request.data)
         large_video.user = request.user
         large_video.save()
-        return Response()
+        return Response(large_video.details)
 
 
 class LargeVideosFeedAPI(views.APIView):
@@ -36,3 +37,15 @@ class LargeVideoDetailsAPI(views.APIView):
 
     def get(self, request: Request, uid: str) -> Response:
         return Response(LargeVideo.objects.get(uid=uid).details)
+    
+
+class SmallVideoUploadAPI(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [parsers.FormParser, parsers.MultiPartParser]
+
+    def post(self, request: Request) -> Response:
+        video = request.data.get('video')
+        cloud_engine = CloudEngine(video, 'cdn')
+        public_url = cloud_engine.upload()
+        return Response(dict(
+            public_url=public_url), status=status.HTTP_200_OK)
