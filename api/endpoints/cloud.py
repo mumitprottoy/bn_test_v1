@@ -56,6 +56,7 @@ class MultipartUploadCompletionRequestAPI(views.APIView):
         completion = engine.complete_multipart_upload(
             **request.data.get('params'))
         if completion is not None:
-            public_url = engine.__get_file_public_url(request.data.get('key'))
+            public_url = engine.__get_file_public_url(
+                request.data.get('params')['key'])
             return Response(dict(public_url=public_url))
         return Response(dict(errors=engine.errors), status=status.HTTP_400_BAD_REQUEST)
