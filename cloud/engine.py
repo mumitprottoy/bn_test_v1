@@ -45,22 +45,22 @@ class CloudEngine:
             config=Config(signature_version='s3v4')
         )
 
-    def __set_file_name(self, original_file_name: str) -> str:
+    def set_file_name(self, original_file_name: str) -> str:
         ext = original_file_name.split('.')[-1].lower()
         name = kg.KeyGen().timestamped_alphanumeric_id(
             head_len=self.file_name_header_len)
         return f'{name}.{ext}'
     
-    def __get_file_public_url(self, cloud_file_name: str) -> str:
+    def get_file_public_url(self, cloud_file_name: str) -> str:
         return f'{self.public_base_url}/{cloud_file_name}'
     
     def upload(self) -> str | None:
-        cloud_file_name = self.__set_file_name(self.file.name)
+        cloud_file_name = self.set_file_name(self.file.name)
         try:
             response = self.client.upload_fileobj(
                 self.file.file, self.bucket, cloud_file_name)
             print(response)
-            return self.__get_file_public_url(cloud_file_name)
+            return self(cloud_file_name)
         except Exception as e:
             self.errors.append(str(e))
     
