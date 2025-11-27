@@ -62,3 +62,16 @@ class LargeVideoEditAPI(views.APIView):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         large_video_set.update(**request.data)
         return Response(large_video_set.first().details)
+
+
+class LargeVideoDeleteAPI(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def delete(self, request: Request, video_id: int) -> Response:
+        large_video_set = LargeVideo.objects.filter(id=video_id)
+        if not large_video_set.exists():
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        if large_video_set.first().user != request.user:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        large_video_set.delete()
+        return Response()
