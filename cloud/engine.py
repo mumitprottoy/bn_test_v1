@@ -30,9 +30,7 @@ class CloudEngine:
     
     def get_file_upload_key(self, file_name: str) -> str | None:
         ext = file_name.lower().split('.')[-1]
-        if ext in const.BUCKET_EXT_MAP[self.bucket_code]:
-            return kg.KeyGen().timestamped_alphanumeric_id() + '.' + ext
-        else: self.errors.append(err_msg.BUCKET_SUPPORT_ERROR(self.bucket_code, ext))
+        return kg.KeyGen().timestamped_alphanumeric_id() + '.' + ext
  
     @property
     def client(self):

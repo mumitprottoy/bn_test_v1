@@ -16,7 +16,7 @@ class LargeVideosAPI(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request: Request) -> Response:
-        return Response([v.details for v in request.user.large_videos.all()])
+        return Response([v.details for v in request.user.large_videos.all().order_by('id')])
 
     def post(self, request: Request) -> Response:
         large_video = LargeVideo(**request.data)
@@ -29,7 +29,7 @@ class LargeVideosFeedAPI(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request: Request) -> Response:
-        return Response([v.details for v in LargeVideo.objects.all()])
+        return Response([v.details for v in LargeVideo.objects.all().order_by('-id')])
 
 
 class LargeVideoDetailsAPI(views.APIView):
