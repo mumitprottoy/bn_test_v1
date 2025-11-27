@@ -149,5 +149,6 @@ urlpatterns = [
     path('tube/large-vidoes/feed', views.LargeVideosFeedAPI.as_view()),
     path('tube/large-videos/details/<str:uid>', views.LargeVideoDetailsAPI.as_view()),
     path('tube/large-videos/edit/<int:video_id>', views.LargeVideoEditAPI.as_view()),
+    path('tube/large-videos/upload-thumbnail/<int:video_id>', views.LargeVideoEditAPI.as_view()),
     path('tube/small-videos/upload', views.SmallVideoUploadAPI.as_view()),
 ]

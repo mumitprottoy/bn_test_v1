@@ -62,4 +62,3 @@ class LargeVideoEditAPI(views.APIView):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         large_video_set.update(**request.data)
         return Response(large_video_set.first().details)
-    
