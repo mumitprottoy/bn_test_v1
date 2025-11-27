@@ -1,6 +1,6 @@
 import boto3
 from ._cloud_creds import cloud_cred
-from utils import keygen as kg, constants as const
+from utils import keygen as kg, constants as const, error_messages as err_msg
 from django.core.files.uploadedfile import UploadedFile
 from botocore.client import Config
 
@@ -10,7 +10,7 @@ class CloudEngine:
     def __init__(
             self,
             file: UploadedFile=None,  
-            bucket: str='testv0', 
+            bucket: str='cdn', 
             key_holder: str='mumit1', 
             region: str='auto',
             file_name_header_len: int=10) -> None:
@@ -32,7 +32,7 @@ class CloudEngine:
         ext = file_name.lower().split('.')[-1]
         if ext in const.BUCKET_EXT_MAP[self.bucket_code]:
             return kg.KeyGen().timestamped_alphanumeric_id() + '.' + ext
-        else: self.errors.append(f'Bucket: {self.bucket_code} does not support file-type: {ext}')
+        else: self.errors.append(err_msg.BUCKET_SUPPORT_ERROR(self.bucket_code, ext))
  
     @property
     def client(self):
@@ -45,22 +45,22 @@ class CloudEngine:
             config=Config(signature_version='s3v4')
         )
 
-    def set_file_name(self, original_file_name: str) -> str:
-        ext = original_file_name.split('.')[-1].lower()
+    def set_file_name(self, file_name: str) -> str:
+        ext = file_name.split('.')[-1].lower()
         name = kg.KeyGen().timestamped_alphanumeric_id(
             head_len=self.file_name_header_len)
         return f'{name}.{ext}'
     
-    def get_file_public_url(self, cloud_file_name: str) -> str:
-        return f'{self.public_base_url}/{cloud_file_name}'
+    def get_file_public_url(self, key: str) -> str:
+        return f'{self.public_base_url}/{key}'
     
     def upload(self) -> str | None:
-        cloud_file_name = self.set_file_name(self.file.name)
+        key = self.set_file_name(self.file.name)
         try:
             response = self.client.upload_fileobj(
-                self.file.file, self.bucket, cloud_file_name)
+                self.file.file, self.bucket, key)
             print(response)
-            return self(cloud_file_name)
+            return self(key)
         except Exception as e:
             self.errors.append(str(e))
     
@@ -74,9 +74,23 @@ class CloudEngine:
         except Exception as e:
             self.errors.append(str(e))
             return None
+    
+    def get_presigned_url(self, key: str, expires: int=3600) -> str | None:
+        try:
+            return self.client.generate_presigned_url(
+                ClientMethod="put_object",
+                Params={
+                    "Bucket": self.bucket,
+                    "Key": key
+                },
+                ExpiresIn=expires
+            )
+        except Exception as e:
+            self.errors.append(str(e))
+            return None
 
     def get_presigned_url_for_part_upload(
-            self, key: str, upload_id: str, part_number: int, expires=3600) -> str | None:
+            self, key: str, upload_id: str, part_number: int, expires: int=3600) -> str | None:
         try:
             return self.client.generate_presigned_url(
                 ClientMethod="upload_part",
@@ -92,11 +106,8 @@ class CloudEngine:
             self.errors.append(str(e))
             return None
 
-    def complete_multipart_upload(self, key: str, upload_id: str, parts: list[dict]) -> dict | None:
-        """
-        parts must be a list of dicts:
-        [{"PartNumber": int, "ETag": str}, ...]
-        """
+    def complete_multipart_upload(self, 
+        key: str, upload_id: str, parts: list[dict]) -> dict | None:
         try:
             resp = self.client.complete_multipart_upload(
                 Bucket=self.bucket,

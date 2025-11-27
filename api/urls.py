@@ -135,6 +135,9 @@ urlpatterns = [
 
     # cloud
     path('cloud/upload/requests/key', views.FileUploadKeyRequestAPI.as_view()),
+    path('cloud/upload/requests/presigned-url', views.PresignedURLRequestAPI.as_view()),
+    path('cloud/upload/requests/public-url', views.PublicURLRequestAPI.as_view()),
+    path('cloud/upload/singlepart/requests/initiate', views.SinglepartUploadInitiationAPI.as_view()),
     path('cloud/upload/multipart/requests/initiate', views.MultipartUploadInitiationAPI.as_view()),
     path('cloud/upload/multipart/requests/presigned-url', views.PartUploadPresignedURLRequestAPI.as_view()),
     path('cloud/upload/multipart/requests/complete', views.MultipartUploadCompletionRequestAPI.as_view()),

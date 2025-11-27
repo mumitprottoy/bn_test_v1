@@ -1,154 +1,146 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>BN Multipart Upload Demo</title>
+  <meta charset="UTF-8" />
+  <title>Multipart Upload Demo</title>
 </head>
 <body>
 
-<h1>Multipart Upload (5 Chunks) – BowlersNetwork</h1>
+<h2>Multipart Upload Demo (Parallel, Min 10MB Chunks)</h2>
 
-<input type="file" id="fileInput" accept="video/*" />
-<button id="uploadBtn">Upload</button>
+<input type="file" id="fileInput" />
+<button onclick="startMultipartUpload()">Upload</button>
 
 <pre id="log"></pre>
 
 <script>
-const API_BASE = "https://test.bowlersnetwork.com/api";
+const BASE = "https://test.bowlersnetwork.com/api";
 const BUCKET = "cdn";
 const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY2Nzg3ODkyLCJpYXQiOjE3NjQxOTU4OTIsImp0aSI6IjU0MWVmNmM5MjVmODQ0YmM4MTgyYWIzZTVmNzdjZjUwIiwidXNlcl9pZCI6NTR9.6-3LQVDtOzXaO_gYERu4mrrnuTKSRyuqsSsId0xCMMk";
 
-const log = (msg) => {
-  document.getElementById("log").textContent += msg + "\n";
-};
+const MIN_CHUNK = 10 * 1024 * 1024; // 10MB
 
-async function apiCall(path, payload) {
-  const res = await fetch(`${API_BASE}${path}`, {
+function log(msg) {
+  document.getElementById("log").textContent += msg + "\n";
+}
+
+async function apiPOST(url, body) {
+  const res = await fetch(url, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${TOKEN}`
+      "Authorization": `Bearer ${TOKEN}`,
+      "Content-Type": "application/json"
     },
-    body: JSON.stringify(payload)
+    body: JSON.stringify(body)
   });
   return res.json();
 }
 
-async function uploadMultipart(file) {
-  log("🔥 Initiating multipart upload…");
+function sliceFileIntoChunks(file) {
+  const chunks = [];
+  let offset = 0;
 
-  // 1. INITIATE MULTIPART UPLOAD
-  const initResp = await apiCall(
-    "/cloud/upload/multipart/requests/initiate",
-    {
-      file_name: file.name,
-      bucket: BUCKET
-    }
-  );
-
-  if (!initResp.upload_id) {
-    log("❌ Failed to initiate upload: " + JSON.stringify(initResp));
-    return;
+  while ((file.size - offset) > MIN_CHUNK) {
+    chunks.push(file.slice(offset, offset + MIN_CHUNK));
+    offset += MIN_CHUNK;
   }
 
-  const key = initResp.key;
-  const uploadId = initResp.upload_id;
+  // Last smaller chunk (≤ 10MB allowed)
+  chunks.push(file.slice(offset, file.size));
 
-  log(`🗝 Key: ${key}`);
-  log(`🧩 Upload ID: ${uploadId}`);
-
-  // 2. SPLIT INTO EXACTLY 5 CHUNKS
-  const chunkCount = 2;
-  const chunkSize = Math.ceil(file.size / chunkCount);
-
-  log(`📦 Chunk size = ${chunkSize} bytes\n`);
-
-  const parts = [];
-
-  for (let partNumber = 1; partNumber <= chunkCount; partNumber++) {
-    const start = (partNumber - 1) * chunkSize;
-    const end = Math.min(start + chunkSize, file.size);
-
-    const chunk = file.slice(start, end);
-
-    log(`➡️ Getting presigned URL for part ${partNumber}…`);
-
-    // 3. GET PRESIGNED URL
-    const preResp = await apiCall(
-      "/cloud/upload/multipart/requests/presigned-url",
-      {
-        bucket: BUCKET,
-        params: {
-          key: key,
-          upload_id: uploadId,
-          part_number: partNumber
-        }
-      }
-    );
-
-    const presignedUrl = preResp.presigned_url;
-
-    if (!presignedUrl) {
-      log("❌ Failed to get presigned URL");
-      return;
-    }
-
-    log(`⬆️ Uploading part ${partNumber}…`);
-
-    // 4. UPLOAD PART TO R2
-    const uploadRes = await fetch(presignedUrl, {
-      method: "PUT",
-      body: chunk
-    });
-
-    if (!uploadRes.ok) {
-      log(`❌ Upload failed for part ${partNumber}`);
-      return;
-    }
-
-    const etag = uploadRes.headers.get("etag");
-
-    log(`✅ Part ${partNumber} uploaded (ETag: ${etag})`);
-
-    parts.push({
-      PartNumber: partNumber,
-      ETag: etag
-    });
-  }
-
-  // 5. COMPLETE MULTIPART UPLOAD
-  log("\n🔗 Completing multipart upload…");
-
-  const completeResp = await apiCall(
-    "/cloud/upload/multipart/requests/complete",
-    {
-      bucket: BUCKET,
-      key: key,
-      params: {
-        key: key,
-        upload_id: uploadId,
-        parts: parts
-      }
-    }
-  );
-
-  if (completeResp.public_url) {
-    log("\n🎉 Upload complete!");
-    log("🌐 Public URL:");
-    log(completeResp.public_url);
-  } else {
-    log("❌ Failed to complete upload: " + JSON.stringify(completeResp));
-  }
+  return chunks;
 }
 
-document.getElementById("uploadBtn").onclick = () => {
+
+async function startMultipartUpload() {
   const file = document.getElementById("fileInput").files[0];
-  if (!file) {
-    log("⚠️ Please select a video file first.");
+  if (!file) return alert("Select a file first");
+
+  log(`Selected file: ${file.name} (${(file.size/1024/1024).toFixed(2)}MB)`);
+
+  // 1) Initiate multipart upload
+  const initRes = await apiPOST(`${BASE}/cloud/upload/multipart/requests/initiate`, {
+    file_name: file.name,
+    bucket: BUCKET
+  });
+
+  if (initRes.errors) {
+    log("INIT ERROR: " + JSON.stringify(initRes.errors));
     return;
   }
-  uploadMultipart(file);
-};
+
+  const key = initRes.key;
+  const upload_id = initRes.upload_id;
+
+  log(`Key: ${key}`);
+  log(`Upload ID: ${upload_id}`);
+
+  // 2) Create chunks
+  const chunks = sliceFileIntoChunks(file);
+  log(`Created ${chunks.length} chunks`);
+
+  // 3) Upload chunks in parallel
+  const uploadPromises = chunks.map((chunk, index) => uploadChunk(chunk, index + 1, key, upload_id));
+
+  const parts = await Promise.all(uploadPromises);
+
+  // 4) Filter failures
+  const successfulParts = parts.filter(p => p && p.ETag);
+  if (successfulParts.length !== parts.length) {
+    log("Some parts failed. Aborting multipart upload.");
+    return;
+  }
+
+  // 5) Complete upload
+  log("Completing multipart upload...");
+  const completeRes = await apiPOST(`${BASE}/cloud/upload/multipart/requests/complete`, {
+    bucket: BUCKET,
+    params: {
+      key,
+      upload_id,
+      parts: successfulParts
+    }
+  });
+
+  log("Upload complete!");
+  log(JSON.stringify(completeRes, null, 2));
+}
+
+async function uploadChunk(chunk, partNumber, key, upload_id) {
+  log(`Requesting presigned URL for part ${partNumber}...`);
+
+  const presignRes = await apiPOST(`${BASE}/cloud/upload/multipart/requests/presigned-url`, {
+    bucket: BUCKET,
+    params: { key, upload_id, part_number: partNumber }
+  });
+
+  if (presignRes.errors) {
+    log(`Presign ERROR part ${partNumber}: ${JSON.stringify(presignRes.errors)}`);
+    return null;
+  }
+
+  const url = presignRes.presigned_url;
+  log(`Uploading part ${partNumber} (${(chunk.size/1024/1024).toFixed(2)}MB)...`);
+
+  const putRes = await fetch(url, {
+    method: "PUT",
+    body: chunk
+  });
+
+  const etag = putRes.headers.get("ETag");
+
+  if (!putRes.ok || !etag) {
+    log(`UPLOAD ERROR part ${partNumber}: ETag missing`);
+    return null;
+  }
+
+  log(`Part ${partNumber} uploaded (ETag: ${etag})`);
+
+  return {
+    PartNumber: partNumber,
+    ETag: etag
+  };
+}
 </script>
 
 </body>

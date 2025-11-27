@@ -21,6 +21,42 @@ class FileUploadKeyRequestAPI(views.APIView):
             status=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
 
 
+class PresignedURLRequestAPI(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request: Request) -> Response:
+        engine = CloudEngine(bucket=request.data.get('bucket'))
+        presigned_url = engine.get_presigned_url(
+            **request.data.get('params'))
+        if presigned_url is not None:
+            return Response(dict(presigned_url=presigned_url))
+        return Response(dict(errors=engine.errors), status=status.HTTP_400_BAD_REQUEST)
+
+
+class SinglepartUploadInitiationAPI(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request: Request) -> Response:
+        file_name, bucket = unpack(request)
+        engine = CloudEngine(bucket=bucket)
+        key = engine.get_file_upload_key(file_name)
+        public_url = engine.get_file_public_url(key)
+        presigned_url = engine.get_presigned_url(key)
+        return Response(dict(
+            key=key, public_url=public_url, presigned_url=presigned_url))
+
+
+class PublicURLRequestAPI(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request: Request) -> Response:
+        engine = CloudEngine(bucket=request.data.get('bucket'))
+        public_url = engine.get_file_public_url(
+            request.data.get('key')
+        )
+        return Response(public_url=public_url)
+
+
 class MultipartUploadInitiationAPI(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
