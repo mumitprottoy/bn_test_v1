@@ -4,6 +4,7 @@ DEFAULT_COVER_PHOTO = 'https://profiles.bowlersnetwork.com/default_cp_refined.jp
 DATE_STR_FORMAT_1 = "%B %d, %Y"
 DATETIME_STR_FORMAT_1 = "%I : %M %p %a %d %b, %Y"
 DEFAULT_CENTER_LOGO = 'https://logos.bowlersnetwork.com/pinsX.jpg'
+DEFAULT_THUMBNAIL = "https://cdn.bowlersnetwork.com/thumbnail.png"
 PROFILE_PIC_SUPPORTED_FILES = ['jpg', 'jpeg', 'png', 'gif']
 COVER_PHOTO_SUPPORTED_FILES = ['jpg', 'jpeg', 'png']
 LARGE_VIDEO_SUPPORTED_FILES = [

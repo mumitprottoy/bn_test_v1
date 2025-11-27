@@ -1,6 +1,6 @@
 from django.db import models
 from player.models import User
-from utils import keygen as kg, subroutines as sr
+from utils import keygen as kg, subroutines as sr, constants as const
 
 
 def generate_uid() -> str:
@@ -14,7 +14,7 @@ class LargeVideo(models.Model):
     title = models.CharField(max_length=200, unique=True)
     description = models.TextField(default='')
     url = models.CharField(unique=True, max_length=200)
-    thumbnail_url = models.CharField(null=True, default=None, max_length=200)
+    thumbnail_url = models.CharField(null=True, default=const.DEFAULT_THUMBNAIL, max_length=200)
     uploaded_at = models.DateTimeField(auto_now_add=True)
     is_public = models.BooleanField(default=True)
     duration = models.FloatField(default=0.0)
