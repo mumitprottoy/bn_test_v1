@@ -49,3 +49,17 @@ class SmallVideoUploadAPI(views.APIView):
         public_url = cloud_engine.upload()
         return Response(dict(
             public_url=public_url), status=status.HTTP_200_OK)
+    
+
+class LargeVideoEditAPI(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request: Request, video_id: str) -> Response:
+        large_video_set = LargeVideo.objects.filter(id=video_id)
+        if not large_video_set.exists():
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        if large_video_set.first().user != request.user:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        large_video_set.update(**request.data)
+        return Response(large_video_set.first().details)
+    
