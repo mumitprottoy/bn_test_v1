@@ -94,5 +94,16 @@ class MultipartUploadCompletionRequestAPI(views.APIView):
         if completion is not None:
             public_url = engine.get_file_public_url(
                 request.data.get('params')['key'])
-            return Response(dict(public_url=public_url))
+            return Response(dict(public_url=public_url, report=completion))
+        return Response(dict(errors=engine.errors), status=status.HTTP_400_BAD_REQUEST)
+
+
+class MultipartUploadAbortionAPI(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request: Request) -> Response:
+        engine = CloudEngine(bucket=request.data.get('bucket'))
+        abortion = engine.abort_multipart_upload(**request.data.get('params'))
+        if abortion is not None:
+            return Response(abortion)
         return Response(dict(errors=engine.errors), status=status.HTTP_400_BAD_REQUEST)

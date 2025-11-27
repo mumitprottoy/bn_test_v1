@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>R2 Upload Demo</title>
+</head>
+<body>
+
+  <h2>Upload Video to R2</h2>
+
+  <input id="videoInput" type="file" accept="video/*" />
+  <button id="uploadBtn">Upload</button>
+
+  <p id="status"></p>
+
+  <script>
+    // Provided data
+    const data = {
+      key: "8D1965823b476472251127020447HsKoGCNAIG.mp4",
+      public_url: "https://cdn.bowlersnetwork.com/8D1965823b476472251127020447HsKoGCNAIG.mp4",
+      presigned_url:
+        "https://bdf1650e0f6d38c742f87b7703a2e2d4.r2.cloudflarestorage.com/bwlrntkcdn/8D1965823b476472251127020447HsKoGCNAIG.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=cef3a724a56beacceed51c2d06c7c60b%2F20251127%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=20251127T040247Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=3a2cf7d234e8f1022fb73a37591f83d44082bc21b0c7f5fa98d4c53cd294053e"
+    };
+
+    const input = document.getElementById("videoInput");
+    const uploadBtn = document.getElementById("uploadBtn");
+    const status = document.getElementById("status");
+
+    uploadBtn.addEventListener("click", async () => {
+      const file = input.files[0];
+      if (!file) {
+        status.textContent = "Choose a video first.";
+        return;
+      }
+
+      status.textContent = "Uploading...";
+
+      try {
+        const res = await fetch(data.presigned_url, {
+          method: "PUT",
+          body: file,
+          headers: {
+            "Content-Type": file.type
+          }
+        });
+
+        if (!res.ok) {
+          status.textContent = "Upload failed: " + res.status;
+          return;
+        }
+
+        status.innerHTML = `
+          ✅ Upload complete!<br>
+          <a href="${data.public_url}" target="_blank">View file on CDN</a>
+        `;
+      } catch (err) {
+        status.textContent = "Error: " + err.message;
+      }
+    });
+  </script>
+
+</body>
+</html>

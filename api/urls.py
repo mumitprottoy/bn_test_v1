@@ -141,6 +141,7 @@ urlpatterns = [
     path('cloud/upload/multipart/requests/initiate', views.MultipartUploadInitiationAPI.as_view()),
     path('cloud/upload/multipart/requests/presigned-url', views.PartUploadPresignedURLRequestAPI.as_view()),
     path('cloud/upload/multipart/requests/complete', views.MultipartUploadCompletionRequestAPI.as_view()),
+    path('cloud/upload/multipart/requests/abort', views.MultipartUploadAbortionAPI.as_view()),
 
     # tube
     path('tube/large-videos', views.LargeVideosAPI.as_view()),
