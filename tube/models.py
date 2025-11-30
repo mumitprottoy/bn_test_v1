@@ -58,7 +58,6 @@ class LargeVideo(models.Model):
             comments=self.all_comments
         )
     
-    @property
     def details_for_user(self, user: User) -> dict:
         details = self.details
         details.update(dict(

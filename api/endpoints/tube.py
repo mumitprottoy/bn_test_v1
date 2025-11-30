@@ -30,7 +30,7 @@ class LargeVideosFeedAPI(views.APIView):
 
     def get(self, request: Request) -> Response:
         return Response([v.details_for_user(
-            request.user) for v in LargeVideo.objects.all().order_by('-id')])
+            user=request.user) for v in LargeVideo.objects.all().order_by('-id')])
 
 
 class LargeVideoDetailsAPI(views.APIView):
