@@ -151,5 +151,7 @@ urlpatterns = [
     path('tube/large-videos/edit/<int:video_id>', views.LargeVideoEditAPI.as_view()),
     path('tube/large-videos/delete/<int:video_id>', views.LargeVideoDeleteAPI.as_view()),
     path('tube/large-videos/upload-thumbnail/<int:video_id>', views.LargeVideoEditAPI.as_view()),
+    path('tube/large-videos/like/<str:uid>', views.LargeVideoLikeAPI.as_view()),
+    path('tube/large-videos/comment/<str:uid>', views.LargeVideoCommentAPI.as_view()),
     path('tube/small-videos/upload', views.SmallVideoUploadAPI.as_view()),
 ]

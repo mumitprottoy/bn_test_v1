@@ -1,5 +1,5 @@
 from .libs import *
-from tube.models import LargeVideo
+from tube.models import LargeVideo, LargeVideoLike, LargeVideoComment
 from cloud.engine import CloudEngine
 
 
@@ -29,7 +29,8 @@ class LargeVideosFeedAPI(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request: Request) -> Response:
-        return Response([v.details for v in LargeVideo.objects.all().order_by('-id')])
+        return Response([v.details_for_user(
+            request.user) for v in LargeVideo.objects.all().order_by('-id')])
 
 
 class LargeVideoDetailsAPI(views.APIView):
@@ -75,3 +76,33 @@ class LargeVideoDeleteAPI(views.APIView):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         large_video_set.delete()
         return Response()
+
+
+class LargeVideoLikeAPI(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request: Request, uid: str) -> Response:
+        large_video = LargeVideo.objects.filter(uid=uid).first()
+        if large_video is not None:
+            like, created = LargeVideoLike.objects.get_or_create(
+                user=request.user, large_video=large_video)
+            if not created: like.delete()
+            return Response(dict(
+                is_liked=created, likes_count=large_video.likes_count))
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+
+class LargeVideoCommentAPI(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request: Request, uid: str) -> Response:
+        large_video = LargeVideo.objects.filter(uid=uid).first()
+        if large_video is not None:
+            comment = LargeVideoComment.objects.create(
+                large_video=large_video,
+                user=request.user,
+                comment=request.data.get('comment')
+            )
+            return Response(comment.details)
+        return Response(status=status.HTTP_404_NOT_FOUND)
+        

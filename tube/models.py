@@ -23,6 +23,14 @@ class LargeVideo(models.Model):
     def validate_video_metadata(cls: 'LargeVideo', **kwargs) -> bool:
         return not cls.objects.filter(**kwargs).exists()
     
+    @property
+    def likes_count(self) -> int:
+        return self.likes.count()
+    
+    @property
+    def all_comments(self) -> list[dict]:
+        return [c.details for c in self.comments.all().order_by('-id')]
+    
     def toggle_privacy(self) -> dict:
         self.is_public = not self.is_public
         self.save()
@@ -45,8 +53,41 @@ class LargeVideo(models.Model):
             thumbnail_url=self.thumbnail_url,
             duration_str=self.duration_str,
             uploaded=sr.pretty_timesince(self.uploaded_at),
-            is_public=self.is_public
+            is_public=self.is_public,
+            likes_count=self.likes_count,
+            comments=self.all_comments
         )
+    
+    @property
+    def details_for_user(self, user: User) -> dict:
+        details = self.details
+        details.update(dict(
+            viewer_liked=self.likes.filter(user=user).exists()))
+        return details
     
     def __str__(self) -> str:
         return self.title
+
+
+class LargeVideoLike(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    large_video = models.ForeignKey(
+        LargeVideo, on_delete=models.CASCADE, related_name='likes')
+
+
+class LargeVideoComment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    large_video = models.ForeignKey(
+        LargeVideo, on_delete=models.CASCADE, related_name='comments')
+    comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def details(self) -> dict:
+        return dict(
+            large_video_id=self.large_video.id,
+            comment_id=self.id,
+            comment=self.comment,
+            user=self.user.minimal,
+            created=sr.pretty_timesince(self.created_at)
+        )
