@@ -37,7 +37,8 @@ class LargeVideoDetailsAPI(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request: Request, uid: str) -> Response:
-        return Response(LargeVideo.objects.get(uid=uid).details)
+        return Response(LargeVideo.objects.get(
+            uid=uid).details_for_user(user=request.user))
     
 
 class SmallVideoUploadAPI(views.APIView):
