@@ -37,8 +37,12 @@ class LargeVideoDetailsAPI(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request: Request, uid: str) -> Response:
-        return Response(LargeVideo.objects.get(
-            uid=uid).details_for_user(user=request.user))
+         large_video = LargeVideo.objects.filter(
+            uid=uid).first()
+         if large_video is not None:
+             return Response(large_video.details_for_user(
+                 user=request.user))
+         return Response(status=status.HTTP_404_NOT_FOUND)
     
 
 class SmallVideoUploadAPI(views.APIView):
