@@ -209,7 +209,7 @@ class UserMediaAPI(views.APIView):
     def get(self, request: Request) -> Response:
         media = dict(photos=list(), videos=list(), gifs=list(), others=list())
         urls = [content.url for content in PostMediaContent.objects.filter(
-            metadata__in=request.user.post_metadata.all())]
+            metadata__in=request.user.post_metadata.all()).order_by('-id')]
         for url in urls:
             media[const.get_media_type(
                 f'.{url.split('.')[-1]}')].append(url)
