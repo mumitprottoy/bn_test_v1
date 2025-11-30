@@ -81,8 +81,8 @@ class LargeVideoDeleteAPI(views.APIView):
 class LargeVideoLikeAPI(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request: Request, uid: str) -> Response:
-        large_video = LargeVideo.objects.filter(uid=uid).first()
+    def get(self, request: Request, video_id: int) -> Response:
+        large_video = LargeVideo.objects.filter(id=video_id).first()
         if large_video is not None:
             like, created = LargeVideoLike.objects.get_or_create(
                 user=request.user, large_video=large_video)
@@ -95,8 +95,8 @@ class LargeVideoLikeAPI(views.APIView):
 class LargeVideoCommentAPI(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def post(self, request: Request, uid: str) -> Response:
-        large_video = LargeVideo.objects.filter(uid=uid).first()
+    def post(self, request: Request, video_id: int) -> Response:
+        large_video = LargeVideo.objects.filter(id=video_id).first()
         if large_video is not None:
             comment = LargeVideoComment.objects.create(
                 large_video=large_video,
